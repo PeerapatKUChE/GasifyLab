@@ -1,1 +1,3 @@
-print("Hello World!")
+import steamlit as st
+
+st.title("Hello World!")
