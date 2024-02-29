@@ -3,6 +3,12 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
+import os
+os.chdir("..")
+directory = os.path.abspath(os.curdir)
+
+st.text(directory)
+
 data = pd.read_excel("data/preprocessed/Data-Gasification-Completed", sheet_name="Preprocessed Data")
 
 model = {
