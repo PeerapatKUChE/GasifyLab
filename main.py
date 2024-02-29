@@ -20,8 +20,12 @@ bed_material = st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), 
 catalyst = st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select")
 scale = st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 
-st.text(float(carbon)+float(hydrogen))
-
 if particle_size == "":
     st.error("Missing particle size")
     st.focus(particle_size)
+
+if (carbon == "" and hydrogen == "") or feedstock =="":
+    st.error("Missing carbon")
+    st.focus(carbon)
+else:
+    st.text(float(carbon)+float(hydrogen))
