@@ -66,7 +66,7 @@ categorical_inputs = {
         index=None, placeholder="Select"),
     "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
     "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
-    "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
+    "Reactor type": st.selectbox("Reactor *", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
     "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
     "Catalyst": st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select"),
     "System scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
