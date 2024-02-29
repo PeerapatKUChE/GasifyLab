@@ -5,10 +5,9 @@ from joblib import load
 
 import os
 #os.chdir("..")
-directory = os.getcwd()
-st.text(directory)
+directory = /mount/src/biomass-gasification-optimisation-project/
 st.text(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx")
-data = pd.read_excel(f"{directory}biomass-gasification-optimisation-project/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
+data = pd.read_excel(f"/mount/src/biomass-gasification-optimisation-project/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
 model = {
     "H2": load("models/model-H2.joblib"),
