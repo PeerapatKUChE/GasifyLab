@@ -22,10 +22,8 @@ scale = st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, plac
 
 if particle_size == "":
     st.error("Missing particle size")
-    st.focus(particle_size)
 
-if (carbon == "" and hydrogen == "") or feedstock =="":
+if (carbon == "" and hydrogen == "") or feedstock == "":
     st.error("Missing carbon")
-    st.focus(carbon)
 else:
     st.text(float(carbon)+float(hydrogen))
