@@ -8,7 +8,7 @@ import os
 directory = os.getcwd()
 st.text(directory)
 st.text(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx")
-data = pd.read_excel(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
+data = pd.read_excel(f"biomass-gasification-optimisation-project/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
 model = {
     "H2": load("models/model-H2.joblib"),
