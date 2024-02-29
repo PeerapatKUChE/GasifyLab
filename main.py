@@ -8,8 +8,8 @@ import os
 directory = os.path.abspath(os.curdir)
 
 st.text(directory)
-st.text(f"{directory}\\data\\preprocessed\\Data-Gasification-Completed")
-data = pd.read_excel(f"{directory}\\data\\preprocessed\\Data-Gasification-Completed", sheet_name="Preprocessed Data")
+st.text(f"{directory}data/preprocessed/Data-Gasification-Completed")
+data = pd.read_excel(f"{directory}data/preprocessed/Data-Gasification-Completed", sheet_name="Preprocessed Data")
 
 model = {
     "H2": load("models/model-H2.joblib"),
