@@ -3,11 +3,7 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
-import os
-#os.chdir("..")
-directory = "/mount/src/biomass-gasification-optimisation-project/"
-st.text(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx")
-data = pd.read_excel(f"/mount/src/biomass-gasification-optimisation-project/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
+data = pd.read_excel("data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
 model = {
     "H2": load("models/model-H2.joblib"),
