@@ -5,6 +5,8 @@ from joblib import load
 
 data = pd.read_excel("data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
+st.dataframe(data)
+
 model = {
     "H2": load("models/model-H2.joblib"),
     "CO2": load("models/model-CO2.joblib")
