@@ -4,7 +4,7 @@ import pandas as pd
 from joblib import load
 
 import os
-os.chdir("..")
+#os.chdir("..")
 directory = os.path.abspath(os.curdir)
 
 st.text(directory)
