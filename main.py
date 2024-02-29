@@ -71,7 +71,6 @@ categorical_inputs = {
 }
 
 if not any(value is None for value in categorical_inputs.values()):
-    print(1)
     encoded_categorical_vars = pd.DataFrame()
     for category in categorical_vars.keys():
         encoded_categorical_input = encode_categorical_value(
@@ -79,7 +78,7 @@ if not any(value is None for value in categorical_inputs.values()):
             category=categorical_vars[category],
             prefix=category
         )
-
+        st.dataframe(encoded_categorical_input)
         encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
     
     st.dataframe(encoded_categorical_vars)
