@@ -19,6 +19,8 @@ def denormalize(x_norm, x_original):
     return x_denorm
 
 def encode_categorical_value(value, category, prefix):
+    if value.lower() == "laboratory":
+        value = "lab"
     value_with_prefix = np.array([f"{prefix} " + value.lower()])
     encoded_values = pd.DataFrame(
         {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
@@ -80,5 +82,4 @@ if not any(value is None for value in categorical_inputs.values()):
         )
 
         encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
-        st.dataframe(encoded_categorical_vars)
     st.dataframe(encoded_categorical_vars)
