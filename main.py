@@ -5,8 +5,7 @@ from joblib import load
 
 import os
 #os.chdir("..")
-directory = os.path.abspath()
-
+directory = os.getcwd()
 st.text(directory)
 st.text(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx")
 data = pd.read_excel(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
