@@ -7,7 +7,7 @@ from joblib import load
 path = os.path.dirname(__file__)
 st.text(path)
 
-data = pd.read_excel("data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
+data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
 st.dataframe(data)
 
