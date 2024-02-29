@@ -18,7 +18,7 @@ def denormalize(x_norm, x_original):
     
     return x_denorm
 
-def encode_categorical_inputs(value, category, prefix):
+def encode_categorical_value(value, category, prefix):
     value_with_prefix = np.array([f"{prefix} " + value.lower()])
     encoded_values = pd.DataFrame(
         {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
@@ -59,7 +59,9 @@ continuous_inputs = {
 }
 
 categorical_inputs = {
-    "Feedstock type": st.selectbox("Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"), index=None, placeholder="Select"),
+    "Feedstock type": st.selectbox(
+        "Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"),
+        index=None, placeholder="Select"),
     "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
     "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
     "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
@@ -67,4 +69,5 @@ categorical_inputs = {
     "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
-st.text(continuous_inputs["Particle size"])
+if categorical_inputs['Feedstock type'] != "":
+    st.text(encode_categorical_value(categorical_inputs['Feedstock type'], categorical_vars['Feedstock type'], 'Feedstock type'))
