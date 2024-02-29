@@ -62,7 +62,7 @@ categorical_inputs = {
     "Feedstock type": st.selectbox(
         "Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"),
         index=None, placeholder="Select"),
-    "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous")),
+    "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
     "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
     "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
     "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
@@ -70,7 +70,8 @@ categorical_inputs = {
     "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
-if any(value is not None for value in categorical_inputs.values()):
+if not any(value is None for value in categorical_inputs.values()):
+    print(1)
     encoded_categorical_vars = pd.DataFrame()
     for category in categorical_vars.keys():
         encoded_categorical_input = encode_categorical_value(
