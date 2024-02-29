@@ -36,7 +36,7 @@ continuous_vars = {
 
 categorical_vars = {
     category: [f"{category} {variable}" for variable in data[category].unique()]
-    for category in ["Feedstock type", "Gasifying agent", "Operation mode", "Reactor type", "Bed material", "Catalyst", "System scale"]
+    for category in ["Feedstock type", "Operation mode", "Gasifying agent", "Reactor type", "Bed material", "Catalyst", "System scale"]
 }
 
 model = {
@@ -62,6 +62,7 @@ categorical_inputs = {
     "Feedstock type": st.selectbox(
         "Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"),
         index=None, placeholder="Select"),
+    "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous")),
     "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
     "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
     "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
@@ -69,5 +70,15 @@ categorical_inputs = {
     "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
-if categorical_inputs['Feedstock type'] != None:
-    st.text(encode_categorical_value(categorical_inputs['Feedstock type'], categorical_vars['Feedstock type'], 'Feedstock type'))
+if any(value is not None for value in categorical_inputs.values()):
+    encoded_categorical_vars = pd.DataFrame()
+    for category in categorical_vars.keys():
+        encoded_categorical_input = encode_categorical_value(
+            value=categorical_inputs[category],
+            category=categorical_vars[category],
+            prefix=category
+        )
+
+        encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
+    
+    st.dataframe(encoded_categorical_vars)
