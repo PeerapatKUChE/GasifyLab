@@ -13,7 +13,7 @@ temperature = st.text_input('Temperature (°C)')
 steam_biomass = st.text_input('Steam/biomass ratio (wt/wt)')
 equivalence_ratio = st.text_input('Equivalence ratio of non-steam agent')
 
-feedstock = st.selectbox('Feedstock', ('Herbaceous biomass', 'Municipal solid waste', 'Sewage sludge', 'Woody biomass', 'Other'), placeholder='Select)
+feedstock = st.selectbox('Feedstock', ('Herbaceous biomass', 'Municipal solid waste', 'Sewage sludge', 'Woody biomass', 'Other'), placeholder="Select")
 agent = st.selectbox('Gasifying agent', ('Air', 'Steam', 'Air/steam', 'Oxygen'))
 reactor = st.selectbox('Reactor', ('Fixed-bed', 'Fluidised-bed', 'Other'))
 bed_material = st.selectbox('Bed material', ('Alumina', 'Olivine', 'Silica'))
