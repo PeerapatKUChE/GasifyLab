@@ -69,5 +69,5 @@ categorical_inputs = {
     "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
-if categorical_inputs['Feedstock type'] != "":
+if categorical_inputs['Feedstock type'] != None:
     st.text(encode_categorical_value(categorical_inputs['Feedstock type'], categorical_vars['Feedstock type'], 'Feedstock type'))
