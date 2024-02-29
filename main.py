@@ -44,6 +44,9 @@ model = {
     "CO2": load(f"{path}/models/model-CO2.joblib")
 }
 
+st.title("Predict H₂ and CO₂ from Biomass Gasification")
+st.text("* Required")
+
 continuous_inputs = {
     "Particle size": st.text_input("Particle size (mm) *"),
     "C": st.text_input("Carbon (%daf)"),
