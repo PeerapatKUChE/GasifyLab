@@ -19,3 +19,5 @@ reactor = st.selectbox('Reactor', ('Fixed-bed', 'Fluidised-bed', 'Other'))
 bed_material = st.selectbox('Bed material', ('Alumina', 'Olivine', 'Silica'))
 catalyst = st.selectbox('Catalyst presence', ('Absent', 'Present'))
 scale = st.selectbox('System scale', ('Laboratory', 'Pilot'))
+
+st.text(carbon+hydrogen)
