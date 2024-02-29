@@ -5,7 +5,7 @@ from joblib import load
 
 import os
 #os.chdir("..")
-directory = os.path.abspath(os.curdir)
+directory = os.path.abspath()
 
 st.text(directory)
 st.text(f"{directory}data/preprocessed/Data-Gasification-Completed.xlsx")
