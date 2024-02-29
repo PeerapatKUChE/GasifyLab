@@ -1,7 +1,11 @@
+import os
 import streamlit as st
 import numpy as np
 import pandas as pd
 from joblib import load
+
+path = os.path.dirname(__file__)
+st.text(path)
 
 data = pd.read_excel("data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
 
