@@ -67,7 +67,7 @@ categorical_inputs = {
     "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
     "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
     "Catalyst": st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select"),
-    "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+    "System scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
 if not any(value is None for value in categorical_inputs.values()):
