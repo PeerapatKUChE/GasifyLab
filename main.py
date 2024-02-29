@@ -1,29 +1,31 @@
 import streamlit as st
+import numpy as np
+import pandas as pd
+from joblib import load
 
-st.title("Predict H₂ & CO₂ from Biomass Gasification")
-st.text("Description")
+data = pd.read_excel("data/preprocessed/Data-Gasification-Completed", sheet_name="Preprocessed Data")
 
-particle_size = st.text_input("Particle size (mm) *")
-carbon = st.text_input("Carbon (%daf)")
-hydrogen = st.text_input("Hydrogen (%daf)")
-ash = st.text_input("Ash (%db)")
-moisture = st.text_input("Moisture (%wb) *")
+model = {
+    "H2": load("models/model-H2.joblib"),
+    "CO2": load("models/model-CO2.joblib")
+}
 
-temperature = st.text_input("Temperature (°C) *")
-steam_biomass = st.text_input("Steam/biomass ratio (wt/wt)")
-equivalence_ratio = st.text_input("Equivalence ratio of non-steam agent")
+continuous_inputs = {
+    "Particle size": st.text_input("Particle size (mm) *"),
+    "C": st.text_input("Carbon (%daf)"),
+    "H": st.text_input("Hydrogen (%daf)"),
+    "Ash": st.text_input("Ash (%db)"),
+    "Moisture": st.text_input("Moisture (%wb) *"),
+    "Temperature": st.text_input("Temperature (°C) *"),
+    "Steam/biomass ratio": st.text_input("Steam/biomass ratio (wt/wt)"),
+    "ER": st.text_input("Equivalence ratio of non-stream agent"),
+}
 
-feedstock = st.selectbox("Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"), index=None, placeholder="Select")
-agent = st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select")
-reactor = st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select")
-bed_material = st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select")
-catalyst = st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select")
-scale = st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
-
-if particle_size == "":
-    st.error("Missing particle size")
-
-if (carbon == "" and hydrogen == "") or feedstock == "":
-    st.error("Missing carbon")
-else:
-    st.text(float(carbon)+float(hydrogen))
+categorical_inputs = {
+    "Feedstock type": st.selectbox("Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"), index=None, placeholder="Select"),
+    "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
+    "Reactor type": st.selectbox("Reactor *", ("Fixed-bed", "Fluidised-bed", "Other"), index=None, placeholder="Select"),
+    "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
+    "Catalyst": st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select"),
+    "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+}
