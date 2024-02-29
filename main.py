@@ -4,16 +4,44 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
+def normalize(x, x_original):
+    xmin = pd.DataFrame.min(x_original)
+    xmax = pd.DataFrame.max(x_original)
+    x_norm = (x - xmin) / (xmax - xmin)
+
+    return x_norm.reindex(columns=x_original.columns)
+
+def denormalize(x_norm, x_original):
+    xmax = max(x_original)
+    xmin = min(x_original)
+    x_denorm = x_norm * (xmax - xmin) + xmin
+    
+    return x_denorm
+
+def encode_categorical_inputs(value, category, prefix):
+    value_with_prefix = np.array([f"{prefix} " + value.lower()])
+    encoded_values = pd.DataFrame(
+        {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
+    )
+    return encoded_values
+
 path = os.path.dirname(__file__)
-st.text(path)
 
-data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Preprocessed Data")
+data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Normalised Data")
 
-st.dataframe(data)
+continuous_vars = {
+    var: data[var]
+    for var in ["Particle size", "C", "H", "Ash", "Moisture", "Temperature", "Steam/biomass ratio", "ER"]
+}
+
+categorical_vars = {
+    category: [f"{category} {variable}" for variable in data[category].unique()]
+    for category in ["Feedstock type", "Gasifying agent", "Operation mode", "Reactor type", "Bed material", "Catalyst", "System scale"]
+}
 
 model = {
-    "H2": load("models/model-H2.joblib"),
-    "CO2": load("models/model-CO2.joblib")
+    "H2": load(f"{path}/models/model-H2.joblib"),
+    "CO2": load(f"{path}/models/model-CO2.joblib")
 }
 
 continuous_inputs = {
@@ -35,3 +63,5 @@ categorical_inputs = {
     "Catalyst": st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select"),
     "Scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
+
+st.text(continuous_inputs["Particle size"])
