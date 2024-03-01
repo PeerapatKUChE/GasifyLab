@@ -114,7 +114,7 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         st.text(y)
         st.text(y-y0)
         res1, res2, res3, reset = st.columns(4)
-        res1.metric("H₂ (vol.% db)", f"{H2:.2f}")
+        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
         res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
         reset.text("")
         reset.button("Reset")
