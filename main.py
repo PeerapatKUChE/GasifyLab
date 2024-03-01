@@ -4,6 +4,12 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
+@st.cache
+def get_y0():
+    return np.array([0, 0])
+
+y0 = get_y0()
+
 def normalize(x, x_original):
     xmin = pd.DataFrame.min(x_original)
     xmax = pd.DataFrame.max(x_original)
@@ -47,8 +53,6 @@ models = {
     "H2": load(f"{path}/models/model-H2.joblib"),
     "CO2": load(f"{path}/models/model-CO2.joblib")
 }
-
-y0 = np.array([0, 0])
 
 st.title("Biomass Gasification Product Prediction Tool")
 st.text("All fields are required unless specied optional.")
@@ -113,7 +117,7 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         y = np.array([H2.item(), CO2.item()])
         diff_H2, diff_CO2 = y - y0
 
-        res1, res2, res3, reset = st.columns(4)
+        res1, res2, _, reset = st.columns(4)
         res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", diff_H2)
         res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", diff_CO2)
         reset.text("")
