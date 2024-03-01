@@ -52,14 +52,14 @@ st.title("Predict H₂ and CO₂ from Biomass Gasification")
 st.text("* Required")
 
 continuous_inputs = {
-    "Particle size": st.text_input("Particle size (mm) *"),
-    "C": st.text_input("Carbon (%daf)"),
-    "H": st.text_input("Hydrogen (%daf)"),
-    "Ash": st.text_input("Ash (%db)"),
-    "Moisture": st.text_input("Moisture (%wb) *"),
-    "Temperature": st.text_input("Temperature (°C) *"),
-    "Steam/biomass ratio": st.text_input("Steam/biomass ratio (wt/wt)"),
-    "ER": st.text_input("Equivalence ratio of non-stream agent"),
+    "Particle size": st.number_input("Particle size (mm) *", value=None),
+    "C": st.number_input("Carbon (%daf)", value=None),
+    "H": st.number_input("Hydrogen (%daf)", value=None),
+    "Ash": st.number_input("Ash (%db)", value=None),
+    "Moisture": st.number_input("Moisture (%wb) *", value=None),
+    "Temperature": st.number_input("Temperature (°C) *", value=None),
+    "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None),
+    "ER": st.number_input("Equivalence ratio of non-stream agent", value=None),
 }
 
 categorical_inputs = {
@@ -86,9 +86,9 @@ if not any(value is None for value in categorical_inputs.values()):
 
             encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
-if not any(value == "" for value in continuous_inputs.values()):
-    for (variable, value) in continuous_inputs.items():
-        continuous_inputs[variable] = float(value)
+if not any(value is None for value in continuous_inputs.values()):
+    #for (variable, value) in continuous_inputs.items():
+        #continuous_inputs[variable] = float(value)
 
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
@@ -106,6 +106,6 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
     H2 = denormalize(models["H2"].predict(X), target_data["H2"])
     CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-    col1, col2 = st.columns(2)
-    col1.metric("H₂ (vol.% db)", np.round(H2, 2))
-    col2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+    H2_disp, CO2_disp = st.columns(2)
+    H2_disp.metric("H₂ (vol.% db)", np.round(H2, 2))
+    CO2_disp.metric("CO₂ (vol.% db)", np.round(CO2, 2))
