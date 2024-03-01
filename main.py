@@ -31,6 +31,7 @@ path = os.path.dirname(__file__)
 
 continuous_data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Encoded Data")
 categorical_data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Normalised Data")
+target_data = continuous_data[['H2', 'CO2']]
 
 continuous_vars = {
     var: continuous_data[var]
@@ -42,7 +43,7 @@ categorical_vars = {
     for category in ["Feedstock type", "Operation mode", "Gasifying agent", "Reactor type", "Bed material", "Catalyst", "System scale"]
 }
 
-model = {
+models = {
     "H2": load(f"{path}/models/model-H2.joblib"),
     "CO2": load(f"{path}/models/model-CO2.joblib")
 }
@@ -93,6 +94,6 @@ if not any(value == "" for value in continuous_inputs.values()):
 
 if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
     X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1)
-
-    st.dataframe(X)
-    st.text(f"{X.shape}")
+    H2 = denormalize(models['H2'].predict(X), target_data['H2'])
+    CO2 = denormalize(models['CO2'].predict(X), target_data['CO2'])
+    st.text(f"{H2, CO2}")
