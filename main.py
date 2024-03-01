@@ -91,4 +91,7 @@ if not any(value == "" for value in continuous_inputs.values()):
 
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
-    st.dataframe(normalized_continuous_vars)
+if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
+    X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1)
+
+    st.dataframe(X)
