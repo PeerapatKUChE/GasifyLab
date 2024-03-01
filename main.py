@@ -7,6 +7,8 @@ from joblib import load
 def normalize(x, x_original):
     xmin = pd.DataFrame.min(x_original)
     xmax = pd.DataFrame.max(x_original)
+    st.dataframe(xmin)
+    st.dataframe(xmax)
     x_norm = (x - xmin) / (xmax - xmin)
 
     return x_norm.reindex(columns=x_original.columns)
@@ -87,7 +89,7 @@ if not any(value is None for value in categorical_inputs.values()):
 if not any(value == "" for value in continuous_inputs.values()):
     for (variable, value) in continuous_inputs.items():
         continuous_inputs[variable] = float(value)
-    st.text(continuous_inputs)
+
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
     st.dataframe(normalized_continuous_vars)
