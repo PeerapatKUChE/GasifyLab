@@ -66,20 +66,20 @@ with st.container(border=True):
         "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00, key="Moisture"),
         "Temperature": temperature,
         "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00, key="Steam/biomass ratio"),
-        "ER": equivalence_ratio.number_input("Equivalence ratio of non-steam agent", value=None, min_value=0.00),
+        "ER": equivalence_ratio.number_input("Equivalence ratio of non-steam agent", value=None, min_value=0.00, key="ER"),
     }
     st.write(st.session_state[continuous_inputs["ER"]])
 
     categorical_col1, categorical_col2 = st.columns(2)
     categorical_inputs = {
-        "Operation mode": categorical_col1.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
-        "Gasifying agent": categorical_col2.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
-        "Reactor type": categorical_col1.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
-        "Bed material": categorical_col2.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
-        "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
-        "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+        "Operation mode": categorical_col1.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select", key="Operation mode"),
+        "Gasifying agent": categorical_col2.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select", key="Gasifying agent"),
+        "Reactor type": categorical_col1.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select", key="Reactor type"),
+        "Bed material": categorical_col2.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select", key="Bed material"),
+        "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select", key="Catalyst"),
+        "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
     }
-
+    st.write(continuous_inputs,  categorical_inputs)
     H2, CO2 = np.array([0, 0])
 
     if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
@@ -125,4 +125,6 @@ with st.container(border=True):
 
     reset.text("")
     reset.text("")
-    reset.button("Submit")
+    if reset.button("Submit"):
+        for key in continuous_inputs.keys() + categorical_inputs.keys():
+            st.session_state[key] = ""
