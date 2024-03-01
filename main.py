@@ -14,7 +14,7 @@ def normalize(x, x_original):
 def denormalize(x_norm, x_original):
     xmax = max(x_original)
     xmin = min(x_original)
-    x_denorm = x_norm (xmax - xmin) + xmin
+    x_denorm = x_norm * (xmax - xmin) + xmin
     
     return x_denorm
 
@@ -83,9 +83,6 @@ if not any(value is None for value in categorical_inputs.values()):
         encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
 if not any(value is None for value in continuous_inputs.values()):
-    #for (variable, value) in continuous_inputs.items():
-        #continuous_inputs[variable] = float(value)
-
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
 if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
@@ -98,7 +95,7 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
         'Bed material alumina', 'Bed material olivine', 'Bed material silica',
         'Catalyst absent', 'Catalyst present',
         'System scale lab', 'System scale pilot'])
-    st.dataframe(X)
+
     H2 = denormalize(models["H2"].predict(X), target_data["H2"])
     CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
