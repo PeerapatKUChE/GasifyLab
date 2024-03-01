@@ -95,3 +95,4 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
     X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1)
 
     st.dataframe(X)
+    st.text(f"{X.shape}")
