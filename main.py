@@ -86,7 +86,7 @@ if not any(value is None for value in categorical_inputs.values()):
 print(continuous_inputs.items())
 if not any(value == "" for value in continuous_inputs.values()):
     for (variable, value) in continuous_inputs.items():
-        st.text(variable, value)
+        st.text(f"{variable, value}")
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
     st.dataframe(normalized_continuous_vars)
