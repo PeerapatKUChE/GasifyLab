@@ -116,11 +116,11 @@ with st.form("myform", clear_on_submit=True):
     y = np.array([H2.item(), CO2.item()])
     diff_H2, diff_CO2 = y - y0
 
-    res1, res2, _, reset = st.columns(4)
-    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
-
+    res1, res2, submit, reset = st.columns(4)
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
-    reset.text("")
+    if submit.button("Submit"):
+        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+
     reset.form_submit_button("Reset")
