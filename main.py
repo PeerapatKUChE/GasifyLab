@@ -77,6 +77,9 @@ categorical_inputs = {
     "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
     "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
+
+H2, CO2 = np.array([0, 0])
+
 if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
     if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
         st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
@@ -108,15 +111,15 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-        y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
-        y = np.array([H2.item(), CO2.item()])
-        diff_H2, diff_CO2 = y - y0
+y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
+y = np.array([H2.item(), CO2.item()])
+diff_H2, diff_CO2 = y - y0
 
-        res1, res2, _, reset = st.columns(4)
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+res1, res2, _, reset = st.columns(4)
+res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
-        np.savetxt(f"{path}/data/raw/y0.txt", y)
+np.savetxt(f"{path}/data/raw/y0.txt", y)
 
-        reset.text("")
-        reset.button("Reset")
+reset.text("")
+reset.button("Reset")
