@@ -83,10 +83,11 @@ if not any(value is None for value in categorical_inputs.values()):
             )
 
         encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
-print(continuous_inputs.items())
+
 if not any(value == "" for value in continuous_inputs.values()):
     for (variable, value) in continuous_inputs.items():
-        st.text(f"{variable, float(value)}")
+        continuous_inputs[variable] = float(value)
+    st.text(continuous_inputs)
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
     st.dataframe(normalized_continuous_vars)
