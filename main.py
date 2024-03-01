@@ -7,8 +7,6 @@ from joblib import load
 def normalize(x, x_original):
     xmin = pd.DataFrame.min(x_original)
     xmax = pd.DataFrame.max(x_original)
-    st.dataframe(xmin)
-    st.dataframe(xmax)
     x_norm = (x - xmin) / (xmax - xmin)
 
     return x_norm.reindex(columns=x_original.columns)
@@ -31,15 +29,16 @@ def encode_categorical_value(value, category, prefix):
 
 path = os.path.dirname(__file__)
 
-data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Normalised Data")
+continuous_data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Encoded Data")
+categorical_data = pd.read_excel(f"{path}/data/preprocessed/Data-Gasification-Completed.xlsx", sheet_name="Normalised Data")
 
 continuous_vars = {
-    var: data[var]
+    var: continuous_data[var]
     for var in ["Particle size", "C", "H", "Ash", "Moisture", "Temperature", "Steam/biomass ratio", "ER"]
 }
 
 categorical_vars = {
-    category: [f"{category} {variable}" for variable in data[category].unique()]
+    category: [f"{category} {variable}" for variable in categorical_data[category].unique()]
     for category in ["Feedstock type", "Operation mode", "Gasifying agent", "Reactor type", "Bed material", "Catalyst", "System scale"]
 }
 
