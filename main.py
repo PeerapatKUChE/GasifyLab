@@ -48,7 +48,9 @@ models = {
     "CO2": load(f"{path}/models/model-CO2.joblib")
 }
 
-st.title("Predict H₂ and CO₂ from Biomass Gasification")
+y0 = np.array([0, 0])
+
+st.title("Biomass Gasification Product Prediction Tool")
 st.text("All fields are required unless specied optional.")
 
 particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
@@ -108,6 +110,8 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
+        y = np.array([H2, CO2])
+        st.text(y-y0)
         res1, res2, res3, reset = st.columns(4)
         res1.metric("H₂ (vol.% db)", np.round(H2, 2))
         res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
