@@ -52,14 +52,14 @@ st.title("Predict H₂ and CO₂ from Biomass Gasification")
 st.text("All fields are required unless specied optional")
 
 continuous_inputs = {
-    "Particle size": st.number_input("Particle size (mm)", value=None, min_value=0, value=float),
-    "C": st.number_input("Carbon (%daf)", value=None, min_value=0, max_value=100, value=float),
-    "H": st.number_input("Hydrogen (%daf)", value=None, min_value=0, max_value=100, value=float),
-    "Ash": st.number_input("Ash (%db)", value=None, min_value=0, max_value=100, value=float),
-    "Moisture": st.number_input("Moisture (%wb)", value=None, min_value=0, max_value=100, value=float),
-    "Temperature": st.number_input("Temperature (°C)", value=None, min_value=0, value=float),
-    "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0, value=float),
-    "ER": st.number_input("Equivalence ratio of non-stream agent", value=None, min_value=0, value=float),
+    "Particle size": st.number_input("Particle size (mm)", value=None, min_value=0.00),
+    "C": st.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00),
+    "H": st.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0),
+    "Ash": st.number_input("Ash (%db)", value=None, min_value=0.00, max_value=100.00),
+    "Moisture": st.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00),
+    "Temperature": st.number_input("Temperature (°C)", value=None, min_value=0.00),
+    "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00),
+    "ER": st.number_input("Equivalence ratio of non-stream agent", value=None, min_value=0.00),
 }
 
 categorical_inputs = {
