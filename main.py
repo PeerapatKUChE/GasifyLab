@@ -102,7 +102,8 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
         'Bed material alumina', 'Bed material olivine', 'Bed material silica',
         'Catalyst absent', 'Catalyst present',
         'System scale lab', 'System scale pilot'])
-    st.text(f"{models['H2'].predict(X)}")
+
     H2 = denormalize(models["H2"].predict(X), target_data["H2"])
     CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
     st.text(f"{H2, CO2}")
+    st.metric("Metric", 42, 2)
