@@ -93,9 +93,16 @@ if not any(value == "" for value in continuous_inputs.values()):
     normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
 if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
-    X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1)
-    st.dataframe(X)
-    #st.text(f"{models['H2'].predict(X)}")
-    #H2 = denormalize(models["H2"].predict(X), target_data["H2"])
-    #CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
-    #st.text(f"{H2, CO2}")
+    X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
+        'Particle size', 'C', 'H', 'Ash', 'Moisture',
+        'Temperature', 'Steam/biomass ratio', 'ER',
+        'Operation mode batch', 'Operation mode continuous',
+        'Gasifying agent air', 'Gasifying agent air/steam', 'Gasifying agent oxygen', 'Gasifying agent steam',
+        'Reactor type fixed bed', 'Reactor type fluidised bed', 'Reactor type other',
+        'Bed material alumina', 'Bed material olivine', 'Bed material silica',
+        'Catalyst absent', 'Catalyst present',
+        'System scale lab', 'System scale pilot'])
+    st.text(f"{models['H2'].predict(X)}")
+    H2 = denormalize(models["H2"].predict(X), target_data["H2"])
+    CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
+    st.text(f"{H2, CO2}")
