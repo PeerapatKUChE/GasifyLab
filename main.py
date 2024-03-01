@@ -111,7 +111,8 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
         y = np.array([H2, CO2])
-        st.text(y, y-y0)
+        st.text(y)
+        st.text(y-y0)
         res1, res2, res3, reset = st.columns(4)
         res1.metric("H₂ (vol.% db)", np.round(H2, 2))
         res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
