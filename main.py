@@ -122,4 +122,5 @@ res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 np.savetxt(f"{path}/data/raw/y0.txt", y)
 
 reset.text("")
-reset.button("Reset")
+if reset.button("Reset"):
+    st.write('Hello, *World!* :sunglasses:')
