@@ -114,4 +114,5 @@ else:
         res1, res2, res3, reset = st.columns(4)
         res1.metric("H₂ (vol.% db)", np.round(H2, 2))
         res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+        reset.text("")
         reset.button("Reset")
