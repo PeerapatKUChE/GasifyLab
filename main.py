@@ -77,13 +77,12 @@ categorical_inputs = {
     "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
     "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
-
-if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
-    st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
-elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
-    st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
-else:
-    if not any(value is None for value in categorical_inputs.values()):
+if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
+    if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
+        st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
+    elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
+        st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
+    else:
         encoded_categorical_vars = pd.DataFrame()
         for category in categorical_vars.keys():
             encoded_categorical_input = encode_categorical_value(
@@ -94,10 +93,8 @@ else:
 
             encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
-    if not any(value is None for value in continuous_inputs.values()):
         normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
-    if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
         X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
             "Particle size", "C", "H", "Ash", "Moisture",
             "Temperature", "Steam/biomass ratio", "ER",
