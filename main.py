@@ -75,35 +75,35 @@ if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Stea
     st.error("Error 1")
 elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
     st.error("Error 2")
+else:
+    if not any(value is None for value in categorical_inputs.values()):
+        encoded_categorical_vars = pd.DataFrame()
+        for category in categorical_vars.keys():
+            encoded_categorical_input = encode_categorical_value(
+                value=categorical_inputs[category],
+                category=categorical_vars[category],
+                prefix=category
+            )
 
-if not any(value is None for value in categorical_inputs.values()):
-    encoded_categorical_vars = pd.DataFrame()
-    for category in categorical_vars.keys():
-        encoded_categorical_input = encode_categorical_value(
-            value=categorical_inputs[category],
-            category=categorical_vars[category],
-            prefix=category
-        )
+            encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
-        encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
+    if not any(value is None for value in continuous_inputs.values()):
+        normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
-if not any(value is None for value in continuous_inputs.values()):
-    normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
+    if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
+        X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
+            'Particle size', 'C', 'H', 'Ash', 'Moisture',
+            'Temperature', 'Steam/biomass ratio', 'ER',
+            'Operation mode batch', 'Operation mode continuous',
+            'Gasifying agent air', 'Gasifying agent air/steam', 'Gasifying agent oxygen', 'Gasifying agent steam',
+            'Reactor type fixed bed', 'Reactor type fluidised bed', 'Reactor type other',
+            'Bed material alumina', 'Bed material olivine', 'Bed material silica',
+            'Catalyst absent', 'Catalyst present',
+            'System scale lab', 'System scale pilot'])
 
-if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in locals():
-    X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
-        'Particle size', 'C', 'H', 'Ash', 'Moisture',
-        'Temperature', 'Steam/biomass ratio', 'ER',
-        'Operation mode batch', 'Operation mode continuous',
-        'Gasifying agent air', 'Gasifying agent air/steam', 'Gasifying agent oxygen', 'Gasifying agent steam',
-        'Reactor type fixed bed', 'Reactor type fluidised bed', 'Reactor type other',
-        'Bed material alumina', 'Bed material olivine', 'Bed material silica',
-        'Catalyst absent', 'Catalyst present',
-        'System scale lab', 'System scale pilot'])
+        H2 = denormalize(models["H2"].predict(X), target_data["H2"])
+        CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-    H2 = denormalize(models["H2"].predict(X), target_data["H2"])
-    CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
-
-    H2_disp, CO2_disp = st.columns(2)
-    H2_disp.metric("H₂ (vol.% db)", np.round(H2, 2))
-    CO2_disp.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+        H2_disp, CO2_disp = st.columns(2)
+        H2_disp.metric("H₂ (vol.% db)", np.round(H2, 2))
+        CO2_disp.metric("CO₂ (vol.% db)", np.round(CO2, 2))
