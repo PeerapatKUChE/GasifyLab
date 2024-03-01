@@ -14,7 +14,7 @@ def normalize(x, x_original):
 def denormalize(x_norm, x_original):
     xmax = max(x_original)
     xmin = min(x_original)
-    x_denorm = x_norm * (xmax - xmin) + xmin
+    x_denorm = x_norm (xmax - xmin) + xmin
     
     return x_denorm
 
@@ -49,42 +49,38 @@ models = {
 }
 
 st.title("Predict H₂ and CO₂ from Biomass Gasification")
-st.text("* Required")
+st.text("All fields are required unless specied optional")
 
 continuous_inputs = {
-    "Particle size": st.number_input("Particle size (mm) *", value=None),
+    "Particle size": st.number_input("Particle size (mm)", value=None),
     "C": st.number_input("Carbon (%daf)", value=None),
     "H": st.number_input("Hydrogen (%daf)", value=None),
     "Ash": st.number_input("Ash (%db)", value=None),
-    "Moisture": st.number_input("Moisture (%wb) *", value=None),
-    "Temperature": st.number_input("Temperature (°C) *", value=None),
+    "Moisture": st.number_input("Moisture (%wb)", value=None),
+    "Temperature": st.number_input("Temperature (°C)", value=None),
     "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None),
     "ER": st.number_input("Equivalence ratio of non-stream agent", value=None),
 }
 
 categorical_inputs = {
-    "Feedstock type": st.selectbox(
-        "Feedstock", ("Herbaceous biomass", "Municipal solid waste", "Sewage sludge", "Woody biomass", "Other"),
-        index=None, placeholder="Select"),
     "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
     "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
-    "Reactor type": st.selectbox("Reactor *", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
-    "Bed material": st.selectbox("Bed material *", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
-    "Catalyst": st.selectbox("Catalyst presence *", ("Absent", "Present"), index=None, placeholder="Select"),
-    "System scale": st.selectbox("System scale *", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+    "Reactor type": st.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
+    "Bed material": st.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
+    "Catalyst": st.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
+    "System scale": st.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
 if not any(value is None for value in categorical_inputs.values()):
     encoded_categorical_vars = pd.DataFrame()
     for category in categorical_vars.keys():
-        if category != "Feedstock type":
-            encoded_categorical_input = encode_categorical_value(
-                value=categorical_inputs[category],
-                category=categorical_vars[category],
-                prefix=category
-            )
+        encoded_categorical_input = encode_categorical_value(
+            value=categorical_inputs[category],
+            category=categorical_vars[category],
+            prefix=category
+        )
 
-            encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
+        encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
 if not any(value is None for value in continuous_inputs.values()):
     #for (variable, value) in continuous_inputs.items():
