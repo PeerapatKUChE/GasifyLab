@@ -78,7 +78,7 @@ with st.container(border=True):
         "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select", key="Catalyst"),
         "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
     }
-    st.write(continuous_inputs,  categorical_inputs)
+
     H2, CO2 = np.array([0, 0])
 
     if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
@@ -125,5 +125,5 @@ with st.container(border=True):
     reset.text("")
     reset.text("")
     if reset.button("Submit"):
-        for key in continuous_inputs.keys() + categorical_inputs.keys():
+        for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
             st.session_state[key] = ""
