@@ -51,10 +51,12 @@ models = {
 st.title("Predict H₂ and CO₂ from Biomass Gasification")
 st.text("All fields are required unless specied optional")
 
+carbon, hydrogen = st.columns(2)
+
 continuous_inputs = {
     "Particle size": st.number_input("Particle size (mm)", value=None, min_value=0.00),
-    "C": st.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00),
-    "H": st.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0),
+    "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00),
+    "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0),
     "Ash": st.number_input("Ash (%db)", value=None, min_value=0.00, max_value=100.00),
     "Moisture": st.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00),
     "Temperature": st.number_input("Temperature (°C)", value=None, min_value=0.00),
@@ -72,9 +74,9 @@ categorical_inputs = {
 }
 
 if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
-    st.error("Error: Steam/biomass ratio cannot be 0 and equivalence ratio of non-steam agent must be 0 for steam gasification.")
+    st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
 elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
-    st.error("Error: Equivalence ratio of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
+    st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
 else:
     if not any(value is None for value in categorical_inputs.values()):
         encoded_categorical_vars = pd.DataFrame()
