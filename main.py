@@ -68,13 +68,14 @@ continuous_inputs = {
     "ER": equivalence_ratio.number_input("Equivalence ratio of non-stream agent", value=None, min_value=0.00),
 }
 
+categorical_col1, categorical_col2 = st.columns(2)
 categorical_inputs = {
-    "Operation mode": st.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
-    "Gasifying agent": st.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
-    "Reactor type": st.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
-    "Bed material": st.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
-    "Catalyst": st.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
-    "System scale": st.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+    "Operation mode": categorical_col1.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
+    "Gasifying agent": categorical_col2.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
+    "Reactor type": categorical_col1.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
+    "Bed material": categorical_col2.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
+    "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
+    "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
 if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
@@ -110,6 +111,6 @@ else:
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-        H2_disp, CO2_disp = st.columns(2)
-        H2_disp.metric("H₂ (vol.% db)", np.round(H2, 2))
-        CO2_disp.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+        res1, res2, res3, res4 = st.columns(4)
+        res1.metric("H₂ (vol.% db)", np.round(H2, 2))
+        res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
