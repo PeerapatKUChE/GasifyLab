@@ -110,7 +110,7 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-        y = np.array([H2, CO2])
+        y = np.array([H2.values(), CO2.values()])
         st.text(y)
         st.text(y-y0)
         res1, res2, res3, reset = st.columns(4)
