@@ -75,11 +75,16 @@ categorical_inputs = {
 if not any(value is None for value in categorical_inputs.values()):
     encoded_categorical_vars = pd.DataFrame()
     for category in categorical_vars.keys():
-        encoded_categorical_input = encode_categorical_value(
-            value=categorical_inputs[category],
-            category=categorical_vars[category],
-            prefix=category
-        )
+        if category != 'Feedstock type':
+            encoded_categorical_input = encode_categorical_value(
+                value=categorical_inputs[category],
+                category=categorical_vars[category],
+                prefix=category
+            )
 
         encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
-    st.dataframe(encoded_categorical_vars)
+
+if not any(value is None for value in continuous_inputs.values()):
+    normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=continuous_vars)
+
+    st.dataframe(normalized_continuous_vars)
