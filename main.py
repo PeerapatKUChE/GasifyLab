@@ -51,76 +51,76 @@ models = {
 st.title("Biomass Gasification Product Prediction Tool")
 st.text("All fields are required.")
 
-particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
-carbon, hydrogen = st.columns(2)
-ash, moisture = st.columns(2)
-temperature = st.number_input("Temperature (°C)", value=None, min_value=0.00)
-steam_biomass, equivalence_ratio = st.columns(2)
+with st.form("myform", clear_on_submit=True):
+    particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
+    carbon, hydrogen = st.columns(2)
+    ash, moisture = st.columns(2)
+    temperature = st.number_input("Temperature (°C)", value=None, min_value=0.00)
+    steam_biomass, equivalence_ratio = st.columns(2)
 
-continuous_inputs = {
-    "Particle size": particle_size,
-    "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00),
-    "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0),
-    "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.00, max_value=100.00),
-    "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00),
-    "Temperature": temperature,
-    "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00),
-    "ER": equivalence_ratio.number_input("Equivalence ratio of non-steam agent", value=None, min_value=0.00),
-}
+    continuous_inputs = {
+        "Particle size": particle_size,
+        "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00),
+        "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0),
+        "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.00, max_value=100.00),
+        "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00),
+        "Temperature": temperature,
+        "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00),
+        "ER": equivalence_ratio.number_input("Equivalence ratio of non-steam agent", value=None, min_value=0.00),
+    }
 
-categorical_col1, categorical_col2 = st.columns(2)
-categorical_inputs = {
-    "Operation mode": categorical_col1.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
-    "Gasifying agent": categorical_col2.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
-    "Reactor type": categorical_col1.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
-    "Bed material": categorical_col2.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
-    "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
-    "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
-}
+    categorical_col1, categorical_col2 = st.columns(2)
+    categorical_inputs = {
+        "Operation mode": categorical_col1.selectbox("Operation mode", ("Batch", "Continuous"), index=None, placeholder="Select"),
+        "Gasifying agent": categorical_col2.selectbox("Gasifying agent", ("Air", "Steam", "Air/steam", "Oxygen"), index=None, placeholder="Select"),
+        "Reactor type": categorical_col1.selectbox("Reactor", ("Fixed bed", "Fluidised bed", "Other"), index=None, placeholder="Select"),
+        "Bed material": categorical_col2.selectbox("Bed material", ("Alumina", "Olivine", "Silica"), index=None, placeholder="Select"),
+        "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
+        "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
+    }
 
-H2, CO2 = np.array([0, 0])
+    H2, CO2 = np.array([0, 0])
 
-if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
-    if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
-        st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
-    elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
-        st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
-    else:
-        encoded_categorical_vars = pd.DataFrame()
-        for category in categorical_vars.keys():
-            encoded_categorical_input = encode_categorical_value(
-                value=categorical_inputs[category],
-                category=categorical_vars[category],
-                prefix=category
-            )
+    if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
+        if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
+            st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
+        elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
+            st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
+        else:
+            encoded_categorical_vars = pd.DataFrame()
+            for category in categorical_vars.keys():
+                encoded_categorical_input = encode_categorical_value(
+                    value=categorical_inputs[category],
+                    category=categorical_vars[category],
+                    prefix=category
+                )
 
-            encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
+                encoded_categorical_vars = pd.concat([encoded_categorical_vars, encoded_categorical_input], axis=1)
 
-        normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
+            normalized_continuous_vars = normalize(x=pd.DataFrame(continuous_inputs, index=[0]), x_original=pd.DataFrame(continuous_vars))
 
-        X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
-            "Particle size", "C", "H", "Ash", "Moisture",
-            "Temperature", "Steam/biomass ratio", "ER",
-            "Operation mode batch", "Operation mode continuous",
-            "Gasifying agent air", "Gasifying agent air/steam", "Gasifying agent oxygen", "Gasifying agent steam",
-            "Reactor type fixed bed", "Reactor type fluidised bed", "Reactor type other",
-            "Bed material alumina", "Bed material olivine", "Bed material silica",
-            "Catalyst absent", "Catalyst present",
-            "System scale lab", "System scale pilot"])
+            X = pd.concat([normalized_continuous_vars, encoded_categorical_vars], axis=1).reindex(columns=[
+                "Particle size", "C", "H", "Ash", "Moisture",
+                "Temperature", "Steam/biomass ratio", "ER",
+                "Operation mode batch", "Operation mode continuous",
+                "Gasifying agent air", "Gasifying agent air/steam", "Gasifying agent oxygen", "Gasifying agent steam",
+                "Reactor type fixed bed", "Reactor type fluidised bed", "Reactor type other",
+                "Bed material alumina", "Bed material olivine", "Bed material silica",
+                "Catalyst absent", "Catalyst present",
+                "System scale lab", "System scale pilot"])
 
-        H2 = denormalize(models["H2"].predict(X), target_data["H2"])
-        CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
+            H2 = denormalize(models["H2"].predict(X), target_data["H2"])
+            CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
-y = np.array([H2.item(), CO2.item()])
-diff_H2, diff_CO2 = y - y0
+    y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
+    y = np.array([H2.item(), CO2.item()])
+    diff_H2, diff_CO2 = y - y0
 
-res1, res2, _, reset = st.columns(4)
-res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+    res1, res2, _, reset = st.columns(4)
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
-np.savetxt(f"{path}/data/raw/y0.txt", y)
+    np.savetxt(f"{path}/data/raw/y0.txt", y)
 
-reset.text("")
-if reset.button("Reset"):
-    st.write('Hello, *World!* :sunglasses:')
+    reset.text("")
+    reset.form_submit_button("Reset")
