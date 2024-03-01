@@ -51,7 +51,7 @@ models = {
 st.title("Biomass Gasification Product Prediction Tool")
 st.text("All fields are required.")
 
-with st.container():
+with st.container(border=True):
     particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
     carbon, hydrogen = st.columns(2)
     ash, moisture = st.columns(2)
