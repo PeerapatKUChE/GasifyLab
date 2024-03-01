@@ -119,8 +119,8 @@ with st.form("myform", clear_on_submit=True):
     res1, res2, submit, reset = st.columns(4)
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
-    if submit.button("Submit"):
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+    #if submit.button("Submit"):
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
     reset.form_submit_button("Reset")
