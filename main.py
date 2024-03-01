@@ -72,9 +72,9 @@ categorical_inputs = {
 }
 
 if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
-    st.error("Error 1")
+    st.error("Error: Steam/biomass ratio cannot be 0 and equivalence ratio of non-steam agent must be 0 for steam gasification.")
 elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
-    st.error("Error 2")
+    st.error("Error: Equivalence ratio of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification")
 else:
     if not any(value is None for value in categorical_inputs.values()):
         encoded_categorical_vars = pd.DataFrame()
