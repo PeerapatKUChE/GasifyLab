@@ -65,7 +65,7 @@ continuous_inputs = {
     "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00),
     "Temperature": temperature,
     "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00),
-    "ER": equivalence_ratio.number_input("Equivalence ratio of non-stream agent", value=None, min_value=0.00),
+    "ER": equivalence_ratio.number_input("Equivalence ratio of non-steam agent", value=None, min_value=0.00),
 }
 
 categorical_col1, categorical_col2 = st.columns(2)
@@ -111,6 +111,7 @@ else:
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-        res1, res2, res3, res4 = st.columns(4)
+        res1, res2, res3, reset = st.columns(4)
         res1.metric("H₂ (vol.% db)", np.round(H2, 2))
         res2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+        reset.button("Reset")
