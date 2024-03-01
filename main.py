@@ -71,14 +71,9 @@ categorical_inputs = {
     "System scale": st.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
 
-st.text(f"{categorical_inputs == "Steam"}")
-st.text(f"{continuous_inputs["Steam/biomass ratio"] == 0}")
-st.text(f"{continuous_inputs["ER"] > 0}")
-st.text(f"{(continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0)}")
-st.text(f"{categorical_inputs == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0)}")
 if categorical_inputs == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
     st.error("Error 1")
-elif (categorical_inputs == "Air" or categorical_inputs == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
+elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
     st.error("Error 2")
 
 if not any(value is None for value in categorical_inputs.values()):
