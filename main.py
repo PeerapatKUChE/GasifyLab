@@ -108,4 +108,4 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
 
     col1, col2 = st.columns(2)
     col1.metric("H₂ (vol.% db)", np.round(H2, 2))
-    col1.metric("CO₂ (vol.% db)", np.round(CO2, 2))
+    col2.metric("CO₂ (vol.% db)", np.round(CO2, 2))
