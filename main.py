@@ -52,14 +52,14 @@ st.title("Predict H₂ and CO₂ from Biomass Gasification")
 st.text("All fields are required unless specied optional")
 
 continuous_inputs = {
-    "Particle size": st.number_input("Particle size (mm)", value=None),
-    "C": st.number_input("Carbon (%daf)", value=None),
-    "H": st.number_input("Hydrogen (%daf)", value=None),
-    "Ash": st.number_input("Ash (%db)", value=None),
-    "Moisture": st.number_input("Moisture (%wb)", value=None),
-    "Temperature": st.number_input("Temperature (°C)", value=None),
-    "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None),
-    "ER": st.number_input("Equivalence ratio of non-stream agent", value=None),
+    "Particle size": st.number_input("Particle size (mm)", value=None, min_value=0),
+    "C": st.number_input("Carbon (%daf)", value=None, min_value=0, max_value=100),
+    "H": st.number_input("Hydrogen (%daf)", value=None, min_value=0, max_value=100),
+    "Ash": st.number_input("Ash (%db)", value=None, min_value=0, max_value=100),
+    "Moisture": st.number_input("Moisture (%wb)", value=None, min_value=0, max_value=100),
+    "Temperature": st.number_input("Temperature (°C)", value=None, min_value=0),
+    "Steam/biomass ratio": st.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0),
+    "ER": st.number_input("Equivalence ratio of non-stream agent", value=None, min_value=0),
 }
 
 categorical_inputs = {
@@ -70,6 +70,11 @@ categorical_inputs = {
     "Catalyst": st.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select"),
     "System scale": st.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select")
 }
+
+if categorical_inputs == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
+    st.error("Error 1")
+elif (categorical_inputs == "Air" or categorical_inputs == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
+    st.error("Error 2")
 
 if not any(value is None for value in categorical_inputs.values()):
     encoded_categorical_vars = pd.DataFrame()
