@@ -105,6 +105,6 @@ if "encoded_categorical_vars" in locals() and "normalized_continuous_vars" in lo
 
     H2 = denormalize(models["H2"].predict(X), target_data["H2"])
     CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
-    st.text(f"{H2, CO2}")
-    st.metric("H₂", f"{H2:.2f} vol.% db")
-    st.metric("CO₂", f"{CO2:.2f} vol.% db")
+
+    st.metric("H₂ (vol.% db)", np.round(H2, 2))
+    st.metric("CO₂ (vol.% db)", np.round(CO2, 2))
