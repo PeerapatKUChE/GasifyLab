@@ -49,7 +49,7 @@ models = {
 }
 
 st.title("Biomass Gasification Product Prediction Tool")
-st.text("All fields are required unless specied optional.")
+st.text("All fields are required.")
 
 particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
 carbon, hydrogen = st.columns(2)
@@ -108,8 +108,15 @@ if not any(value is None for value in categorical_inputs.values()) and not any(v
         H2 = denormalize(models["H2"].predict(X), target_data["H2"])
         CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
+        y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
+        y = np.array([H2.item(), CO2.item()])
+        diff_H2, diff_CO2 = y - y0
+
         res1, res2, _, reset = st.columns(4)
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
+        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+
+        np.savetxt(f"{path}/data/raw/y0.txt", y)
+
         reset.text("")
         reset.button("Reset")
