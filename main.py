@@ -40,7 +40,7 @@ continuous_vars = {
 
 categorical_vars = {
     category: [f"{category} {variable}" for variable in categorical_data[category].unique()]
-    for category in ["Feedstock type", "Operation mode", "Gasifying agent", "Reactor type", "Bed material", "Catalyst", "System scale"]
+    for category in ["Operation mode", "Gasifying agent", "Reactor type", "Bed material", "Catalyst", "System scale"]
 }
 
 models = {
