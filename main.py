@@ -122,4 +122,5 @@ with st.form("myform", clear_on_submit=False):
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
+    submit.text("")
     submit.form_submit_button("Submit")
