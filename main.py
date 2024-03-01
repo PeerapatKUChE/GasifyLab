@@ -51,7 +51,7 @@ models = {
 st.title("Biomass Gasification Product Prediction Tool")
 st.text("All fields are required.")
 
-with st.form("myform", clear_on_submit=False):
+with st.container():
     particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00)
     carbon, hydrogen = st.columns(2)
     ash, moisture = st.columns(2)
@@ -123,4 +123,4 @@ with st.form("myform", clear_on_submit=False):
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
     submit.text("")
-    submit.form_submit_button("Submit")
+    submit.button("Submit")
