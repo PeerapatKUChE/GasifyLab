@@ -128,5 +128,6 @@ with st.container(border=True):
     def reset():
         for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
             st.session_state[key] = None
+            diff_H2, diff_CO2 = np.array([0, 0])
     
     reset_button.button("Reset", on_click=reset)
