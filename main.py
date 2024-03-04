@@ -49,7 +49,7 @@ models = {
 }
 
 st.title("Biomass Gasification Product Estimation Tool")
-st.text("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
+st.write("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
 st.write(":red[All fields are required.]")
 
 with st.container(border=True):
