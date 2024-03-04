@@ -118,13 +118,6 @@ with st.container(border=True):
     y = np.array([H2.item(), CO2.item()])
     diff_H2, diff_CO2 = y - y0
 
-    if round(diff_H2, 2) == 0:
-        st.text("ME")
-        diff_H2 = 0
-    if round(diff_CO2, 2) == 0:
-        st.text("YOU")
-        diff_CO2 == 0
-
     res1, res2, _, reset_button = st.columns(4)
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
