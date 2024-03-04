@@ -48,8 +48,8 @@ models = {
     "CO2": load(f"{path}/models/model-CO2.joblib")
 }
 
-st.title("Biomass Gasification Product Prediction Tool")
-st.write("This web application predicts the amount of hydrogen (H₂) and carbon dioxide (CO₂) produced during biomass gasification.")
+st.title("Biomass Gasification Product Estimation Tool")
+st.text("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
 st.write(":red[All fields are required.]")
 
 with st.container(border=True):
