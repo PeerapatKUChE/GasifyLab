@@ -129,7 +129,7 @@ with st.container(border=True):
         }
         [data-testid="stMetricDelta"] > div::before {
             content:"-";
-            font-weight: bold;
+            font-color: gray;
         }
     </style>
     '''
