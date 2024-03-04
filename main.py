@@ -126,5 +126,4 @@ with st.container(border=True):
     reset.text("")
     if reset.button("Reset"):
         for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
-            st.text(key)
-            #st.session_state[key] = ""
+            st.session_state[key] = None
