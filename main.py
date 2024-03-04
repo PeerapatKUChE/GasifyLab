@@ -131,4 +131,4 @@ with st.container(border=True):
             st.session_state[key] = None
             np.savetxt(f"{path}/data/raw/y0.txt", np.array([0, 0]))
     
-    reset_button.button("Reset", on_click=reset)
+    reset_button.button(":red[Reset]", on_click=reset)
