@@ -119,8 +119,6 @@ with st.container(border=True):
     diff_H2, diff_CO2 = y - y0
 
     res1, res2, _, reset_button = st.columns(4)
-    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
     css = '''
     <style>
@@ -128,16 +126,25 @@ with st.container(border=True):
             display: none;
         }
         [data-testid="stMetricDelta"] > div::before {
-            content:"-";
-            font-color: gray;
+            content:"–";
         }
     </style>
     '''
 
     if np.round(diff_H2, 2) == 0:
         res1.markdown(css, unsafe_allow_html=True)
+        delta_color1 = "off"
+    else:
+        delta_color1 = "normal"
+
     if np.round(diff_CO2, 2) == 0:
         res2.markdown(css, unsafe_allow_html=True)
+        delta_color2 = "off"
+    else:
+        delta_color2 = "normal"
+
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}", delta_color=delta_color1)
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}", delta_color=delta_color2)
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
