@@ -125,7 +125,6 @@ with st.container(border=True):
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
     reset_button.text("")
-    reset_button.text("")
 
     def reset():
         for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
