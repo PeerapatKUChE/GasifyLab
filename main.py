@@ -49,7 +49,7 @@ models = {
 }
 
 st.title("Biomass Gasification Product Prediction Tool")
-st.markdown(":red[All fields are required.]")
+st.text(":red[All fields are required.]")
 
 with st.container(border=True):
     particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00, key="Particle size")
@@ -121,6 +121,23 @@ with st.container(border=True):
     res1, res2, _, reset_button = st.columns(4)
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+
+    css = '''
+    <style>
+        [data-testid="stMetricDelta"] svg {
+            display: none;
+        }
+        [data-testid="stMetricDelta"] > div::before {
+            content:"-";
+            font-weight: bold;
+        }
+    </style>
+    '''
+
+    if np.round(diff_H2, 2) == 0:
+        res1.markdown(css, unsafe_allow_html=True)
+    if np.round(diff_CO2, 2) == 0:
+        res2.markdown(css, unsafe_allow_html=True)
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
