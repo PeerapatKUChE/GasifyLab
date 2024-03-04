@@ -124,14 +124,13 @@ with st.container(border=True):
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
-
+    st.write(y0)
     reset_button.text("")
 
     def reset():
         for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
             st.session_state[key] = None
         np.savetxt(f"{path}/data/raw/y0.txt", np.array([0, 0]))
-        st.write("Reset")
     
     reset_button.button(":red[Reset]", on_click=reset)
 
