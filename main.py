@@ -53,18 +53,18 @@ st.write("This web application uses machine learning (ML) to estimate hydrogen (
 st.write(":red[All fields are required.]")
 
 with st.container(border=True):
-    particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00, key="Particle size")
+    particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.01, key="Particle size")
     carbon, hydrogen = st.columns(2)
     ash, moisture = st.columns(2)
-    temperature = st.number_input("Temperature (°C)", value=None, min_value=0.00, key="Temperature")
+    temperature = st.number_input("Temperature (°C)", value=None, min_value=0.01, key="Temperature")
     steam_biomass, equivalence_ratio = st.columns(2)
 
     continuous_inputs = {
         "Particle size": particle_size,
-        "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.00, max_value=100.00, key="C"),
-        "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.00, max_value=100.0, key="H"),
-        "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.00, max_value=100.00, key="Ash"),
-        "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.00, max_value=100.00, key="Moisture"),
+        "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.01, max_value=100.00, key="C"),
+        "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.01, max_value=100.0, key="H"),
+        "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.01, max_value=100.00, key="Ash"),
+        "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.01, max_value=100.00, key="Moisture"),
         "Temperature": temperature,
         "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00, key="Steam/biomass ratio"),
         "ER": equivalence_ratio.number_input("Equivalence ratio (ER) of non-steam agent", value=None, min_value=0.00, key="ER"),
