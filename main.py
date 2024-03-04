@@ -116,11 +116,11 @@ with st.container(border=True):
 
     y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
     y = np.array([H2.item(), CO2.item()])
-    diff_H2, diff_CO2 = np.round(y - y0, 2)
+    diff_H2, diff_CO2 = y - y0
 
-    if diff_H2 == 0:
+    if round(diff_H2, 2) == 0:
         diff_H2 = 0
-    if diff_CO2 == 0:
+    if round(diff_CO2, 2) == 0:
         diff_CO2 == 0
 
     res1, res2, _, reset_button = st.columns(4)
