@@ -49,7 +49,7 @@ models = {
 }
 
 st.title("Biomass Gasification Product Prediction Tool")
-st.text(":red[All fields are required.]")
+st.write(":red[All fields are required.]")
 
 with st.container(border=True):
     particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.00, key="Particle size")
