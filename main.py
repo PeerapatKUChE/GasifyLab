@@ -117,6 +117,8 @@ with st.container(border=True):
 
     y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
     y = np.array([H2.item(), CO2.item()])
+    st.write(y0)
+    st.write(y)
     diff_H2, diff_CO2 = y - y0
 
     res1, res2, _, reset_button = st.columns(4)
@@ -124,7 +126,7 @@ with st.container(border=True):
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
-    st.write(y0)
+    
     reset_button.text("")
 
     def reset():
