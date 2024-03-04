@@ -49,6 +49,7 @@ models = {
 }
 
 st.title("Biomass Gasification Product Prediction Tool")
+st.text("This web application predicts the amount of hydrogen (H₂) and carbon dioxide (CO₂) produced during biomass gasification.")
 st.write(":red[All fields are required.]")
 
 with st.container(border=True):
