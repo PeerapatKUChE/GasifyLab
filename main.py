@@ -86,6 +86,8 @@ with st.container(border=True):
             st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
         elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
             st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
+        elif categorical_inputs["Gasifying agent"] == "Air/steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] == 0):
+            st.error("Error: Steam/biomass ratio and ER of non-steam agent cannot be 0 for air/steam gasification.")
         else:
             encoded_categorical_vars = pd.DataFrame()
             for category in categorical_vars.keys():
@@ -117,10 +119,6 @@ with st.container(border=True):
     diff_H2, diff_CO2 = y - y0
 
     res1, res2, _, reset_button = st.columns(4)
-    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
-
-    np.savetxt(f"{path}/data/raw/y0.txt", y)
 
     reset_button.text("")
     reset_button.text("")
@@ -131,3 +129,8 @@ with st.container(border=True):
             diff_H2, diff_CO2 = np.array([0, 0])
     
     reset_button.button("Reset", on_click=reset)
+
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+
+    np.savetxt(f"{path}/data/raw/y0.txt", y)
