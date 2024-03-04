@@ -50,7 +50,6 @@ models = {
 
 st.title("Biomass Gasification Product Estimation Tool")
 st.write("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
-st.write("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 st.write(":red[All fields are required.]")
 
 with st.container(border=True):
@@ -120,10 +119,9 @@ with st.container(border=True):
     y = np.array([H2.item(), CO2.item()])
     diff_H2, diff_CO2 = y - y0
 
-    res1, res2, submit_button, reset_button = st.columns(4)
-    if submit_button("Submit"):
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
+    res1, res2, _, reset_button = st.columns(4)
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
 
     np.savetxt(f"{path}/data/raw/y0.txt", y)
 
@@ -135,3 +133,5 @@ with st.container(border=True):
             np.savetxt(f"{path}/data/raw/y0.txt", np.array([0, 0]))
     
     reset_button.button(":red[Reset]", on_click=reset)
+
+st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
