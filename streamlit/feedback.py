@@ -9,5 +9,6 @@ now = datetime.now()
 st.write("now =", now)
 
 # dd/mm/YY H:M:S
-dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-st.write("date and time =", dt_string)
+dt_string1 = now.strftime("%d/%m/%Y")
+dt_string2 = now.strftime("%H:%M:%S")
+st.write("date and time =", dt_string1, "time:" dt_string2)
