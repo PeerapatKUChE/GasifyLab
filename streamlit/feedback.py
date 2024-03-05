@@ -6,7 +6,7 @@ from datetime import datetime
 st.title("Feedback")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper pharetra aliquet. In facilisis, velit a molestie sollicitudin, nisl tellus sagittis eros, vel vehicula est elit nec odio. Vivamus luctus, tortor at scelerisque congue, metus neque suscipit lectus, bibendum ultrices nisi mi sed ex. Mauris aliquet eros sit amet pellentesque.")
 
-feedback = pd.read_csv(os.path.dirname(__file__) + "/feedback.csv")
+feedback = pd.read_csv(os.path.dirname(__file__) + "/feedback.csv").drop(columns=["Unnamed: 0"])
 
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject *")
