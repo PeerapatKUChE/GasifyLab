@@ -27,4 +27,5 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
         }, index=[feedback.shape[0]])
 
         feedback = pd.concat([feedback, latest_feedback])
+        st.dataframe(feedback)
         feedback.to_csv("feedback.csv")
