@@ -1,7 +1,15 @@
 import os
 import pandas as pd
 import streamlit as st
+from streamlit_gsheets import GSheetsConnection
 from datetime import datetime
+
+url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0hmKBlRnjf4/edit?usp=sharing"
+
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+data = conn.read(spreadsheet=url)
+st.dataframe(data)
 
 st.title("Feedback")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper pharetra aliquet. In facilisis, velit a molestie sollicitudin, nisl tellus sagittis eros, vel vehicula est elit nec odio. Vivamus luctus, tortor at scelerisque congue, metus neque suscipit lectus, bibendum ultrices nisi mi sed ex. Mauris aliquet eros sit amet pellentesque.")
@@ -31,6 +39,8 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             feedback = pd.concat([feedback, latest_feedback])
 
             feedback.to_csv("feedback.csv")
+
+            st.success("Your feedback has been submitted successfully.")
 
         if subject is None:
             st.error("Error: Subject cannot be blank.")
