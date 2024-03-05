@@ -13,24 +13,24 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
     message = st.text_area("Message *", value=None)
     attachments = st.text_input("Attachment links (optional)", value=None)
 
-    if st.form_submit_button("Submit") and subject != None and message != None:
-        now = datetime.now()
-        date = now.strftime("%d/%m/%Y")
-        time = now.strftime("%H:%M:%S")
+    if st.form_submit_button("Submit"):
+        if subject != None and message != None:
+            now = datetime.now()
+            date = now.strftime("%d/%m/%Y")
+            time = now.strftime("%H:%M:%S")
 
-        latest_feedback = pd.DataFrame({
-            "Date": date,
-            "Time": time,
-            "Subject": subject,
-            "Message": message,
-            "Attachments": attachments
-        }, index=[feedback.shape[0]])
+            latest_feedback = pd.DataFrame({
+                "Date": date,
+                "Time": time,
+                "Subject": subject,
+                "Message": message,
+                "Attachments": attachments
+            }, index=[feedback.shape[0]])
 
-        feedback = pd.concat([feedback, latest_feedback])
+            feedback = pd.concat([feedback, latest_feedback])
 
-        feedback.to_csv("feedback.csv")
-    
-    else:
+            feedback.to_csv("feedback.csv")
+
         if subject is None:
             st.error("Error: Subject cannot be blank.")
         if message is None:
