@@ -1,10 +1,13 @@
 import streamlit as st
+from datetime import datetime
 
 st.title("Feedback")
 
-from trubrics.integrations.streamlit import FeedbackCollector
+# datetime object containing current date and time
+now = datetime.now()
+ 
+print("now =", now)
 
-collector = FeedbackCollector()
-collector.st_feedback(feedback_type="issue")
-
-collector.st_feedback(feedback_type="faces")
+# dd/mm/YY H:M:S
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+print("date and time =", dt_string)
