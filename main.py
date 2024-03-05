@@ -115,24 +115,15 @@ with st.container(border=True):
             H2 = denormalize(models["H2"].predict(X), target_data["H2"])
             CO2 = denormalize(models["CO2"].predict(X), target_data["CO2"])
 
-    y0 = np.loadtxt(f"{path}/data/raw/y0.txt")
-    y = np.array([H2.item(), CO2.item()])
-    st.write(y0)
-    st.write(y)
-    diff_H2, diff_CO2 = y - y0
-
     res1, res2, _, reset_button = st.columns(4)
-    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}", f"{diff_H2:.2f}")
-    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}", f"{diff_CO2:.2f}")
-
-    np.savetxt(f"{path}/data/raw/y0.txt", y)
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
     
     reset_button.text("")
 
     def reset():
         for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
             st.session_state[key] = None
-        np.savetxt(f"{path}/data/raw/y0.txt", np.array([0, 0]))
     
     reset_button.button(":red[Reset]", on_click=reset)
 
