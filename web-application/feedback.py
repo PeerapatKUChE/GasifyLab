@@ -8,8 +8,7 @@ url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0
 
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-data = conn.read(spreadsheet=url, worksheet=0)
-st.dataframe(data)
+feedback = conn.read(spreadsheet=url, worksheet=0)
 
 st.title("Feedback")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper pharetra aliquet. In facilisis, velit a molestie sollicitudin, nisl tellus sagittis eros, vel vehicula est elit nec odio. Vivamus luctus, tortor at scelerisque congue, metus neque suscipit lectus, bibendum ultrices nisi mi sed ex. Mauris aliquet eros sit amet pellentesque.")
