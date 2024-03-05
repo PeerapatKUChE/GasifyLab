@@ -23,14 +23,15 @@ def validate_inputs(categorical_inputs, continuous_inputs):
             error_message += "Steam/biomass ratio and ER of non-steam agent cannot be 0 for air/steam gasification."
         st.error(error_message)
         return False
+    
+    else:
+        return True
 
 def encode_categorical_value(value, category, prefix):
     if value.lower() == "laboratory":
         value = "lab"
     value_with_prefix = np.array([f"{prefix} " + value.lower()])
-    encoded_values = pd.DataFrame(
-        {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
-    )
+    encoded_values = category.apply(lambda column: (value_with_prefix == column).astype(int))
     return encoded_values
 
 def normalize(x, x_original):
@@ -41,10 +42,7 @@ def normalize(x, x_original):
     return x_norm.reindex(columns=x_original.columns)
 
 def denormalize(x_norm, x_original):
-    xmax = max(x_original)
-    xmin = min(x_original)
-    x_denorm = x_norm * (xmax - xmin) + xmin
-    
+    x_denorm = x_norm * (x_original.max() - x_original.min()) + x_original.min()
     return x_denorm
 
 def predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data):
