@@ -12,5 +12,5 @@ gekko==1.0.6
 geopandas==0.14.3
 streamlit==1.31.1
 st_pages==0.4.5
-streamlit_gsheets==0.0.1
+st-gsheets-connection==0.0.4
 datetime==5.4
