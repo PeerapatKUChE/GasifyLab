@@ -8,7 +8,7 @@ url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0
 
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-data = conn.read(spreadsheet=url)
+data = conn.read(spreadsheet=url, worksheet=1)
 st.dataframe(data)
 
 st.title("Feedback")
