@@ -9,5 +9,3 @@ seaborn==0.13.2
 streamlit==1.31.1
 openpyxl==3.1.2
 st_pages==0.4.5
-trubrics==1.6.2
-streamlit-feedback==0.1.3
