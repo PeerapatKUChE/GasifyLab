@@ -1,20 +1,21 @@
 import os
 import pandas as pd
 import streamlit as st
-from streamlit_gsheets import GSheetsConnection
+
 from datetime import datetime
 
-url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0hmKBlRnjf4/edit?usp=sharing"
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-conn = st.experimental_connection("gsheets", type=GSheetsConnection)
-
-feedback = conn.read(spreadsheet=url, worksheet=0)
+creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(__file__) + "/biomass-gasification-faec3b292117.json", scope)
+client = gspread.authorize(creds)
+ 
+sheet = client.open("Web Application").worksheet("Feedback")  
 
 st.title("Feedback")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper pharetra aliquet. In facilisis, velit a molestie sollicitudin, nisl tellus sagittis eros, vel vehicula est elit nec odio. Vivamus luctus, tortor at scelerisque congue, metus neque suscipit lectus, bibendum ultrices nisi mi sed ex. Mauris aliquet eros sit amet pellentesque.")
 st.write(":red[* Required]")
-
-feedback = pd.read_csv(os.path.dirname(__file__) + "/feedback.csv").drop(columns=["Unnamed: 0"])
 
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject :red[*]", value=None)
@@ -27,6 +28,9 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
 
+            row = [1, date, time, subject, message, attachments]
+            sheet.append_row(row)
+            """
             latest_feedback = pd.DataFrame({
                 "Date": date,
                 "Time": time,
@@ -38,6 +42,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             feedback = pd.concat([feedback, latest_feedback])
 
             conn.update(worksheet="Feedback", data=feedback)
+            """
 
             st.success("Your feedback has been submitted successfully.")
 
