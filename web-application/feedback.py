@@ -38,7 +38,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             feedback = pd.concat([feedback, latest_feedback])
             st.dataframe(feedback)
 
-            conn.update(data=feedback)
+            conn.update(data=latest_feedback)
 
             st.success("Your feedback has been submitted successfully.")
 
