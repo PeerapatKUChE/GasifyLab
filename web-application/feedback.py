@@ -8,7 +8,7 @@ url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0
 
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-data = conn.read(spreadsheet=url)
+data = conn.read(spreadsheet=url, worksheet="Feedback")
 st.dataframe(data)
 
 st.title("Feedback")
@@ -33,12 +33,12 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
                 "Time": time,
                 "Subject": subject,
                 "Message": message,
-                "Attachments": attachments
+                "Attachment(s)": attachments
             }, index=[feedback.shape[0]])
 
             feedback = pd.concat([feedback, latest_feedback])
 
-            feedback.to_csv("feedback.csv")
+            conn.update(spreadsheet=url, worksheet="Feedback", data=feedback)
 
             st.success("Your feedback has been submitted successfully.")
 
