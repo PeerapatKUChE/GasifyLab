@@ -28,22 +28,9 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
 
-            row = [1, date, time, subject, message, attachments]
-            sheet.append_row(row)
-            """
-            latest_feedback = pd.DataFrame({
-                "Date": date,
-                "Time": time,
-                "Subject": subject,
-                "Message": message,
-                "Attachment(s)": attachments
-            }, index=[feedback.shape[0]])
-
-            feedback = pd.concat([feedback, latest_feedback])
-
-            conn.update(worksheet="Feedback", data=feedback)
-            """
-
+            feedback = [date, time, subject, message, attachments]
+            sheet.append_row(feedback)
+            
             st.success("Your feedback has been submitted successfully.")
 
         if subject is None:
