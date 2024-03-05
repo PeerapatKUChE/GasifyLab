@@ -4,6 +4,33 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
+def load_data(file_path):
+    return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
+
+def validate_inputs(categorical_inputs, continuous_inputs):
+    gasifying_agent = categorical_inputs["Gasifying agent"].lower()
+    steam_conditions = gasifying_agent == "steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0)
+    air_oxygen_conditions = gasifying_agent in ["air", "oxygen"] and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0)
+    air_steam_conditions = gasifying_agent == "air/steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] == 0)
+
+    if steam_conditions or air_oxygen_conditions or air_steam_conditions:
+        error_message = "Error: "
+        if steam_conditions:
+            error_message += "Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification."
+        if air_oxygen_conditions:
+            error_message += "ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification."
+        if air_steam_conditions:
+            error_message += "Steam/biomass ratio and ER of non-steam agent cannot be 0 for air/steam gasification."
+        st.error(error_message)
+        return False
+
+def encode_categorical_value(value, category, prefix):
+    if value.lower() == "laboratory":
+        value = "lab"
+    value_with_prefix = np.array([f"{prefix} " + value.lower()])
+    encoded_values = category.apply(lambda column: (value_with_prefix == column).astype(int))
+    return encoded_values
+
 def normalize(x, x_original):
     xmin = pd.DataFrame.min(x_original)
     xmax = pd.DataFrame.max(x_original)
@@ -12,39 +39,8 @@ def normalize(x, x_original):
     return x_norm.reindex(columns=x_original.columns)
 
 def denormalize(x_norm, x_original):
-    xmax = max(x_original)
-    xmin = min(x_original)
-    x_denorm = x_norm * (xmax - xmin) + xmin
-    
+    x_denorm = x_norm * (x_original.max() - x_original.min()) + x_original.min()
     return x_denorm
-
-def encode_categorical_value(value, category, prefix):
-    if value.lower() == "laboratory":
-        value = "lab"
-    value_with_prefix = np.array([f"{prefix} " + value.lower()])
-    encoded_values = pd.DataFrame(
-        {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
-    )
-    return encoded_values
-
-def load_data(file_path):
-    return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
-
-def validate_inputs(categorical_inputs, continuous_inputs):
-    if categorical_inputs["Gasifying agent"] == "Steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] > 0):
-        st.error("Error: Steam/biomass ratio cannot be 0 and ER of non-steam agent must be 0 for steam gasification.")
-        return False
-
-    elif (categorical_inputs["Gasifying agent"] == "Air" or categorical_inputs["Gasifying agent"] == "Oxygen") and (continuous_inputs["ER"] == 0 or continuous_inputs["Steam/biomass ratio"] > 0):
-        st.error("Error: ER of non-steam agent cannot be 0 and steam/biomass ratio must be 0 for air or oxygen gasification.")
-        return False
-
-    elif categorical_inputs["Gasifying agent"] == "Air/steam" and (continuous_inputs["Steam/biomass ratio"] == 0 or continuous_inputs["ER"] == 0):
-        st.error("Error: Steam/biomass ratio and ER of non-steam agent cannot be 0 for air/steam gasification.")
-        return False
-    
-    else:
-        return True
 
 def predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data):
     encoded_categorical_vars = pd.DataFrame()
