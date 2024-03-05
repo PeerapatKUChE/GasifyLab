@@ -1,2 +1,2 @@
-No,Date,Time,Subject,Message
-1,01-01-00,23:59:00,Test subject,Test message
+,Date,Time,Subject,Message,Attachments
+0,01-01-00,0:00:00,Test subject,Test message,None
