@@ -4,6 +4,20 @@ import numpy as np
 import pandas as pd
 from joblib import load
 
+from st_pages import Page, show_pages, add_page_title
+
+# Optional -- adds the title and icon to the current page
+add_page_title("A")
+
+# Specify what pages should be shown in the sidebar, and what their titles 
+# and icons should be
+show_pages(
+    [
+        Page("main.py", "Home", "🏠"),
+        Page("streamlit/about.py", "About", ":books:"),
+    ]
+)
+
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
 
@@ -148,8 +162,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-add_selectbox = st.sidebar.selectbox(
-    "How would you like to be contacted?",
-    ("Email", "Home phone", "Mobile phone")
-)
