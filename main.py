@@ -148,3 +148,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+add_selectbox = st.sidebar.selectbox(
+    "How would you like to be contacted?",
+    ("Email", "Home phone", "Mobile phone")
+)
