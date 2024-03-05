@@ -39,7 +39,10 @@ def normalize(x, x_original):
     return x_norm.reindex(columns=x_original.columns)
 
 def denormalize(x_norm, x_original):
-    x_denorm = x_norm * (x_original.max() - x_original.min()) + x_original.min()
+    xmax = max(x_original)
+    xmin = min(x_original)
+    x_denorm = x_norm * (xmax - xmin) + xmin
+    
     return x_denorm
 
 def predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data):
