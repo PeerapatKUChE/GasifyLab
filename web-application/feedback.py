@@ -6,7 +6,7 @@ from datetime import datetime
 
 url = "https://docs.google.com/spreadsheets/d/1JbyaF0-QGG9EsgELp3qIG6HJvE_xDbCM0hmKBlRnjf4/edit?usp=sharing"
 
-conn = st.connection("gsheets", type=GSheetsConnection)
+conn = st.experimental_connection("gsheets", type=GSheetsConnection)
 
 feedback = conn.read(spreadsheet=url, worksheet=0)
 
@@ -37,8 +37,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
 
             feedback = pd.concat([feedback, latest_feedback])
 
-            conn.create(worksheet="Feedback2", data=feedback)
-            #conn.update(worksheet="Feedback", data=feedback)
+            conn.update(worksheet="Feedback", data=feedback)
 
             st.success("Your feedback has been submitted successfully.")
 
