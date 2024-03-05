@@ -7,9 +7,10 @@ from st_pages import Page, show_pages
 
 show_pages(
     [
-        Page("main.py", "Home"),
         Page("streamlit/about.py", "About"),
-        Page("streamlit/bug_report.py", "Bug Report")
+        Page("main.py", "Estimation Tool"),
+        Page("streamlit/feedback.py", "Feedback"),
+        Page("streamlit/contact.py", "Contact")
     ]
 )
 
