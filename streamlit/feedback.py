@@ -1,16 +1,30 @@
+import os
+import pandas as pd
 import streamlit as st
 from datetime import datetime
 
 st.title("Feedback")
-st.write("We appreciate your commitment to improving our platform! Your feedback and bug reports are invaluable in helping us enhance the user experience and address any issues promptly. Please use the form below to share your thoughts or report any bugs you may have encountered.")
+st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur semper pharetra aliquet. In facilisis, velit a molestie sollicitudin, nisl tellus sagittis eros, vel vehicula est elit nec odio. Vivamus luctus, tortor at scelerisque congue, metus neque suscipit lectus, bibendum ultrices nisi mi sed ex. Mauris aliquet eros sit amet pellentesque.")
 
-st.text_input("Subject")
-st.text_area("Description")
-now = datetime.now()
+feedback = pd.read_excel(os.path.dirname(__file__) + "/feedback.csv")
 
-st.write("now =", now)
+with st.form("Feedback Form", clear_on_submit=True, border=False):
+    subject = st.text_input("Subject *")
+    message = st.text_area("Message *")
+    attachments = st.text_input("Attachment links (optional)")
 
-# dd/mm/YY H:M:S
-dt_string1 = now.strftime("%d/%m/%Y")
-dt_string2 = now.strftime("%H:%M:%S")
-st.write("date and time =", dt_string1, "time:", dt_string2)
+    if st.form_submit_button("Submit"):
+        now = datetime.now()
+        date = now.strftime("%d/%m/%Y")
+        time = now.strftime("%H:%M:%S")
+
+        latest_feedback = pd.DataFrame({
+            "Date": date,
+            "Time": time,
+            "Subject": subject,
+            "Message": message,
+            "Attachments": attachments
+        })
+
+        feedback = pd.concat([feedback, latest_feedback])
+        feedback.to_csv(feedback.csv)
