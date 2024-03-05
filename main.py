@@ -28,7 +28,9 @@ def encode_categorical_value(value, category, prefix):
     if value.lower() == "laboratory":
         value = "lab"
     value_with_prefix = np.array([f"{prefix} " + value.lower()])
-    encoded_values = category.apply(lambda column: (value_with_prefix == column).astype(int))
+    encoded_values = pd.DataFrame(
+        {column: (value_with_prefix == column).astype(int) for column in category}, columns=category
+    )
     return encoded_values
 
 def normalize(x, x_original):
