@@ -11,7 +11,7 @@ feedback = pd.read_csv(os.path.dirname(__file__) + "/feedback.csv")
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject *")
     message = st.text_area("Message *")
-    attachments = st.text_input("Attachment links (optional)")
+    attachments = st.text_input("Attachment links (optional)", value=None)
 
     if st.form_submit_button("Submit"):
         now = datetime.now()
