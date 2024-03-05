@@ -37,7 +37,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
 
             feedback = pd.concat([feedback, latest_feedback])
 
-            conn.update(spreadsheet=url, worksheet=0, data=feedback)
+            conn.insert(spreadsheet=url, worksheet=0, data=feedback)
 
             st.success("Your feedback has been submitted successfully.")
 
