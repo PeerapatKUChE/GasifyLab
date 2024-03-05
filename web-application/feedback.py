@@ -28,9 +28,12 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
 
+            if attachments is None:
+                attachments = "N/A"
+
             feedback = [date, time, subject, message, attachments]
             sheet.append_row(feedback)
-            
+
             st.success("Your feedback has been submitted successfully.")
 
         if subject is None:
