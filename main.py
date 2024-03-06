@@ -109,7 +109,7 @@ def main():
         "CO2": load(os.path.dirname(__file__) + "/models/model-CO2.joblib")
     }
 
-    with st.form("Estimation Tool"):
+    with st.container(border=True):
         particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.01, key="Particle size")
         carbon, hydrogen = st.columns(2)
         ash, moisture = st.columns(2)
