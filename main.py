@@ -177,7 +177,7 @@ def main():
             unsafe_allow_html=True,
         )
 
-        st.write("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
+        submit_button.write("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
     if "H2" not in locals() and "CO2" not in locals():
         H2, CO2 = np.array([0, 0])
