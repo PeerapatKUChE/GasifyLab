@@ -9,7 +9,6 @@ show_pages(
     [
         Page("web-application/about.py", "About"),
         Page("main.py", "Estimation Tool"),
-        Page("web-application/guide.py", "User Guide"),
         Page("web-application/feedback.py", "Feedback"),
         Page("web-application/contact.py", "Contact")
     ]
@@ -143,16 +142,23 @@ def main():
             if validate_inputs(categorical_inputs, continuous_inputs):
                 H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
-        res1, res2, _, reset_button = st.columns(4)
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
-        
+        res1, res2, _, buttons = st.columns(4)
+        submit_button, reset_button = buttons.columns(2)
+        #res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
+        #res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
+
         reset_button.text("")
+
+        def predict(col1, col2):
+            H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
+            col1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
+            col2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
+        submit_button.button("Submit", on_click=predict(res1, res2))
         reset_button.button(":red[Reset]", on_click=reset)
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
