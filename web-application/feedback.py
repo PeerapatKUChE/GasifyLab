@@ -1,13 +1,14 @@
 import os
+import base64
 import streamlit as st
-from datetime import datetime
-
 import gspread
+from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
+
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(__file__) + "/key/biomass-gasification-faec3b292117.json", scope)
-client = gspread.authorize(creds)
+credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(__file__) + "/key/biomass-gasification-faec3b292117.json", scope)
+client = gspread.authorize(credentials)
  
 sheet = client.open("Web Application").worksheet("Feedback")  
 
@@ -25,7 +26,13 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             now = datetime.now()
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
-            st.write(attachments)
+            
+            attachment_data = []
+            for file in attachments:
+                content = file.read()
+                encoded_content = base64.b64encode(content).decode("utf-8")
+                attachment_data.append({"filename": file.name, "content": encoded_content})
+
             feedback = [date, time, subject, message, attachments]
             sheet.append_row(feedback)
 
