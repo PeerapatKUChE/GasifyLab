@@ -1,5 +1,4 @@
 import os
-import base64
 import streamlit as st
 import gspread
 from datetime import datetime
@@ -27,9 +26,19 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
             
-            st.write(attachments)
+            attachment_urls = []
 
-            feedback = [date, time, subject, message, attachment_urls]
+            if attachments:
+                for file in attachments:
+                    # You can customize the file storage path or use a cloud storage service
+                    file_path = f"attachments/{file.name}"
+                    with open(file_path, "wb") as f:
+                        f.write(file.getvalue())
+                    attachment_urls.append(file_path)
+            else:
+                attachment_urls.append("N/A")
+
+            feedback = [date, time, subject, message, ",".join(attachment_urls)]
             sheet.append_row(feedback)
 
             st.success("Your feedback has been submitted successfully.")
