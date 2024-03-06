@@ -153,6 +153,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
+        button1.button("Estimate")
         reset_button.button(":red[Reset]", on_click=reset)
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
