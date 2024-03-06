@@ -9,6 +9,7 @@ show_pages(
     [
         Page("web-application/about.py", "About"),
         Page("main.py", "Estimation Tool"),
+        Page("web-application/guide.py", "User Guide"),
         Page("web-application/feedback.py", "Feedback"),
         Page("web-application/contact.py", "Contact")
     ]
@@ -145,8 +146,7 @@ def main():
         st.markdown(
             """
         <style> {
-            .stButton button {
-                background-color: brown;
+            .stButton > button {
                 width: 200px;
             }
         }
