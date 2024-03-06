@@ -144,17 +144,18 @@ def main():
 
         results, _, buttons = st.columns(3)
         res1, res2 = results.columns(2)
-        button1, reset_button = buttons.columns(2)
+        submit_button, reset_button = buttons.columns(2)
         res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
         res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
+        submit_button.text("")
         reset_button.text("")
 
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        button1.button("Estimate")
+        submit_button.button("Estimate")
         reset_button.button(":red[Reset]", on_click=reset)
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
