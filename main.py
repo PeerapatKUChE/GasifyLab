@@ -142,6 +142,17 @@ def main():
             if validate_inputs(categorical_inputs, continuous_inputs):
                 H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
+        st.markdown(
+            """
+        <style>
+        button {
+            width: 20px
+        }
+        </style>
+        """,
+            unsafe_allow_html=True,
+        )
+
         results, _, buttons = st.columns(3)
         res1, res2 = results.columns(2)
         submit_button, reset_button = buttons.columns(2)
