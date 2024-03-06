@@ -137,7 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([1, 5.1, 1])
+        submit_button, _, reset_button = st.columns([1, 5.15, 1])
 
         if submit_button.form_submit_button("Estimate", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
@@ -159,13 +159,22 @@ def main():
             button[kind="secondaryFormSubmit"] {
                 background: none;
                 border: none;
+                color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:hover {
-                text-decoration: none;
+                background-color: #f8fcfc;
+                border: none;
+                color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:focus {
-                outline: none;
-                box-shadow: none;
+                background-color: #f8fad7;
+                border: none;
+                color: "primaryColor";
+            }
+            button[kind="secondaryFormSubmit"]:active {
+                background: none;
+                border: none;
+                color: "primaryColor";
             }
             </style>
             """,
