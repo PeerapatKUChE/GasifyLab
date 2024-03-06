@@ -156,16 +156,6 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
 
-        st.markdown(
-            """
-        <style> {
-            .stButton > button {
-                width: 200px;
-            }
-        }
-        </style>
-        """, unsafe_allow_html=True,
-        )
         submit_button.button("Estimate")
         reset_button.button(":red[Reset]", on_click=reset)
 
