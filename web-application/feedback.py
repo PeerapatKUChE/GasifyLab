@@ -13,9 +13,9 @@ client = gspread.authorize(credentials)
 sheet = client.open("Web Application").worksheet("Feedback")  
 
 st.title("Feedback")
-st.write("Thank you for using [Web App Name]! We're always looking for ways to improve your experience.")
-st.write("If you have any suggestions on how we can make [Web App Name] better, or if you encounter a bug or unexpected behavior, please take a moment to share it with us.")
-st.write("**Your report is completely anonymous. We won't collect any personal information from you**")
+st.write("Thank you for your feedback! We're always looking for ways to improve your experience.")
+st.write("If you have any suggestions or encounter a bug, please share them with us. Your feedback is valuable in helping us create a better experience for everyone.")
+st.write("**We understand your privacy is important, so your report is completely anonymous. We won't collect any personal information from you.**")
 st.write(":red[* Required]")
 
 with st.form("Feedback Form", clear_on_submit=True, border=False):
