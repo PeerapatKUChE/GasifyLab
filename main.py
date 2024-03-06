@@ -139,7 +139,7 @@ def main():
 
         submit_button, _, reset_button = st.columns([1, 5, 1])
 
-        if submit_button.form_submit_button("Estimate", type="secondary"):
+        if submit_button.form_submit_button("Estimate", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
@@ -147,11 +147,14 @@ def main():
             else:
                 st.error("Error: All fields are required.")
         
+        # light: #ff4c4c
+        # dark: #ff3434
+
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button("**Reset**", on_click=reset, type="primary")
+        reset_button.form_submit_button("**Reset**", on_click=reset, type="secondary")
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
