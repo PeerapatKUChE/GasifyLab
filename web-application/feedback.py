@@ -19,7 +19,7 @@ st.write(":red[* Required]")
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject :red[*]", value=None)
     message = st.text_area("Message :red[*]", value=None)
-    attachments = st.text_area("Attachment link :gray[(if any)]", value=None)
+    attachments = st.text_input("Attachment link :gray[(if any)]", value=None)
 
     if st.form_submit_button("Submit"):
         if subject != None and message != None:
