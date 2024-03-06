@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 import gspread
+import validators
 from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
@@ -18,30 +19,23 @@ st.write(":red[* Required]")
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject :red[*]", value=None)
     message = st.text_area("Message :red[*]", value=None)
-    attachments = st.file_uploader("Attachment(s) :gray[(if any)]", type=["jpg", "png", "jpeg"], accept_multiple_files=True)
+    attachments = st.text_area("Attachment link :gray[(if any)]", value=None)
 
     if st.form_submit_button("Submit"):
         if subject != None and message != None:
             now = datetime.now()
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
-            
-            attachment_urls = []
 
-            if attachments:
-                for file in attachments:
-                    # You can customize the file storage path or use a cloud storage service
-                    file_path = f"attachments/{file.name}"
-                    with open(file_path, "wb") as f:
-                        f.write(file.getvalue())
-                    attachment_urls.append(file_path)
+            if attachments is None:
+                attachments = "N/A"
+            elif not validators.url(attachments):
+                st.error("Error: Attachment must be a link.")
             else:
-                attachment_urls.append("N/A")
+                feedback = [date, time, subject, message, attachments]
+                sheet.append_row(feedback)
 
-            feedback = [date, time, subject, message, ",".join(attachment_urls)]
-            sheet.append_row(feedback)
-
-            st.success("Your feedback has been submitted successfully.")
+                st.success("Your feedback has been submitted successfully.")
 
         if subject is None:
             st.error("Error: Subject cannot be blank.")
