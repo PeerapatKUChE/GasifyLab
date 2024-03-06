@@ -137,13 +137,14 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        H2, CO2 = np.array([0, 0])
-
         if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
             if validate_inputs(categorical_inputs, continuous_inputs):
                 H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
+        
+        else:
+            H2, CO2 = np.array([0, 0])
 
-        results, _, buttons = st.columns(3)
+        results, _, buttons = st.columns([2, 1, 2])
         res1, res2 = results.columns(2)
         submit_button, reset_button = buttons.columns(2)
         res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
@@ -155,9 +156,21 @@ def main():
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
-
+        
         submit_button.button("Estimate")
-        reset_button.button(":red[Reset]", on_click=reset)
+        reset_button.button("**:red[Reset]**", on_click=reset, type="primary")
+
+        st.markdown(
+            """
+            <style>
+            button[kind="primary"] {
+                background: none!important;
+                border: none;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
