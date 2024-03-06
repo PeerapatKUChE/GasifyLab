@@ -139,9 +139,7 @@ def main():
 
         submit_button, _, reset_button = st.columns([1, 5, 1])
 
-        H2, CO2 = np.array([0, 0])
-
-        if submit_button.form_submit_button("Estimate", type="secondary"):
+        if submit_button.button("Estimate", type="secondary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
@@ -153,7 +151,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="primary")
+        reset_button.button("**:red[Reset]**", on_click=reset, type="primary")
 
         st.markdown(
             """
@@ -180,6 +178,9 @@ def main():
         )
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
+
+    if "H2" not in locals and "CO2" not in locals:
+        H2, CO2 = np.array([0, 0])
 
     res1, res2, _ = st.columns([1, 1, 2])
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
