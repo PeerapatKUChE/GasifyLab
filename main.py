@@ -137,7 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([1, 5.11, 1])
+        submit_button, _, reset_button = st.columns([1, 5.1, 1])
 
         if submit_button.form_submit_button("Estimate", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
