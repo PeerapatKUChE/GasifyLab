@@ -141,7 +141,7 @@ def main():
 
         H2, CO2 = np.array([0, 0])
 
-        if submit_button.button("Estimate"):
+        if submit_button.button("Estimate", type="secondary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
@@ -161,6 +161,18 @@ def main():
             button[kind="primary"] {
                 background: none!important;
                 border: none;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            """
+            <style>
+            button[kind="secondary"] {
+                background-color: #FF2B2B;
+                color: white;
             }
             </style>
             """,
