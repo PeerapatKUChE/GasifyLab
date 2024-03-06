@@ -137,7 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([1, 5, 1])
+        submit_button, _, reset_button = st.columns([1, 5.1, 1])
 
         if submit_button.form_submit_button("Estimate", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
@@ -146,15 +146,32 @@ def main():
 
             else:
                 st.error("Error: All fields are required.")
-        
-        # light: #ff4c4c
-        # dark: #ff3434
 
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
         reset_button.form_submit_button("**Reset**", on_click=reset, type="secondary")
+
+        st.markdown(
+            """
+            <style>
+            button[kind="secondaryFormSubmit"] {
+                background: none;
+                border: none;
+                padding: 10;
+            }
+            button[kind="secondaryFormSubmit"]:hover {
+                text-decoration: none;
+            }
+            button[kind="secondaryFormSubmit"]:focus {
+                outline: none;
+                box-shadow: none;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
