@@ -33,7 +33,8 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
                 encoded_content = base64.b64encode(content).decode("utf-8")
                 attachment_data.append({"filename": file.name, "content": encoded_content})
 
-            feedback = [date, time, subject, message, attachments]
+            st.write(attachment_data)
+            feedback = [date, time, subject, message, attachment_data]
             sheet.append_row(feedback)
 
             st.success("Your feedback has been submitted successfully.")
