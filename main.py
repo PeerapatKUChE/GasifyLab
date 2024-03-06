@@ -137,14 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
-            if validate_inputs(categorical_inputs, continuous_inputs):
-                H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
-        
-        else:
-            H2, CO2 = np.array([0, 0])
-
-        submit_button, _, reset_button = st.columns([1, 10, 1])
+        submit_button, _, reset_button = st.columns([1, 5, 1])
 
         H2, CO2 = np.array([0, 0])
 
@@ -176,7 +169,7 @@ def main():
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
-    res1, res2 = st.columns([1, 1, 2])
+    res1, res2, _ = st.columns([1, 1, 2])
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
