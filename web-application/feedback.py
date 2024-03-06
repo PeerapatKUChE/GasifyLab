@@ -19,7 +19,7 @@ st.write(":red[* Required]")
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject :red[*]", value=None)
     message = st.text_area("Message :red[*]", value=None)
-    attachments = st.text_input("Attachment link :gray[(if any)]", value=None)
+    attachments = st.text_input("Attachment link :gray[(if any)]", value=None, placeholder="Example: https://example.com/")
 
     if st.form_submit_button("Submit"):
         if subject != None and message != None:
@@ -30,7 +30,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             if attachments is None:
                 attachments = "N/A"
             elif not validators.url(attachments):
-                st.error("Error: Attachment must be a link.")
+                st.error("Error: The attachment link is invalid.")
             else:
                 feedback = [date, time, subject, message, attachments]
                 sheet.append_row(feedback)
