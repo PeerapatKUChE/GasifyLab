@@ -151,31 +151,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="primary")
-
-        st.markdown(
-            """
-            <style>
-            form_submit_button[kind="primary"] {
-                background: none!important;
-                border: none;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        st.markdown(
-            """
-            <style>
-            form_submit_button[kind="secondary"] {
-                background-color: "ff4b4b";
-                color: white;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
+        reset_button.form_submit_button("**Reset**", on_click=reset, type="primary")
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
