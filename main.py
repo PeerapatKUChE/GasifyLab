@@ -139,7 +139,7 @@ def main():
 
         submit_button, _, reset_button = st.columns([1, 5.1, 1])
 
-        if submit_button.form_submit_button("Estimate", type="primary"):
+        if submit_button.form_submit_button("Submit", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
@@ -162,12 +162,12 @@ def main():
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:hover {
-                background-color: rgb(255, 255, 255, 0.05);
+                background-color: rgb(0, 0, 0, 0.05);
                 border: none;
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:focus {
-                background-color: rgb(255, 255, 255, 0.1); 
+                background-color: rgb(0, 0, 0, 0.1); 
                 border: none;
                 color: "primaryColor";
             }
