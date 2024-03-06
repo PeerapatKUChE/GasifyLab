@@ -167,7 +167,7 @@ def main():
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:focus {
-                background-color: rgb(0, 0, 0, 0.1); 
+                background-color: rgb(0, 0, 0, 0.05); 
                 border: none;
                 color: "primaryColor";
             }
