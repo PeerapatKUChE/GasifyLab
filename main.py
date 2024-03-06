@@ -139,7 +139,7 @@ def main():
 
         submit_button, _, reset_button = st.columns([1, 5.1, 1])
 
-        if submit_button.form_submit_button("Submit", type="primary"):
+        if submit_button.form_submit_button("**Submit**", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
@@ -151,7 +151,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
+        reset_button.form_submit_button(":red[Reset]", on_click=reset, type="secondary")
 
         st.markdown(
             """
