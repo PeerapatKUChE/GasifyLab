@@ -169,7 +169,7 @@ def main():
             """
             <style>
             button[kind="secondary"] {
-                background-color: "currentColor";
+                background-color: "#ff4b4b";
                 color: white;
             }
             </style>
@@ -179,7 +179,7 @@ def main():
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
-    if "H2" not in locals and "CO2" not in locals:
+    if "H2" not in locals() and "CO2" not in locals():
         H2, CO2 = np.array([0, 0])
 
     res1, res2, _ = st.columns([1, 1, 2])
