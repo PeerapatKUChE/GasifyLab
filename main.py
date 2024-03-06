@@ -169,7 +169,7 @@ def main():
             """
             <style>
             button[kind="secondary"] {
-                background-color: "#ff4b4b";
+                background-color: "ff4b4b";
                 color: white;
             }
             </style>
