@@ -137,7 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([1, 5.25, 1])
+        submit_button, _, reset_button = st.columns([1, 5, 1])
 
         H2, CO2 = np.array([0, 0])
 
