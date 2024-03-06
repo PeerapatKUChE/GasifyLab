@@ -151,7 +151,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button(":red[Reset]", on_click=reset, type="secondary")
+        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
 
         st.markdown(
             """
