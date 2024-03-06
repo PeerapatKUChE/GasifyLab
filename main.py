@@ -142,7 +142,8 @@ def main():
             if validate_inputs(categorical_inputs, continuous_inputs):
                 H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
-        res1, res2, buttons = st.columns(3)
+        results, _, buttons = st.columns(3)
+        res1, res2 = results.columns(2)
         button1, reset_button = buttons.columns(2)
         res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
         res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
