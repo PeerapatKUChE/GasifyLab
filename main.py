@@ -137,7 +137,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([4, 1.1, 1])
+        submit_button, _, reset_button = st.columns([1, 5.1, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
@@ -177,7 +177,7 @@ def main():
             unsafe_allow_html=True,
         )
 
-        submit_button.write("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
+    st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
     if "H2" not in locals() and "CO2" not in locals():
         H2, CO2 = np.array([0, 0])
