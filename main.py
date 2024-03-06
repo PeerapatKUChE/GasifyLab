@@ -166,6 +166,14 @@ def main():
             button[kind="primary"] {
                 background: none!important;
                 border: none;
+                text-decoration: none;
+            }
+            button[kind="primary"]:hover {
+                text-decoration: none;
+            }
+            button[kind="primary"]:focus {
+                outline: none !important;
+                box-shadow: none !important;
             }
             </style>
             """,
