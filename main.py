@@ -162,20 +162,21 @@ def main():
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:hover {
-                background-color: #f8fcfc;
-                border: none;
-                color: "primaryColor";
-            }
-            button[kind="secondaryFormSubmit"]:focus {
-                background-color: #f8cad7;
+                background-color: #0269EB;
                 border: none;
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:active {
-                background: none;
+                background-color: #C0EB02;
                 border: none;
                 color: "primaryColor";
             }
+            button[kind="secondaryFormSubmit"]:focus {
+                background-color: #6B3C37; 
+                border: none;
+                color: "primaryColor";
+            }
+
             </style>
             """,
             unsafe_allow_html=True,
