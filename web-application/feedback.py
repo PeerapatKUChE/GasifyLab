@@ -27,15 +27,9 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
             
-            attachment_urls = []
-            for attachment in attachments:
-                file_path = os.path.join("attachments", attachment.name)
-                with open(file_path, "wb") as f:
-                    f.write(attachment.getvalue())
-                attachment_urls.append(file_path)
+            st.write(attachments)
 
             feedback = [date, time, subject, message, attachment_urls]
-            st.write(feedback)
             sheet.append_row(feedback)
 
             st.success("Your feedback has been submitted successfully.")
