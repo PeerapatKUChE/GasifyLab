@@ -151,7 +151,7 @@ def main():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        reset_button.form_submit_button("**Reset**", on_click=reset, type="secondary")
+        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
 
         st.markdown(
             """
@@ -163,11 +163,6 @@ def main():
             }
             button[kind="secondaryFormSubmit"]:hover {
                 background-color: #0269EB;
-                border: none;
-                color: "primaryColor";
-            }
-            button[kind="secondaryFormSubmit"]:active {
-                background-color: #C0EB02;
                 border: none;
                 color: "primaryColor";
             }
