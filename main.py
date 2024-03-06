@@ -145,7 +145,7 @@ def main():
         st.markdown(
             """
         <style> {
-            div.stButton button {
+            .stButton button {
                 background-color: brown;
                 width: 200px;
             }
