@@ -1,7 +1,5 @@
 import os
-import pandas as pd
 import streamlit as st
-import validators
 from datetime import datetime
 
 import gspread
@@ -20,14 +18,14 @@ st.write(":red[* Required]")
 with st.form("Feedback Form", clear_on_submit=True, border=False):
     subject = st.text_input("Subject :red[*]", value=None)
     message = st.text_area("Message :red[*]", value=None)
-    attachments = st.file_uploader("Attachment(s) :gray[(if any)]", accept_multiple_files=True)
+    attachments = st.file_uploader("Attachment(s) :gray[(if any)]", type=["jpg", "png", "jpeg"], accept_multiple_files=True)
 
     if st.form_submit_button("Submit"):
         if subject != None and message != None:
             now = datetime.now()
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
-
+            st.write(attachments)
             feedback = [date, time, subject, message, attachments]
             sheet.append_row(feedback)
 
