@@ -1,5 +1,5 @@
 import streamlit as st
-st.image("https://fontmeme.com/temporary/283bd58e2b2d3521ce6d16fc7812dbce.png")
+st.image("https://fontmeme.com/temporary/27cb896e085fec8625c942b57e4f75d5.png")
 st.write("")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum rutrum pretium leo ac venenatis. Maecenas ipsum odio, vulputate at ante ut, volutpat sodales urna. Nulla at auctor nisl. Donec rutrum augue at ante tincidunt posuere. Praesent molestie fermentum scelerisque. Nulla tristique hendrerit tempus. Aenean eu quam eros. Sed tempor sem hendrerit ipsum ultrices eleifend.")
 
