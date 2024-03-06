@@ -27,13 +27,14 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
             date = now.strftime("%d/%m/%Y")
             time = now.strftime("%H:%M:%S")
             
-            attachment_data = []
-            for file in attachments:
-                content = file.read()
-                encoded_content = base64.b64encode(content).decode("utf-8")
-                attachment_data.append({"filename": file.name, "content": encoded_content})
+            attachment_urls = []
+            for attachment in attachments:
+                file_path = os.path.join("attachments", attachment.name)
+                with open(file_path, "wb") as f:
+                    f.write(attachment.getvalue())
+                attachment_urls.append(file_path)
 
-            feedback = [date, time, subject, message, attachment_data]
+            feedback = [date, time, subject, message, attachment_urls]
             st.write(feedback)
             sheet.append_row(feedback)
 
