@@ -144,20 +144,22 @@ def main():
         else:
             H2, CO2 = np.array([0, 0])
 
-        results, _, buttons = st.columns([2, 1, 2])
-        res1, res2 = results.columns(2)
-        submit_button, reset_button = buttons.columns(2)
-        res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
-        res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
+        submit_button, _, reset_button = st.columns([1, 10, 1])
 
-        submit_button.text("")
-        reset_button.text("")
+        H2, CO2 = np.array([0, 0])
 
+        if submit_button.button("Estimate"):
+            if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
+                if validate_inputs(categorical_inputs, continuous_inputs):
+                    H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
+
+            else:
+                st.error("Error: All fields are required.")
+        
         def reset():
             for key in list(continuous_inputs.keys()) + list(categorical_inputs.keys()):
                 st.session_state[key] = None
         
-        submit_button.button("Estimate")
         reset_button.button("**:red[Reset]**", on_click=reset, type="primary")
 
         st.markdown(
@@ -166,14 +168,6 @@ def main():
             button[kind="primary"] {
                 background: none!important;
                 border: none;
-                text-decoration: none;
-            }
-            button[kind="primary"]:hover {
-                text-decoration: none;
-            }
-            button[kind="primary"]:focus {
-                outline: none !important;
-                box-shadow: none !important;
             }
             </style>
             """,
@@ -181,6 +175,10 @@ def main():
         )
 
     st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
+
+    res1, res2 = st.columns([1, 1, 2])
+    res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
+    res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
 if __name__ == "__main__":
     main()
