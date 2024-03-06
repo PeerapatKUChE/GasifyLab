@@ -15,7 +15,7 @@ sheet = client.open("Web Application").worksheet("Feedback")
 st.title("Your Feedback Matters!")
 st.write("Thank you for taking the time to share your feedback! Your input helps us improve our web application and provide the best possible experience for our users.")
 st.write("This form is **completely anonymous**. Your personal information will not be collected or associated with your feedback.")
-st.write("If you have a specific question, request, or need help with something beyond reporting an issue or sharing feedback, please visit our [contact page](https://biomassgaspredict.streamlit.app/Contact)")
+st.write("If you have a specific question, request, or need help with something beyond reporting an issue or sharing feedback, please visit our [contact page](https://biomassgaspredict.streamlit.app/Contact).")
 st.write(":red[* Required]")
 
 with st.form("Feedback Form", clear_on_submit=True, border=False):
