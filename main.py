@@ -144,13 +144,14 @@ def main():
 
         st.markdown(
             """
-        <style>
-        button {
-            width: 20px
+        <style> {
+            div.stButton button {
+                background-color: brown;
+                width: 200px;
+            }
         }
         </style>
-        """,
-            unsafe_allow_html=True,
+        """, unsafe_allow_html=True,
         )
 
         results, _, buttons = st.columns(3)
