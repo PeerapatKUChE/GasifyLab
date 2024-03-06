@@ -8,7 +8,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(__file__) + "/biomass-gasification-faec3b292117.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(os.path.dirname(__file__) + "/key/biomass-gasification-faec3b292117.json", scope)
 client = gspread.authorize(creds)
  
 sheet = client.open("Web Application").worksheet("Feedback")  
