@@ -89,6 +89,7 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
 def main():
     st.title("Biomass Gasification Product Estimation Tool")
     st.write("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
+    st.text("* db: dry basis, wb: wet basis, daf: dry ash-free basis")
     st.write(":red[All fields are required.]")
 
     continuous_data, categorical_data = load_data(os.path.dirname(__file__) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
@@ -176,8 +177,6 @@ def main():
             """,
             unsafe_allow_html=True,
         )
-
-    st.write("'*' db: dry basis, wb: wet basis, daf: dry ash-free basis")
 
     if "H2" not in locals() and "CO2" not in locals():
         H2, CO2 = np.array([0, 0])
