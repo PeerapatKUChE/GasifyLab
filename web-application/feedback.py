@@ -23,7 +23,7 @@ with st.form("Feedback Form", clear_on_submit=True, border=False):
     message = st.text_area("Message :red[*]", value=None)
     attachments = st.text_input("Attachment link :gray[(if any)]", value=None, placeholder="Example: https://example.com/")
 
-    if st.form_submit_button("Submit", type="secondary"):
+    if st.form_submit_button("Submit", type="primary"):
         if subject != None and message != None:
             now = datetime.now()
             date = now.strftime("%d/%m/%Y")
