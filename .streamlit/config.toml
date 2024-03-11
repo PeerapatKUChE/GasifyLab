@@ -15,10 +15,10 @@ backgroundColor = "#eef0f6" # sepia yellow
 
 # Used as the background for most widgets. Examples of widgets with this background are st.sidebar,
 # st.text_input, st.date_input.
-secondaryBackgroundColor =  "#30b4c9" # wheat  "#d7ab82" # yellow <-- not enough contrast
+secondaryBackgroundColor =  "#f7efe8" # wheat  "#d7ab82" # yellow <-- not enough contrast
 
 # Font color for the page.
-textColor = "#2a344c" # grey
+textColor = "#282828" # grey
 
 # Font family (serif | sans serif | mono) for the page. Will not impact code areas.
 # Default: "sans serif"
