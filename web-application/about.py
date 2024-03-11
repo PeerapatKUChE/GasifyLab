@@ -1,5 +1,5 @@
 import streamlit as st
-st.image("https://txt.1001fonts.net/img/txt/dHRmLjEyOC4zNjVhYzYuUjJGemFXWjVUR0ZpLjA/montserrat.bold.webp")
+st.image("https://txt.1001fonts.net/img/txt/b3RmLjE0Mi4zZTY3ZTQuUjJGemFXWjVUR0ZpLjU/pricedown.bl-regular.webp") ##3E67E4
 st.write("")
 st.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum rutrum pretium leo ac venenatis. Maecenas ipsum odio, vulputate at ante ut, volutpat sodales urna. Nulla at auctor nisl. Donec rutrum augue at ante tincidunt posuere. Praesent molestie fermentum scelerisque. Nulla tristique hendrerit tempus. Aenean eu quam eros. Sed tempor sem hendrerit ipsum ultrices eleifend.")
 
