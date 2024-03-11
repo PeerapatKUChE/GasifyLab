@@ -163,12 +163,12 @@ def main():
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:hover {
-                background-color: rgb(0, 0, 0, 0.05);
+                background-color: rgb(0, 0, 0, 0.025);
                 border: none;
                 color: "primaryColor";
             }
             button[kind="secondaryFormSubmit"]:focus {
-                background-color: rgb(0, 0, 0, 0.05); 
+                background-color: rgb(0, 0, 0, 0.025); 
                 border: none;
                 color: "primaryColor";
             }
