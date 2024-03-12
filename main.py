@@ -25,8 +25,8 @@ show_pages(
 
 st.markdown("""
     <style>
-    div[data-testid="stSidebarNav"] li:nth-child(1) {
-        color: blue;
+    div[data-testid="stSidebarNav"] li:nth-child(3) {
+        display: None;
     }
     </style>
     """, unsafe_allow_html=True)
