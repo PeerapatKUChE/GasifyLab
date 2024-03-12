@@ -13,6 +13,12 @@ st.markdown("""
     <style>
     """, unsafe_allow_html=True)
 
+st.sidebar.markdown("""<style>
+  .st-emotion-cache-1c900x3.eczjsme6 a[data-testid="stSidebarNavLink"][href="https://gasifylab.streamlit.app/User Guide"] > span.st-emotion-cache-9lxyvz.eczjsme5 {
+    content: "Hello World";
+  }
+  </style>""", unsafe_allow_html=True)
+
 show_pages(
     [
         Page("web-application/about.py", "About"),
