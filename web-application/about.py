@@ -11,4 +11,4 @@ st.write("Quisque at dignissim dolor, ac tincidunt nisl. Phasellus mollis lorem 
 
 st.write("Morbi sagittis augue quam, et feugiat sapien semper id. Sed eleifend velit ut lectus semper, id mollis purus aliquet. Praesent vehicula imperdiet cursus. Cras ultricies, lacus in consequat sollicitudin, lorem neque pulvinar ligula, sit amet vestibulum tortor augue a risus. Suspendisse feugiat ultrices enim sagittis pulvinar. Maecenas faucibus, metus non feugiat dapibus, mauris lacus feugiat dui, id mattis turpis neque vel arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla interdum massa in pharetra venenatis.")
 
-st.link_button("Get Started", "https://biomassgaspredict.streamlit.app/Estimation%20Tool")
+st.link_button("Get Started", "https://biomassgaspredict.streamlit.app/Estimation%20Tool", type="primary")
