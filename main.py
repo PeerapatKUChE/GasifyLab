@@ -6,19 +6,22 @@ from joblib import load
 from st_pages import Page, show_pages
 
 st.markdown("""
-<style>
-    [data-testid=stSidebar] {
-        background-color: rgb(0, 0, 0, 0);
-    }
-""", unsafe_allow_html=True)
+    <style>
+        [data-testid=stSidebar] {
+            background-color: rgb(0, 0, 0, 0);
+        }
+    """, unsafe_allow_html=True)
 
 st.markdown("""
-<div class="st-emotion-cache-j7qwjs eczjsme7">
-    <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/User Guide" class="st-emotion-cache-1c900x3 eczjsme6">
-      <span class="st-emotion-cache-9lxyvz eczjsme5">Hello World</span>
-    </a>
-  </div>
-""", unsafe_allow_html=True)
+      <style>
+        .st-sidebar .st-subMenuText {
+          display: none;  /* Hide default text */
+        }
+        .st-sidebar a[data-testid="stSidebarNavLink"] {
+          content: "Hello World";  /* Set new text content */
+        }
+      </style>
+      """, unsafe_allow_html=True)
 
 show_pages(
     [
