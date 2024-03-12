@@ -13,11 +13,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<style>
-a.st-emotion-cache-1c900x3 eczjsme6 span.st-emotion-cache-9lxyvz eczjsme5 {
-    content: "Hello World!";
-}
-</style>
+<div class="st-emotion-cache-j7qwjs eczjsme7">
+    <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/User Guide" class="st-emotion-cache-1c900x3 eczjsme6">
+      <span class="st-emotion-cache-9lxyvz eczjsme5">Hello World</span>
+    </a>
+  </div>
 """, unsafe_allow_html=True)
 
 show_pages(
