@@ -24,12 +24,16 @@ show_pages(
 )
 
 st.markdown("""
-    <style>
-    div[data-testid=\"stSidebarNav\"] li:nth-child(1) {
-        display: "Home";
-    }
-    </style>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var element = document.querySelector('div[data-testid="stSidebarNav"] li:nth-child(1)');
+        if (element) {
+            element.innerHTML = "Home";
+        }
+    });
+    </script>
     """, unsafe_allow_html=True)
+
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
