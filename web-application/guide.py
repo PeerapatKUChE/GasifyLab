@@ -3,7 +3,7 @@ import streamlit as st
 st.title("User Guide")
 st.subheader("Getting Started")
 
-number, text = st.columns([1, 20])
+number, text = st.columns([1, 30])
 number.write("1.‎ ")
 text.write("Accessing the Web App:")
 number.write("‎ ")
