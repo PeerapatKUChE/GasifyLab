@@ -25,7 +25,7 @@ show_pages(
 
 st.markdown("""
     <style>
-    div[data-testid=\"stSidebarNav\"] li:nth-child({1}) {{
+    div[data-testid=\"stSidebarNav\"] li:nth-child(1) {{
         display: none;
     }}
     </style>
