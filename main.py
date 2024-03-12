@@ -16,7 +16,7 @@ st.markdown("""
 st.markdown("""<style>
   div[data-testid=\"stSidebarNav\"] li:nth-child({1})
       span:nth-child(1) {{
-      margin-left: 1.5rem;
+      margin-left: 2.5rem;
   }}
   </style>""", unsafe_allow_html=True)
 
