@@ -14,9 +14,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 st.markdown("""<style>
-  .st-emotion-cache-1c900x3.eczjsme6 a[data-testid="stSidebarNavLink"][href="https://gasifylab.streamlit.app/User Guide"] > span.st-emotion-cache-9lxyvz.eczjsme5 {
-    content: "Hello World";
-  }
+  div[data-testid=\"stSidebarNav\"] li:nth-child({1})
+      span:nth-child(1) {{
+      margin-left: 1.5rem;
+  }}
   </style>""", unsafe_allow_html=True)
 
 show_pages(
