@@ -84,9 +84,6 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    st.write("\* db: dry basis, wb: wet basis, daf: dry ash-free basis")
-    st.write(":red[All fields are required.]")
-
     continuous_data, categorical_data = load_data(os.path.dirname(__file__) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
 
