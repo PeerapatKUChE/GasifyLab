@@ -9,7 +9,6 @@ show_pages(
     [
         Page("web-application/about.py", "About"),
         Page("main.py", "Estimation Tool"),
-        Page("web-application/guide.py", "User Guide"),
         Page("web-application/feedback.py", "Feedback"),
         Page("web-application/contact.py", "Contact")
     ]
