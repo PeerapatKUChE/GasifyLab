@@ -3,14 +3,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from joblib import load
-from st_pages import Page, show_pages
-
-show_pages(
-    [
-        Page("main.py", "Estimation Tool"),
-        Page("web-application/feedback.py", "Feedback"),
-    ]
-)
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
