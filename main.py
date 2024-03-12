@@ -5,6 +5,14 @@ import pandas as pd
 from joblib import load
 from st_pages import Page, show_pages
 
+st.markdown("""
+<style>
+    [data-testid=stSidebar] {
+        opacity = 0;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 show_pages(
     [
         Page("web-application/about.py", "About"),
