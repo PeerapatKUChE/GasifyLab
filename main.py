@@ -24,11 +24,11 @@ show_pages(
 )
 
 st.markdown("""
-    <script>
+    <style>
     div[data-testid="stSidebarNav"] li:nth-child(1) {
-        content: "Home";
+        color: blue;
     }
-    </script>
+    </style>
     """, unsafe_allow_html=True)
 
 
