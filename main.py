@@ -10,7 +10,7 @@ st.markdown("""
     [data-testid=stSidebar] {
         background-color: rgb(255, 255, 255, 0);
     }
-    <style>
+    </style>
     """, unsafe_allow_html=True)
 
 show_pages(
