@@ -16,7 +16,7 @@ backgroundColor="#202020" #191a1d
 
 # Used as the background for most widgets. Examples of widgets with this background are st.sidebar,
 # st.text_input, st.date_input.
-secondaryBackgroundColor="#2e2e2e" #242527
+secondaryBackgroundColor="#2f2f2f" #242527
 
 # Font color for the page.
 textColor="#f5f5f5"
