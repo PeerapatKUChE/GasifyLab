@@ -8,7 +8,7 @@ from st_pages import Page, show_pages
 st.markdown("""
 <style>
     [data-testid=stSidebar] {
-        opacity: rgb(0, 0, 0, 0);
+        background-color: rgb(0, 0, 0, 0);
     }
 </style>
 """, unsafe_allow_html=True)
