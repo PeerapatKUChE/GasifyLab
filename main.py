@@ -8,7 +8,7 @@ from st_pages import Page, show_pages
 st.markdown("""
     <style>
     [data-testid=stSidebar] {
-        background-color: rgb(0, 0, 0, 0);
+        background-color: rgb(255, 255, 255, 0);
     }
     <style>
     """, unsafe_allow_html=True)
@@ -22,74 +22,6 @@ show_pages(
         Page("web-application/contact.py", "Contact")
     ]
 )
-
-st.markdown("""
-<section class="st-emotion-cache-1voizf0 eczjsme11" data-testid="stSidebar" aria-expanded="true" style="position: relative; user-select: auto; width: 244px; height: 728px; box-sizing: border-box; flex-shrink: 0;">
-    <div data-testid="stSidebarContent" class="st-emotion-cache-6qob1r eczjsme3">
-        <div class="st-emotion-cache-aiumgf eczjsme2">
-            <button kind="header" data-testid="baseButton-header" class="st-emotion-cache-16u5fdf ef3psqc5">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg" color="inherit" class="eyeqlp51 st-emotion-cache-1pbsqtx ex0cdmw0">
-                    <path fill="none" d="M0 0h24v24H0V0z"></path>
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>
-                </svg>
-            </button>
-        </div>
-        <div data-testid="stSidebarNav" class="st-emotion-cache-79elbk eczjsme10">
-            <ul data-testid="stSidebarNavItems" class="st-emotion-cache-lrlib eczjsme9">
-                <li>
-                    <div class="st-emotion-cache-j7qwjs eczjsme7">
-                        <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/" class="st-emotion-cache-1c900x3 eczjsme6">
-                            <span class="st-emotion-cache-9lxyvz eczjsme5">About</span>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="st-emotion-cache-j7qwjs eczjsme7">
-                        <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/Estimation Tool" class="st-emotion-cache-iefa9s eczjsme6">
-                            <span class="st-emotion-cache-1ntrxfi eczjsme5">Estimation Tool</span>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="st-emotion-cache-j7qwjs eczjsme7">
-                        <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/Hello World" class="st-emotion-cache-1c900x3 eczjsme6">
-                            <span class="st-emotion-cache-9lxyvz eczjsme5">Hello World</span>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="st-emotion-cache-j7qwjs eczjsme7">
-                        <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/Feedback" class="st-emotion-cache-1c900x3 eczjsme6">
-                            <span class="st-emotion-cache-9lxyvz eczjsme5">Feedback</span>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <div class="st-emotion-cache-j7qwjs eczjsme7">
-                        <a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/Contact" class="st-emotion-cache-1c900x3 eczjsme6">
-                            <span class="st-emotion-cache-9lxyvz eczjsme5">Contact</span>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div data-testid="stSidebarUserContent" class="st-emotion-cache-1n5xqho eczjsme4">
-            <div class="st-emotion-cache-8atqhb ea3mdgi4">
-                <div data-testid="stVerticalBlockBorderWrapper" data-test-scroll-behavior="normal" class="st-emotion-cache-0 e1f1d6gn0">
-                    <div class="st-emotion-cache-1wmy9hl e1f1d6gn1">
-                        <div width="196" data-testid="stVerticalBlock" class="st-emotion-cache-r2l7aq e1f1d6gn2"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <div class="" style="position: absolute; user-select: none; width: 8px; height: 100%; top: 0px; cursor: col-resize; right: -6px;">
-            <div class="st-emotion-cache-1eewpqt eczjsme0"></div>
-        </div>
-    </div>
-</section>
-""")
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
