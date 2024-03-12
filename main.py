@@ -7,18 +7,21 @@ from st_pages import Page, show_pages
 
 st.markdown("""
     <style>
-        [data-testid=stSidebar] {
-            background-color: rgb(0, 0, 0, 0);
-        }
+    [data-testid=stSidebar] {
+        background-color: rgb(0, 0, 0, 0);
+    }
+    <style>
     """, unsafe_allow_html=True)
 
 st.markdown("""
-      <style>
-          .st-sidebar a[data-testid="stSidebarNavLink"] {
-              content: "Hello World";  /* Set new text content */
-          }
-      </style>
-      """, unsafe_allow_html=True)
+    <style>
+    .st-ecjzsme6 a[data-testid="stSidebarNavLink"][href="User Guide"] {
+        span:nth-child(1) {
+            content: "Hello World";
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 show_pages(
     [
