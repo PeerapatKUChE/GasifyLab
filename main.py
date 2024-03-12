@@ -10,10 +10,14 @@ st.markdown("""
     [data-testid=stSidebar] {
         background-color: rgb(0, 0, 0, 0);
     }
+""", unsafe_allow_html=True)
 
-    .st-emotion-cache-iefa9s eczjsme6 .st-emotion-cache-1ntrxfi eczjsme5 {
-        content: "Hello World";  /* Replace text content */
-    }
+st.markdown("""
+<style>
+.st-emotion-cache-1c900x3 eczjsme6 span.st-emotion-cache-9lxyvz eczjsme5 {
+    content: "Hello World!";
+}
+</style>
 """, unsafe_allow_html=True)
 
 show_pages(
