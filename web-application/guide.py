@@ -4,7 +4,7 @@ st.title("User Guide")
 st.subheader("Getting Started")
 
 number, text = st.columns([1, 10])
-number.write("1.")
+number.write("1.‎ ")
 text.write("Accessing the Web App:")
 
 text.write("Open your preferred web browser and navigate to [the estimation tool](https://gasifylab.streamlit.app/Estimation%20Tool).")
