@@ -23,12 +23,13 @@ show_pages(
     ]
 )
 
-st.markdown("""<style>
-  div[data-testid=\"stSidebarNav\"] li:nth-child({1})
-      span:nth-child(1) {{
-      margin-left: 2.5rem;
-  }}
-  </style>""", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    div[data-testid=\"stSidebarNav\"] li:nth-child({1}) {{
+        display: none;
+    }}
+    </style>
+    """, unsafe_allow_html=True)
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
