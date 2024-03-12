@@ -5,14 +5,6 @@ import pandas as pd
 from joblib import load
 from st_pages import Page, show_pages
 
-st.markdown("""
-    <style>
-    [data-testid=stSidebar] {
-        background-color: rgb(255, 255, 255, 0);
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 show_pages(
     [
         Page("web-application/about.py", "About"),
@@ -22,15 +14,6 @@ show_pages(
         Page("web-application/contact.py", "Contact")
     ]
 )
-
-st.markdown("""
-    <style>
-    div[data-testid="stSidebarNav"] li:nth-child(3) {
-        #display: None;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
