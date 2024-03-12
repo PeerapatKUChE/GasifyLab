@@ -15,10 +15,8 @@ st.markdown("""
 
 st.markdown("""
     <style>
-    .st-ecjzsme6 a[data-testid="stSidebarNavLink"][href="User Guide"] {
-        span:nth-child(1) {
-            content: "Hello World";
-        }
+    .st-emoticon-cache-9lxyvz.eczjsme5[data-testid="stSidebarNavLink"]:nth-child(3) {
+        color: #051681;  /* Customize the color as desired */
     }
     </style>
     """, unsafe_allow_html=True)
