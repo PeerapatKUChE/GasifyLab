@@ -7,10 +7,8 @@ from st_pages import Page, show_pages
 
 show_pages(
     [
-        Page("web-application/about.py", "About"),
         Page("main.py", "Estimation Tool"),
         Page("web-application/feedback.py", "Feedback"),
-        Page("web-application/contact.py", "Contact")
     ]
 )
 
