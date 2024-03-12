@@ -23,7 +23,7 @@ show_pages(
     ]
 )
 
-st.sidebar.markdown("""
+st.markdown("""
 <section class="st-emotion-cache-1voizf0 eczjsme11" data-testid="stSidebar" aria-expanded="true" style="position: relative; user-select: auto; width: 244px; height: 728px; box-sizing: border-box; flex-shrink: 0;">
     <div data-testid="stSidebarContent" class="st-emotion-cache-6qob1r eczjsme3">
         <div class="st-emotion-cache-aiumgf eczjsme2">
