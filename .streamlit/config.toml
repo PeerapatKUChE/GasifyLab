@@ -12,7 +12,7 @@ maxUploadSize = 10
 primaryColor="#365ac6"
 
 # Background color for the main container.
-backgroundColor="#1b1b1b" #191a1d
+backgroundColor="#202020" #191a1d
 
 # Used as the background for most widgets. Examples of widgets with this background are st.sidebar,
 # st.text_input, st.date_input.
