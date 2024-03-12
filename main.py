@@ -10,8 +10,8 @@ st.markdown("""
     [data-testid=stSidebar] {
         background-color: rgb(0, 0, 0, 0);
     }
-    [data-testid=stSidebarNavLink] span.st-emotion-cache-9lxyvz.eczjsme5 {
-        font-weight: bold;
+    [data-testid=stSidebarNavLink] span:nth-child(1) {
+      display: "Hello";
     }
 </style>
 """, unsafe_allow_html=True)
