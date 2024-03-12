@@ -84,8 +84,6 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    st.title("Biomass Gasification Product Estimation Tool")
-    st.write("This web application uses machine learning (ML) to estimate hydrogen (H₂) and carbon dioxide (CO₂) production from biomass gasification.")
     st.write("\* db: dry basis, wb: wet basis, daf: dry ash-free basis")
     st.write(":red[All fields are required.]")
 
@@ -135,7 +133,7 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        submit_button, _, reset_button = st.columns([1, 5.1, 1])
+        submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
