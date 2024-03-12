@@ -13,14 +13,6 @@ st.markdown("""
     <style>
     """, unsafe_allow_html=True)
 
-st.markdown("""
-    <style>
-    .st-emoticon-cache-9lxyvz.eczjsme5[data-testid="stSidebarNavLink"]:nth-child(3) {
-        color: #051681;  /* Customize the color as desired */
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
 show_pages(
     [
         Page("web-application/about.py", "About"),
@@ -29,6 +21,21 @@ show_pages(
         Page("web-application/feedback.py", "Feedback"),
         Page("web-application/contact.py", "Contact")
     ]
+)
+
+st.markdown(
+    """
+    <style>
+        .st-emotion-cache-1c900x3.eczjsme6:contains('User Guide') {
+            visibility: hidden;
+        }
+        .st-emotion-cache-1c900x3.eczjsme6:contains('User Guide'):before {
+            content: 'Hello World';
+            visibility: visible;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 def load_data(file_path):
