@@ -10,6 +10,9 @@ st.markdown("""
     [data-testid=stSidebar] {
         background-color: rgb(0, 0, 0, 0);
     }
+    [data-testid=stSidebarNavLink].st-emotion-cache-iefa9s eczjsme6 {
+        color: blue
+    }
 </style>
 """, unsafe_allow_html=True)
 
