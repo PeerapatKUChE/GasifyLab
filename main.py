@@ -10,11 +10,23 @@ st.markdown("""
     [data-testid=stSidebar] {
         background-color: rgb(0, 0, 0, 0);
     }
-    [data-testid=stSidebarNavLink] span:nth-child(1) {
-      display: "Hello";
+""", unsafe_allow_html=True)
+
+# Custom CSS to change the text
+custom_css = """
+<style>
+    .st-emotion-cache-1c900x3.eczjsme6 {
+        color: #000;  /* Change color if needed */
+        text-decoration: none;  /* Remove underline if needed */
     }
 </style>
-""", unsafe_allow_html=True)
+"""
+
+# HTML code with the modified text
+html_code = '<a data-testid="stSidebarNavLink" href="https://gasifylab.streamlit.app/User Guide" class="st-emotion-cache-1c900x3 eczjsme6"><span class="st-emotion-cache-9lxyvz eczjsme5">Hello World</span></a>'
+
+# Display the HTML code with custom CSS
+st.markdown(custom_css + html_code, unsafe_allow_html=True)
 
 show_pages(
     [
