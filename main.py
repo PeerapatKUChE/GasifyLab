@@ -14,12 +14,9 @@ st.markdown("""
 
 st.markdown("""
       <style>
-        .st-sidebar .st-subMenuText {
-          display: none;  /* Hide default text */
-        }
-        .st-sidebar a[data-testid="stSidebarNavLink"] {
-          content: "Hello World";  /* Set new text content */
-        }
+          .st-sidebar a[data-testid="stSidebarNavLink"] {
+              content: "Hello World";  /* Set new text content */
+          }
       </style>
       """, unsafe_allow_html=True)
 
