@@ -24,14 +24,11 @@ show_pages(
 )
 
 st.markdown("""
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var element = document.querySelector('div[data-testid="stSidebarNav"] li:nth-child(1)');
-        if (element) {
-            element.innerHTML = "Home";
-        }
-    });
-    </script>
+    <style>
+    div[data-testid="stSidebarNav"] li:nth-child(1) {
+        content: "Home";
+    }
+    </style>
     """, unsafe_allow_html=True)
 
 
