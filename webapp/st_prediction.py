@@ -90,8 +90,8 @@ def main():
     }
 
     models = {
-        "H2": load(os.path.dirname(__file__) + "/models/model-H2.joblib"),
-        "CO2": load(os.path.dirname(__file__) + "/models/model-CO2.joblib")
+        "H2": load(os.path.abspath(os.curdir) + "/models/model-H2.joblib"),
+        "CO2": load(os.path.abspath(os.curdir) + "/models/model-CO2.joblib")
     }
 
     with st.form("Estimation Tool"):
