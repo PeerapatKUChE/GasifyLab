@@ -101,6 +101,7 @@ def main():
         temperature = st.number_input("Temperature (°C)", value=None, min_value=0.01, key="Temperature")
         steam_biomass, equivalence_ratio = st.columns(2)
 
+        st.write("**Biomass Charecteristics**")
         continuous_inputs = {
             "Particle size": particle_size,
             "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.01, max_value=100.00, key="C"),
