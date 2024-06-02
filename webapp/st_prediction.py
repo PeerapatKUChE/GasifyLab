@@ -76,7 +76,7 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    continuous_data, categorical_data = load_data(os.path.dirname(__file__) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
+    continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
 
     continuous_vars = {
