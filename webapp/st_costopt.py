@@ -91,7 +91,7 @@ def milp_solver(
         )
     
         #
-    prob = pulp.LpProblem("Cost Optimization", pulp.LpMinimize)
+    prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
 
     # Decision variables ===============================================================================
     #
@@ -257,6 +257,9 @@ def milp_solver(
         biomass_percentage = pd.DataFrame(biomass_percentage).T
         biomass_percentage.index = [0]
         summary = pd.concat([summary, biomass_percentage], axis=1)
+
+        st.dataframe(summary)
+        st.dataframe(details)
 
     else:
         print(f"Error: No solution found for this composition.")
