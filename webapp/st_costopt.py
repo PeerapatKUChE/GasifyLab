@@ -6,6 +6,7 @@ import pandas as pd
 
 def load_data(path):
     compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
+    densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
     supplies = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
     distances = pd.read_excel(path+"/data/raw/Data-Distances.xlsx")
     return compositions, supplies, distances
@@ -31,13 +32,14 @@ def calculate_transportation_cost(
     return transportation_costs_df
 
 def prepare_data(
-        target_composition, compositions, prices, supplies, distances,
+        target_composition, compositions, prices, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     ):
+    
     biomass_data = compositions.merge(prices, on="Biomass Type")
+    biomass_data = biomass_data.merge(densities[["Biomass Type", "Density"]], on="Biomass Type")
     st.dataframe(biomass_data)
-    biomass_data = biomass_data.drop(columns=["Feedstock Cost Reference", "Density Reference", "Weight at Max Cargo Capacity", "Transportation Cost"])
     biomass_data["Transportation Cost"] = calculate_transportation_cost(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height,
@@ -91,6 +93,8 @@ def milp_solver(
     return
 
 def main():
+    compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
+
     with st.form("Optimization Tool"):
         col1, col2, col3 = st.columns(3)
 
@@ -157,12 +161,11 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            compositions, supplies, distances = load_data(os.path.abspath(os.curdir))
-
             prepare_data(
                 target_composition=target_composition,
                 compositions=compositions,
                 prices=biomass_prices,
+                densities=densities,
                 supplies=supplies,
                 distances=distances,
                 fuel_price=truck_params["Fuel price"],
