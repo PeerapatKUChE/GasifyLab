@@ -9,7 +9,7 @@ def load_data(path):
     densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
     supplies = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
     distances = pd.read_excel(path+"/data/raw/Data-Distances.xlsx")
-    return compositions, supplies, distances
+    return compositions, densities, supplies, distances
 
 def calculate_transportation_cost(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
@@ -32,7 +32,7 @@ def calculate_transportation_cost(
     return transportation_costs_df
 
 def prepare_data(
-        target_composition, compositions, prices, densities, supplies, distances,
+        prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     ):
@@ -80,13 +80,13 @@ def prepare_data(
     return Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S
 
 def milp_solver(
-        target_composition, compositions, prices, supplies, distances,
+        prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     ):
 
     Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S = prepare_data(
-        target_composition, compositions, prices, supplies, distances,
+        prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
@@ -162,9 +162,9 @@ def main():
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
             prepare_data(
+                prices=biomass_prices,
                 target_composition=target_composition,
                 compositions=compositions,
-                prices=biomass_prices,
                 densities=densities,
                 supplies=supplies,
                 distances=distances,
@@ -179,7 +179,7 @@ def main():
                 cargo_height=truck_params["Cargo height"],
                 cargo_capacity=truck_params["Cargo capacity"]
             )
-        
+
         def reset():
             for target_key in list(target_composition.keys()):
                 st.session_state[target_key] = None
