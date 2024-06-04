@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 def load_data(path):
-    compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Preprocessed Data")
+    compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
     supplies = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
     distances = pd.read_excel(path+"/data/raw/Data-Distances.xlsx")
     return compositions, supplies, distances
