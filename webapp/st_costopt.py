@@ -57,16 +57,16 @@ def main():
         }
 
         truck_params = {
-            "Fuel price": col2.number_input("Fuel price (THB/liter)", value=default_truck_params[0], min_value=0.00, key="Fuel price"),
-            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=default_truck_params[1], min_value=0.01, key="Fuel consumption rate"),
-            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=default_truck_params[2], min_value=0.00, key="Maintenance cost"),
-            "Tire price": col3.number_input("Tire price (THB/tire)", value=default_truck_params[3], min_value=0.00, key="Tire price"),
-            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=default_truck_params[4], min_value=0.01, key="Tire lifespan"),
-            "Number of tires": col3.number_input("Number of tires", value=default_truck_params[5], min_value=0, key="Number of tires"),
-            "Cargo width": col2.number_input("Cargo width (m)", value=default_truck_params[6], min_value=0.01, key="Cargo width"),
-            "Cargo length": col3.number_input("Cargo length (m)", value=default_truck_params[7], min_value=0.01, key="Cargo length"),
-            "Cargo height": col2.number_input("Cargo height (m)", value=default_truck_params[8], min_value=0.01, key="Cargo height"),
-            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=default_truck_params[9], min_value=0.01, key="Cargo capacity"),
+            "Fuel price": col2.number_input("Fuel price (THB/liter)", value=default_truck_params["Fuel price"], min_value=0.00, key="Fuel price"),
+            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=default_truck_params["Fuel consumption rate"], min_value=0.01, key="Fuel consumption rate"),
+            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
+            "Tire price": col3.number_input("Tire price (THB/tire)", value=default_truck_params["Tire price"], min_value=0.00, key="Tire price"),
+            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=default_truck_params["Tire lifespan"], min_value=0.01, key="Tire lifespan"),
+            "Number of tires": col3.number_input("Number of tires", value=default_truck_params["Number of tires"], min_value=0, key="Number of tires"),
+            "Cargo width": col2.number_input("Cargo width (m)", value=default_truck_params["Cargo width"], min_value=0.01, key="Cargo width"),
+            "Cargo length": col3.number_input("Cargo length (m)", value=default_truck_params["Cargo length"], min_value=0.01, key="Cargo length"),
+            "Cargo height": col2.number_input("Cargo height (m)", value=default_truck_params["Cargo height"], min_value=0.01, key="Cargo height"),
+            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=default_truck_params["Cargo capacity"], min_value=0.01, key="Cargo capacity"),
         }
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
