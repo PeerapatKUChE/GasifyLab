@@ -75,6 +75,7 @@ def main():
             st.write("Yes!")
         
         def reset():
+            st.write(st.session_state["Fuel price"])
             for target_key in list(target_composition.keys()):
                 st.session_state[target_key] = None
             for truck_key in list(truck_params.keys()):
