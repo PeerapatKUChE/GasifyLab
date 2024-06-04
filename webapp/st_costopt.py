@@ -12,24 +12,25 @@ def calculate_transportation_cost():
 
 def main():
     with st.form("Optimization Tool"):
+        col1, col2, col3 = st.columns(3)
+
         st.write("**Truck Operational Parameters**")
-        fuel_price, fuel_consumption_rate, maintenance_cost = st.columns(3)
-        tire_price, tire_lifespan, number_of_tires = st.columns(3)
-        cargo_width, cargo_length = st.columns(2)
-        cargo_height, cargo_capacity = st.columns(2)
+        #fuel_price, fuel_consumption_rate, maintenance_cost = st.columns(3)
+        #tire_price, tire_lifespan, number_of_tires = st.columns(3)
+        #cargo_width, cargo_length = st.columns(2)
+        #cargo_height, cargo_capacity = st.columns(2)
 
         truck_params = {
-            "Fuel price": fuel_price.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
-            "Fuel consumption rate": fuel_consumption_rate.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
-            "Maintenance cost": maintenance_cost.number_input("Average maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
-            "Tire price": tire_price.number_input("Tire price (THB/tire)", value=8000.00, min_value=0.00, key="Tire price"),
-            "Tire lifespan": tire_lifespan.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
-            "Number of tires": number_of_tires.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
-            "Cargo width": cargo_width.number_input("Cargo width (m)", value=2.30, min_value=0.00, key="Cargo width"),
-            "Cargo length": cargo_length.number_input("Cargo length (m)", value=2.30, min_value=0.00, key="Cargo length"),
-            "Cargo height": cargo_height.number_input("Cargo height (m)", value=2.30, min_value=0.00, key="Cargo height"),
-            "Cargo capacity": cargo_capacity.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity"),
-            "Cargo capacity": cargo_height.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity2")
+            "Fuel price": col2.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
+            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
+            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
+            "Tire price": col3.number_input("Tire price (THB/tire)", value=8000.00, min_value=0.00, key="Tire price"),
+            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
+            "Number of tires": col3.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
+            "Cargo width": col2.number_input("Cargo width (m)", value=2.30, min_value=0.00, key="Cargo width"),
+            "Cargo length": col3.number_input("Cargo length (m)", value=2.30, min_value=0.00, key="Cargo length"),
+            "Cargo height": col2.number_input("Cargo height (m)", value=2.30, min_value=0.00, key="Cargo height"),
+            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity"),
         }
 
         st.write("**Biomass Price**")
@@ -46,7 +47,7 @@ def main():
         }
 
         biomass_price = pd.DataFrame(biomass_price)
-        biomass_price = st.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True)
+        biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True)
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
