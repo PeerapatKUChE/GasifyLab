@@ -43,9 +43,6 @@ def main():
             st.session_state.key = 0
         biomass_price = st.session_state.biomass_price
 
-        def reset_biomass_price():
-            st.session_state.key += 1
-
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True, key=f"Biomass price edited #{st.session_state.key}")
 
         col2.write("**Truck Operational Parameters**")
@@ -87,7 +84,7 @@ def main():
                 st.session_state[target_key] = None
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
-            reset_biomass_price()
+            st.session_state.key += 1
             
         reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
 
