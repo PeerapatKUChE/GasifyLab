@@ -19,16 +19,16 @@ def main():
         cargo_height, cargo_capacity = st.columns(2)
 
         truck_params = {
-            "Fuel price": fuel_price.number_input("Fuel price (THB/liter)", value=31.94, min_value=0, key="Fuel price"),
-            "Fuel consumption rate": fuel_consumption_rate.number_input("Fuel consumption rate (km/liter)", value=5, min_value=0, key="Fuel consumption rate"),
-            "Maintenance cost": maintenance_cost.number_input("Average truck maintenance cost (THB/km)", value=0.6, min_value=0, key="Maintenance cost"),
-            "Tire price": tire_price.number_input("Tire price (THB/tire)", value=8000, min_value=0, key="Tire price"),
-            "Tire lifespan": tire_lifespan.number_input("Tire lifespan (km)", value=70000, min_value=0, key="Tire lifespan"),
+            "Fuel price": fuel_price.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
+            "Fuel consumption rate": fuel_consumption_rate.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
+            "Maintenance cost": maintenance_cost.number_input("Average truck maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
+            "Tire price": tire_price.number_input("Tire price (THB/tire)", value=8000.00, min_value=0.00, key="Tire price"),
+            "Tire lifespan": tire_lifespan.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
             "Number of tires": number_of_tires.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
-            "Cargo width": cargo_width.number_input("Cargo width (m)", value=2.30, key="Cargo width"),
-            "Cargo length": cargo_length.number_input("Cargo length (m)", value=2.30, key="Cargo length"),
-            "Cargo height": cargo_height.number_input("Cargo height (m)", value=2.30, key="Cargo height"),
-            "Cargo capacity": cargo_capacity.number_input("Cargo capacity (ton)", value=2.30, key="Cargo capacity")
+            "Cargo width": cargo_width.number_input("Cargo width (m)", value=2.30, min_value=0.00, key="Cargo width"),
+            "Cargo length": cargo_length.number_input("Cargo length (m)", value=2.30, min_value=0.00, key="Cargo length"),
+            "Cargo height": cargo_height.number_input("Cargo height (m)", value=2.30, min_value=0.00, key="Cargo height"),
+            "Cargo capacity": cargo_capacity.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity")
         }
 
         st.write("Biomass Price")
