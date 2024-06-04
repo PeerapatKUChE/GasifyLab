@@ -264,6 +264,9 @@ def milp_solver(
         #
         result_summary = pd.concat([result_summary, summary], axis=0)
 
+        st.dataframe(result_summary)
+        st.dataframe(result_details)
+
     else:
         print(f'Error: No solution found for this composition.')
 
