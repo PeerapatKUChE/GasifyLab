@@ -31,7 +31,7 @@ def main():
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True)
 
         col2.write("**Truck Operational Parameters**")
-        col3.write("")
+        col3.write("** **")
         truck_params = {
             "Fuel price": col2.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
             "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
