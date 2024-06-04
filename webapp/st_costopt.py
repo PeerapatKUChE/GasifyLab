@@ -38,7 +38,7 @@ def main():
         }
 
         biomass_price = pd.DataFrame(biomass_price)
-        biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True, key="Biomass price")
+        biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], on_change=reset, hide_index=True, key="Biomass price")
 
         col2.write("**Truck Operational Parameters**")
         col3.write("‎ ")
@@ -80,8 +80,6 @@ def main():
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
             for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
-                st.write(st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"])
-                st.write(default_biomass_price[biomass_key])
                 st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[int(biomass_key)]
         
         reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
