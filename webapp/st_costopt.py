@@ -271,8 +271,6 @@ def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     with st.form("Optimization Tool"):
-        min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
-
         col1, col2, col3 = st.columns(3)
 
         col1.write("**Target Composition** :red[*]")
@@ -283,6 +281,8 @@ def main():
             "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
             "Target ash": col3.number_input("Target ash content (%db)", value=None, min_value=0.01, key="Target ash")
         }
+
+        min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
 
         col1.write("**Biomass Price**")
         default_biomass_price = [
@@ -359,9 +359,9 @@ def main():
             )
 
         def reset():
-            st.session_state["Min Supply"] = 10000.00
             for target_key in list(target_composition.keys()):
                 st.session_state[target_key] = None
+            st.session_state["Min Supply"] = 10000.00
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
             st.session_state.key += 1
