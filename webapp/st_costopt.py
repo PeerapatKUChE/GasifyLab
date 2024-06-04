@@ -49,8 +49,6 @@ def prepare_data(
     biomass_data = biomass_data.drop(columns=["Density"])
     biomass_data = biomass_data.sort_values(by=["Biomass Type"])
 
-
-
     supplies = supplies.drop(columns=["No.", "Region"])
     S = supplies.T
     S.columns = supplies["Province"]
@@ -166,9 +164,7 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            st.dataframe(biomass_prices)
-            st.dataframe(compositions)
-            prepare_data(
+            milp_solver(
                 prices=biomass_prices,
                 target_composition=target_composition,
                 compositions=compositions,
