@@ -14,7 +14,7 @@ def main():
     with st.form("Optimization Tool"):
         col1, col2, col3 = st.columns(3)
 
-        col1.write("**Target Composition**")
+        col1.write("**Target Composition** *")
         col2.write("‎ ")
         col3.write("‎ ")
         target_composition = {
