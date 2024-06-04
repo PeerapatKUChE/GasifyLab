@@ -4,11 +4,17 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
+
+
 def load_data(file_path):
     return
 
 def calculate_transportation_cost():
     return
+
+def on_change_price(default_biomass_price):
+            for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
+                st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[biomass_key]
 
 def main():
     with st.form("Optimization Tool"):
@@ -36,10 +42,6 @@ def main():
             ],
             "Price (THB/ton)": default_biomass_price
         }
-
-        def on_change_price():
-            for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
-                st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[int(biomass_key)]
 
         biomass_price = pd.DataFrame(biomass_price)
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], on_change=on_change_price, hide_index=True, key="Biomass price")
