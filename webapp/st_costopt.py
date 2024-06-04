@@ -21,7 +21,7 @@ def main():
         truck_params = {
             "Fuel price": fuel_price.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
             "Fuel consumption rate": fuel_consumption_rate.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
-            "Maintenance cost": maintenance_cost.number_input("Average truck maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
+            "Maintenance cost": maintenance_cost.number_input("Average maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
             "Tire price": tire_price.number_input("Tire price (THB/tire)", value=8000.00, min_value=0.00, key="Tire price"),
             "Tire lifespan": tire_lifespan.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
             "Number of tires": number_of_tires.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
