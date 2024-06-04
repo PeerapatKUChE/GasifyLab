@@ -81,7 +81,8 @@ def prepare_data(
 def milp_solver(
         prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
+        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity,
+        min_supply
     ):
 
     Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S = prepare_data(
@@ -90,7 +91,9 @@ def milp_solver(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
     
-        #
+    st.write("The code is running. Your result will be available in five minutes.")
+
+    #
     prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
 
     # Decision variables ===============================================================================
@@ -155,7 +158,7 @@ def milp_solver(
     prob += Ht * pulp.lpSum(X) == pulp.lpDot(H.values, [pulp.lpSum(X[j, :, :]) for j in range(Nb)])
 
     # 8.
-    prob += pulp.lpSum(X) >= 10000
+    prob += pulp.lpSum(X) >= min_supply
 
     # 9.
     prob += pulp.lpSum(Y) >= 1
@@ -268,6 +271,8 @@ def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     with st.form("Optimization Tool"):
+        min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
+
         col1, col2, col3 = st.columns(3)
 
         col1.write("**Target Composition** :red[*]")
@@ -303,7 +308,7 @@ def main():
 
         col2.write("**Truck Operational Parameters**")
         col3.write("‎ ")
-    
+
         default_truck_params = {
             "Fuel price": 31.94,
             "Fuel consumption rate": 5.00,
@@ -349,10 +354,12 @@ def main():
                 cargo_width=truck_params["Cargo width"],
                 cargo_length=truck_params["Cargo length"],
                 cargo_height=truck_params["Cargo height"],
-                cargo_capacity=truck_params["Cargo capacity"]
+                cargo_capacity=truck_params["Cargo capacity"],
+                min_supply=min_supply
             )
 
         def reset():
+            st.session_state["Min Supply"] = 10000.00
             for target_key in list(target_composition.keys()):
                 st.session_state[target_key] = None
             for truck_key in list(truck_params.keys()):
