@@ -209,7 +209,7 @@ def milp_solver(
         distance = D.loc[plant.index, supply.index].T
         distance.index = composition_i.index
         distance.columns = ["Distance"]
-        details = pd.concat([details, distance], axis=0)
+        details = pd.concat([details, distance], axis=1)
 
         #
         supply.index = composition_i.index
@@ -222,7 +222,7 @@ def milp_solver(
 
         #
         cost = pd.DataFrame(
-            np.array([plant.index.values[0], total_cost, feedstock_cost, transport_cost]).reshape(1, 5),
+            np.array([plant.index.values[0], total_cost, feedstock_cost, transport_cost]).reshape(1, 4),
             columns=["Selected Plant Code", "Total Cost", "Feedstock Cost", "Transportation Cost"],
             index=[0]
         )
@@ -260,8 +260,6 @@ def milp_solver(
 
     else:
         print(f"Error: No solution found for this composition.")
-
-    return
 
 def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
