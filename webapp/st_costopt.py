@@ -216,9 +216,6 @@ def milp_solver(
         details = pd.concat([details, supply], axis=1)
 
         #
-        result_details = pd.concat([result_details, details], axis=0)
-
-        #
         feedstock_cost = FC.value()
         transport_cost = TC.value()
         total_cost = feedstock_cost + transport_cost
@@ -260,12 +257,6 @@ def milp_solver(
         biomass_percentage = pd.DataFrame(biomass_percentage).T
         biomass_percentage.index = [0]
         summary = pd.concat([summary, biomass_percentage], axis=1)
-
-        #
-        result_summary = pd.concat([result_summary, summary], axis=0)
-
-        st.dataframe(result_summary)
-        st.dataframe(result_details)
 
     else:
         print(f"Error: No solution found for this composition.")
