@@ -45,7 +45,9 @@ def main():
             "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=16.00, min_value=0.01, key="Cargo capacity"),
         }
 
-        col1.write("Target Composition")
+        col1.write("**Target Composition**")
+        col2.write("‎ ")
+        col3.write("‎ ")
         target_composition = {
             "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
             "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
