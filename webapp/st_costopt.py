@@ -37,6 +37,7 @@ def prepare_data(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     ):
     
+    prices["Biomass Type"] = prices["Biomass Type"].str.lower()
     biomass_data = compositions.merge(prices, on="Biomass Type")
     biomass_data = biomass_data.merge(densities[["Biomass Type", "Density"]], on="Biomass Type")
     st.dataframe(biomass_data)
