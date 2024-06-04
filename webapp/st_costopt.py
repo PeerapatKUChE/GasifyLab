@@ -36,6 +36,7 @@ def prepare_data(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     ):
     biomass_data = compositions.merge(prices, on="Biomass Type")
+    st.dataframe(biomass_data)
     biomass_data = biomass_data.drop(columns=["Feedstock Cost Reference", "Density Reference", "Weight at Max Cargo Capacity", "Transportation Cost"])
     biomass_data["Transportation Cost"] = calculate_transportation_cost(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
