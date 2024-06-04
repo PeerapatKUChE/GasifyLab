@@ -41,8 +41,6 @@ def main():
         st.session_state.key = 0
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True, key=f"Biomass price edited #{st.session_state.key}")
 
-        st.dataframe(biomass_price)
-
         col2.write("**Truck Operational Parameters**")
         col3.write("‎ ")
     
