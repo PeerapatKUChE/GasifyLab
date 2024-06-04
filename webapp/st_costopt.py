@@ -34,9 +34,9 @@ def main():
         st.write("Biomass Price")
         biomass_price = {
             "Biomass Type": [
-                "cassava rhizome", "coconut coir", "coconut shell", "corn stalk", "corncob",
-                "palm empty fruit bunch", "palm frond", "palm kernel shell", "palm trunk", "rice husk",
-                "rice straw", "rubber wood sawdust", "sugarcane bagasse", "sugarcane leaf"
+                "Cassava rhizome", "Coconut coir", "Coconut shell", "Corn stalk", "Corncob",
+                "Palm empty fruit bunch", "Palm frond", "Palm kernel shell", "Palm trunk", "Rice husk",
+                "Rice straw", "Rubber wood sawdust", "Sugarcane bagasse", "Sugarcane leaf"
             ],
             "Feedstock Cost": [
                 1800.00, 5000.00, 1000.00, 1500.00, 500.00, 50.00, 500.00,
@@ -45,7 +45,7 @@ def main():
         }
 
         biomass_price = pd.DataFrame(biomass_price)
-        biomass_price = st.data_editor(biomass_price)
+        biomass_price = st.data_editor(biomass_price, disabled="Biomass Type", hide_index=True)
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
