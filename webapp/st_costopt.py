@@ -40,7 +40,7 @@ def prepare_data(
     prices["Biomass Type"] = prices["Biomass Type"].str.lower()
     biomass_data = compositions.merge(prices, on="Biomass Type")
     biomass_data = biomass_data.merge(densities[["Biomass Type", "Density"]], on="Biomass Type")
-    st.dataframe(biomass_data)
+
     biomass_data["Transportation Cost"] = calculate_transportation_cost(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height,
@@ -49,7 +49,7 @@ def prepare_data(
     biomass_data = biomass_data.drop(columns=["Density"])
     biomass_data = biomass_data.sort_values(by=["Biomass Type"])
 
-    st.dataframe(biomass_data)
+
 
     supplies = supplies.drop(columns=["No.", "Region"])
     S = supplies.T
@@ -75,7 +75,7 @@ def prepare_data(
     Ct = target_composition["Target carbon"]
     Ht = target_composition["Target hydrogen"]
     At = target_composition["Target ash"]
-    F = biomass_data["Feedstock Cost"]
+    F = prices
     T = biomass_data["Transportation Cost"]
 
     return Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S
@@ -91,6 +91,10 @@ def milp_solver(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
+    
+    st.write(Nb, Ns, Ng, C, H, A, Ct, Ht, At)
+    st.dataframe(F)
+    st.dataframe(T)
     return
 
 def main():
