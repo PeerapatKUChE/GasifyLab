@@ -29,7 +29,7 @@ def main():
             "Cargo length": cargo_length.number_input("Cargo length (m)", value=2.30, min_value=0.00, key="Cargo length"),
             "Cargo height": cargo_height.number_input("Cargo height (m)", value=2.30, min_value=0.00, key="Cargo height"),
             "Cargo capacity": cargo_capacity.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity"),
-            "Cargo capacity": cargo_height.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity")
+            "Cargo capacity": cargo_height.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity2")
         }
 
         st.write("**Biomass Price**")
