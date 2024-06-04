@@ -276,7 +276,7 @@ def main():
         min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
 
         col1, col2, col3 = st.columns(3)
-        col1.write("**Biomass Price**")
+        col1.write("**Biomass Price** :red[*]")
         default_biomass_price = [
             1800.00, 5000.00, 1000.00, 1500.00, 500.00, 50.00, 500.00,
             3200.00, 500.00, 1500.00, 2000.00, 600.00, 500.00, 800.00
