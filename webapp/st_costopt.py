@@ -196,26 +196,17 @@ def milp_solver(
         supply = X_val.loc[:, supplier_indices].T
 
         #
-        composition_i = np.zeros(supply.shape[0]).reshape(supply.shape[0], 1)
-        composition_i = pd.DataFrame(
-            composition_i,
-            columns=["Composition #i"],
-            index=range(details.shape[0], details.shape[0]+supply.shape[0])
-        )
-        details = pd.concat([details, composition_i.astype(int)], axis=0)
-
-        #
-        supplier = pd.DataFrame(supply.index, columns=["Province"], index=composition_i.index)
-        details = pd.concat([details, supplier], axis=1)
+        supplier = pd.DataFrame(supply.index, columns=["Province"], index=range(supply.shape[0]))
+        details = pd.concat([details, supplier], axis=0)
 
         #
         distance = D.loc[plant.index, supply.index].T
-        distance.index = composition_i.index
+        distance.index = range(supply.shape[0])
         distance.columns = ["Distance"]
         details = pd.concat([details, distance], axis=1)
 
         #
-        supply.index = composition_i.index
+        supply.index = range(supply.shape[0])
         details = pd.concat([details, supply], axis=1)
 
         #
