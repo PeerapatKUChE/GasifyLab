@@ -34,15 +34,22 @@ def main():
         col3.write("‎ ")
         truck_params = {
             "Fuel price": col2.number_input("Fuel price (THB/liter)", value=31.94, min_value=0.00, key="Fuel price"),
-            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.00, key="Fuel consumption rate"),
+            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=5.00, min_value=0.01, key="Fuel consumption rate"),
             "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=0.60, min_value=0.00, key="Maintenance cost"),
             "Tire price": col3.number_input("Tire price (THB/tire)", value=8000.00, min_value=0.00, key="Tire price"),
-            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
+            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=70000.00, min_value=0.01, key="Tire lifespan"),
             "Number of tires": col3.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
-            "Cargo width": col2.number_input("Cargo width (m)", value=2.30, min_value=0.00, key="Cargo width"),
-            "Cargo length": col3.number_input("Cargo length (m)", value=7.20, min_value=0.00, key="Cargo length"),
-            "Cargo height": col2.number_input("Cargo height (m)", value=2.20, min_value=0.00, key="Cargo height"),
-            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=16.00, min_value=0.00, key="Cargo capacity"),
+            "Cargo width": col2.number_input("Cargo width (m)", value=2.30, min_value=0.01, key="Cargo width"),
+            "Cargo length": col3.number_input("Cargo length (m)", value=7.20, min_value=0.01, key="Cargo length"),
+            "Cargo height": col2.number_input("Cargo height (m)", value=2.20, min_value=0.01, key="Cargo height"),
+            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=16.00, min_value=0.01, key="Cargo capacity"),
+        }
+
+        col1.write("Target Composition")
+        target_composition = {
+            "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
+            "Target ash": col3.number_input("Target ash content (%daf)", value=None, min_value=0.01, key="Target ash")
         }
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
