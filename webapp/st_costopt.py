@@ -91,7 +91,7 @@ def milp_solver(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
     
-    st.write("The code is running. Your result will be available in five minutes.")
+    st.write("The code is running. Your results will be available within five minutes.")
 
     #
     prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
@@ -330,26 +330,29 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            st.write(target_composition, type(target_composition))
-            milp_solver(
-                prices=biomass_prices,
-                target_composition=target_composition,
-                compositions=compositions,
-                densities=densities,
-                supplies=supplies,
-                distances=distances,
-                fuel_price=truck_params["Fuel price"],
-                fuel_consumption_rate=truck_params["Fuel consumption rate"],
-                maintenance_cost=truck_params["Maintenance cost"],
-                tire_price=truck_params["Tire price"],
-                tire_lifespan=truck_params["Tire lifespan"],
-                number_of_tires=truck_params["Number of tires"],
-                cargo_width=truck_params["Cargo width"],
-                cargo_length=truck_params["Cargo length"],
-                cargo_height=truck_params["Cargo height"],
-                cargo_capacity=truck_params["Cargo capacity"],
-                min_supply=min_supply
-            )
+            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None:
+                milp_solver(
+                    prices=biomass_prices,
+                    target_composition=target_composition,
+                    compositions=compositions,
+                    densities=densities,
+                    supplies=supplies,
+                    distances=distances,
+                    fuel_price=truck_params["Fuel price"],
+                    fuel_consumption_rate=truck_params["Fuel consumption rate"],
+                    maintenance_cost=truck_params["Maintenance cost"],
+                    tire_price=truck_params["Tire price"],
+                    tire_lifespan=truck_params["Tire lifespan"],
+                    number_of_tires=truck_params["Number of tires"],
+                    cargo_width=truck_params["Cargo width"],
+                    cargo_length=truck_params["Cargo length"],
+                    cargo_height=truck_params["Cargo height"],
+                    cargo_capacity=truck_params["Cargo capacity"],
+                    min_supply=min_supply
+                )
+
+            else:
+                st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
 
         def reset():
             for target_key in list(target_composition.keys()):
