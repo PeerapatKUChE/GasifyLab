@@ -37,9 +37,15 @@ def main():
             "Price (THB/ton)": default_biomass_price
         }
 
-        biomass_price = pd.DataFrame(biomass_price)
-        st.session_state.price = biomass_price
-        st.session_state.key = 0
+        if 'biomass_price' not in st.session_state:
+            biomass_price = pd.DataFrame(biomass_price)
+            st.session_state.biomass_price = biomass_price
+            st.session_state.key = 0
+        biomass_price = st.session_state.biomass_price
+
+        def reset_table():
+            st.session_state.key += 1
+
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True, key=f"Biomass price edited #{st.session_state.key}")
 
         col2.write("**Truck Operational Parameters**")
@@ -81,7 +87,7 @@ def main():
                 st.session_state[target_key] = None
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
-            st.session_state.key += 1
+            reset_table()
             """
             for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
                 st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[biomass_key]
