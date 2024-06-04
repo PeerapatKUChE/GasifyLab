@@ -273,13 +273,13 @@ def main():
     with st.form("Optimization Tool"):
         col1, col2, col3 = st.columns(3)
 
-        col1.write("**Target Composition** :red[*]")
+        col1.write("**Feedstock Specifications**")
         col2.write("‎ ")
         col3.write("‎ ")
         target_composition = {
-            "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
-            "Target ash": col3.number_input("Target ash content (%db)", value=None, min_value=0.01, key="Target ash")
+            "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, key="Target hydrogen"),
+            "Target ash": col3.number_input("Target ash content (%db) :red[*]", value=None, min_value=0.01, key="Target ash")
         }
 
         min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
