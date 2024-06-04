@@ -91,12 +91,12 @@ def milp_solver(
         )
     
         #
-    prob = pulp.LpProblem('Cost Optimization', pulp.LpMinimize)
+    prob = pulp.LpProblem("Cost Optimization", pulp.LpMinimize)
 
     # Decision variables ===============================================================================
     #
     X = np.array([
-        pulp.LpVariable(f'X_{j}_{k}_{l}', lowBound=0)
+        pulp.LpVariable(f"X_{j}_{k}_{l}", lowBound=0)
         for j in range(Nb)
         for k in range(Ns)
         for l in range(Ng)
@@ -104,16 +104,16 @@ def milp_solver(
 
     #
     Y = np.array([
-        pulp.LpVariable(f'Y_{l}_{k}', cat='Binary')
+        pulp.LpVariable(f"Y_{l}_{k}", cat="Binary")
         for l in range(Ng)
         for k in range(Ns)
     ]).reshape(Ng, Ns)
 
     #
-    Ys = np.array([pulp.LpVariable(f'Yp_{k}', cat='Binary') for k in range(Ns)]).reshape(1, Ns)
+    Ys = np.array([pulp.LpVariable(f"Yp_{k}", cat="Binary") for k in range(Ns)]).reshape(1, Ns)
 
     #
-    Yg = np.array([pulp.LpVariable(f'Yg_{l}', cat='Binary') for l in range(Ng)]).reshape(Ng, 1)
+    Yg = np.array([pulp.LpVariable(f"Yg_{l}", cat="Binary") for l in range(Ng)]).reshape(Ng, 1)
 
     # Objective function ===============================================================================
     #
@@ -175,7 +175,7 @@ def milp_solver(
         for l in range(Ng):
             Yg_val.append(Yg[l, 0].value())
         Yg_val = np.array(Yg_val).reshape(Ng, 1)
-        Yg_val = pd.DataFrame(Yg_val, index=distances['Plant Code'])
+        Yg_val = pd.DataFrame(Yg_val, index=distances["Plant Code"])
         plant = Yg_val[Yg_val==1].dropna()
 
         #
@@ -196,19 +196,19 @@ def milp_solver(
         composition_i = np.zeros(supply.shape[0]).reshape(supply.shape[0], 1)
         composition_i = pd.DataFrame(
             composition_i,
-            columns=['Composition #i'],
+            columns=["Composition #i"],
             index=range(details.shape[0], details.shape[0]+supply.shape[0])
         )
         details = pd.concat([details, composition_i.astype(int)], axis=0)
 
         #
-        supplier = pd.DataFrame(supply.index, columns=['Province'], index=composition_i.index)
+        supplier = pd.DataFrame(supply.index, columns=["Province"], index=composition_i.index)
         details = pd.concat([details, supplier], axis=1)
 
         #
         distance = D.loc[plant.index, supply.index].T
         distance.index = composition_i.index
-        distance.columns = ['Distance']
+        distance.columns = ["Distance"]
         details = pd.concat([details, distance], axis=0)
 
         #
@@ -226,7 +226,7 @@ def milp_solver(
         #
         cost = pd.DataFrame(
             np.array([plant.index.values[0], total_cost, feedstock_cost, transport_cost]).reshape(1, 5),
-            columns=['Selected Plant Code', 'Total Cost', 'Feedstock Cost', 'Transportation Cost'],
+            columns=["Selected Plant Code", "Total Cost", "Feedstock Cost", "Transportation Cost"],
             index=[0]
         )
         summary = pd.concat([summary, cost], axis=0)
@@ -234,7 +234,7 @@ def milp_solver(
         #
         total_distance = distance.sum()
         total_distance.index = [0]
-        total_distance = pd.DataFrame(total_distance, columns=['Total Distance'])
+        total_distance = pd.DataFrame(total_distance, columns=["Total Distance"])
         summary = pd.concat([summary, total_distance], axis=1)
 
         #
@@ -245,14 +245,14 @@ def milp_solver(
         #
         composition = pd.DataFrame(
             np.array([mixed_carbon, mixed_hydrogen, mixed_ash, At]).reshape(1, 4),
-            columns=['Mixed Carbon', 'Mixed Hydrogen', 'Mixed Ash', 'Target Ash'],
+            columns=["Mixed Carbon", "Mixed Hydrogen", "Mixed Ash", "Target Ash"],
             index=[0]
         )
         summary = pd.concat([summary, composition], axis=1)
 
         #
         total_supply = X_val.T.sum().sum()
-        total_supply = pd.DataFrame([total_supply], columns=['Total Supply'], index=[0])
+        total_supply = pd.DataFrame([total_supply], columns=["Total Supply"], index=[0])
         summary = pd.concat([summary, total_supply], axis=1)
 
         #
@@ -268,7 +268,7 @@ def milp_solver(
         st.dataframe(result_details)
 
     else:
-        print(f'Error: No solution found for this composition.')
+        print(f"Error: No solution found for this composition.")
 
     return
 
