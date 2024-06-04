@@ -330,6 +330,7 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
+            st.write(target_composition, type(target_composition))
             milp_solver(
                 prices=biomass_prices,
                 target_composition=target_composition,
