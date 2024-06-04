@@ -38,6 +38,7 @@ def main():
         }
 
         biomass_price = pd.DataFrame(biomass_price)
+        st.session_state.price = biomass_price
         st.session_state.key = 0
         biomass_price = col1.data_editor(biomass_price, disabled=["Biomass Type"], hide_index=True, key=f"Biomass price edited #{st.session_state.key}")
 
