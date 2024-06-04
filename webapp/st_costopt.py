@@ -51,7 +51,7 @@ def main():
         target_composition = {
             "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
             "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
-            "Target ash": col3.number_input("Target ash content (%daf)", value=None, min_value=0.01, key="Target ash")
+            "Target ash": col3.number_input("Target ash content (%db)", value=None, min_value=0.01, key="Target ash")
         }
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
