@@ -15,6 +15,7 @@ def main():
         st.write("Truck Operational Parameters")
         fuel_price, fuel_consumption_rate, maintenance_cost = st.columns(3)
         tire_price, tire_lifespan, number_of_tires = st.columns(3)
+        st.write("S")
         cargo_width, cargo,length = st.columns(2)
         cargo_height, cargo_capacity = st.columns(2)
 
