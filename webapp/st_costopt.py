@@ -80,7 +80,7 @@ def main():
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
             for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
-                st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[biomass_key]
+                st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[int(biomass_key)]
         
         reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
 
