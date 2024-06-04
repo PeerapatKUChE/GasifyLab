@@ -40,9 +40,9 @@ def main():
             "Tire lifespan": col2.number_input("Tire lifespan (km)", value=70000.00, min_value=0.00, key="Tire lifespan"),
             "Number of tires": col3.number_input("Number of tires", value=10, min_value=0, key="Number of tires"),
             "Cargo width": col2.number_input("Cargo width (m)", value=2.30, min_value=0.00, key="Cargo width"),
-            "Cargo length": col3.number_input("Cargo length (m)", value=2.30, min_value=0.00, key="Cargo length"),
-            "Cargo height": col2.number_input("Cargo height (m)", value=2.30, min_value=0.00, key="Cargo height"),
-            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity"),
+            "Cargo length": col3.number_input("Cargo length (m)", value=7.20, min_value=0.00, key="Cargo length"),
+            "Cargo height": col2.number_input("Cargo height (m)", value=2.20, min_value=0.00, key="Cargo height"),
+            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=16.00, min_value=0.00, key="Cargo capacity"),
         }
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
