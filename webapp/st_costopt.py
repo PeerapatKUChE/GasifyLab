@@ -75,15 +75,13 @@ def main():
             st.write("Yes!")
         
         def reset():
-            st.write(st.session_state["Fuel price"])
             for target_key in list(target_composition.keys()):
                 st.session_state[target_key] = None
             for truck_key in list(truck_params.keys()):
                 st.session_state[truck_key] = default_truck_params[truck_key]
-            st.write(st.session_state["Fuel price"])
             for biomass_key in list(st.session_state["Biomass price"]["edited_rows"].keys()):
                 st.write(st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"])
-                st.write(default_biomass_price[int(biomass_key)])
+                st.write(default_biomass_price[biomass_key])
                 st.session_state["Biomass price"]["edited_rows"][biomass_key]["Price (THB/ton)"] = default_biomass_price[int(biomass_key)]
         
         reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
