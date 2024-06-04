@@ -4,10 +4,19 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-def load_data(file_path):
+def load_data(path):
+    compositions = pd.read_excel(path+"data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Preprocessed Data")
+    supplies = pd.read_excel(path+"data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
+    distances = pd.read_excel(path+"data/raw/Data-Distances.xlsx")
+    return compositions, supplies, distances
+
+def prepare_data():
     return
 
 def calculate_transportation_cost():
+    return
+
+def milp_solver():
     return
 
 def main():
@@ -77,7 +86,7 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            st.write("Yes!")
+            st.dataframe(biomass_price)
         
         def reset():
             for target_key in list(target_composition.keys()):
