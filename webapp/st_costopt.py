@@ -38,7 +38,7 @@ def main():
                 "Palm empty fruit bunch", "Palm frond", "Palm kernel shell", "Palm trunk", "Rice husk",
                 "Rice straw", "Rubber wood sawdust", "Sugarcane bagasse", "Sugarcane leaf"
             ],
-            "Feedstock Cost": [
+            "Price (THB/ton)": [
                 1800.00, 5000.00, 1000.00, 1500.00, 500.00, 50.00, 500.00,
                 3200.00, 500.00, 1500.00, 2000.00, 600.00, 500.00, 800.00
             ]
