@@ -14,6 +14,15 @@ def main():
     with st.form("Optimization Tool"):
         col1, col2, col3 = st.columns(3)
 
+        col1.write("**Target Composition**")
+        col2.write("‎ ")
+        col3.write("‎ ")
+        target_composition = {
+            "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
+            "Target ash": col3.number_input("Target ash content (%daf)", value=None, min_value=0.01, key="Target ash")
+        }
+
         col1.write("**Biomass Price**")
         biomass_price = {
             "Biomass Type": [
@@ -43,15 +52,6 @@ def main():
             "Cargo length": col3.number_input("Cargo length (m)", value=7.20, min_value=0.01, key="Cargo length"),
             "Cargo height": col2.number_input("Cargo height (m)", value=2.20, min_value=0.01, key="Cargo height"),
             "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=16.00, min_value=0.01, key="Cargo capacity"),
-        }
-
-        col1.write("**Target Composition**")
-        col2.write("‎ ")
-        col3.write("‎ ")
-        target_composition = {
-            "Target carbon": col1.number_input("Target carbon content (%daf)", value=None, min_value=0.01, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content (%daf)", value=None, min_value=0.01, key="Target hydrogen"),
-            "Target ash": col3.number_input("Target ash content (%db)", value=None, min_value=0.01, key="Target ash")
         }
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
