@@ -12,7 +12,7 @@ def calculate_transportation_cost():
 
 def main():
     with st.form("Optimization Tool"):
-        st.write("Truck Operational Parameters")
+        st.write("**Truck Operational Parameters**")
         fuel_price, fuel_consumption_rate, maintenance_cost = st.columns(3)
         tire_price, tire_lifespan, number_of_tires = st.columns(3)
         cargo_width, cargo_length = st.columns(2)
@@ -31,7 +31,7 @@ def main():
             "Cargo capacity": cargo_capacity.number_input("Cargo capacity (ton)", value=2.30, min_value=0.00, key="Cargo capacity")
         }
 
-        st.write("Biomass Price")
+        st.write("**Biomass Price**")
         biomass_price = {
             "Biomass Type": [
                 "Cassava rhizome", "Coconut coir", "Coconut shell", "Corn stalk", "Corncob",
