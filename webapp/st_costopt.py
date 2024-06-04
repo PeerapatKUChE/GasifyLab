@@ -45,7 +45,7 @@ def main():
         }
 
         biomass_price = pd.DataFrame(biomass_price)
-        biomass_price = st.data_editor(biomass_price, disabled="Biomass Type", hide_index=True)
+        biomass_price = st.data_editor(biomass_price, disabled=("Biomass Type"), hide_index=True)
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
