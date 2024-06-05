@@ -330,7 +330,7 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None and biomass_prices.map(lambda x: isinstance(x, (int, float))).all().all():
+            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
                 milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
