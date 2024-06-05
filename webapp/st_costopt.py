@@ -275,7 +275,7 @@ def main():
             "Target ash": col3.number_input("Target ash content (%db) :red[*]", value=None, min_value=0.01, key="Target ash")
         }
 
-        min_supply = st.number_input("Minimum required total supply (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
+        min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
 
         col1, col2, col3 = st.columns(3)
         col1.write("**Biomass Price** :red[*]")
