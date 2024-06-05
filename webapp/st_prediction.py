@@ -95,6 +95,8 @@ def main():
     }
 
     with st.form("Estimation Tool"):
+        st.write(":red[All fields are required.]")
+        st.write("")
         st.write("**Biomass Charecteristics**")
         particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.01, key="Particle size")
         carbon, hydrogen = st.columns(2)
