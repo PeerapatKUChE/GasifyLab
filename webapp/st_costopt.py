@@ -262,6 +262,8 @@ def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     with st.form("Optimization Tool"):
+        st.write(":red[* Required]")
+        st.write("")
         col1, col2, col3 = st.columns(3)
 
         col1.write("**Feedstock Specifications**")
