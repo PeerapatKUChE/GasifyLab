@@ -330,30 +330,26 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None:
-                if biomass_prices.map(lambda x: isinstance(x, (int, float))).all().all():
-                    milp_solver(
-                        prices=biomass_prices,
-                        target_composition=target_composition,
-                        compositions=compositions,
-                        densities=densities,
-                        supplies=supplies,
-                        distances=distances,
-                        fuel_price=truck_params["Fuel price"],
-                        fuel_consumption_rate=truck_params["Fuel consumption rate"],
-                        maintenance_cost=truck_params["Maintenance cost"],
-                        tire_price=truck_params["Tire price"],
-                        tire_lifespan=truck_params["Tire lifespan"],
-                        number_of_tires=truck_params["Number of tires"],
-                        cargo_width=truck_params["Cargo width"],
-                        cargo_length=truck_params["Cargo length"],
-                        cargo_height=truck_params["Cargo height"],
-                        cargo_capacity=truck_params["Cargo capacity"],
-                        min_supply=min_supply
+            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None and biomass_prices.map(lambda x: isinstance(x, (int, float))).all().all():
+                milp_solver(
+                    prices=biomass_prices,
+                    target_composition=target_composition,
+                    compositions=compositions,
+                    densities=densities,
+                    supplies=supplies,
+                    distances=distances,
+                    fuel_price=truck_params["Fuel price"],
+                    fuel_consumption_rate=truck_params["Fuel consumption rate"],
+                    maintenance_cost=truck_params["Maintenance cost"],
+                    tire_price=truck_params["Tire price"],
+                    tire_lifespan=truck_params["Tire lifespan"],
+                    number_of_tires=truck_params["Number of tires"],
+                    cargo_width=truck_params["Cargo width"],
+                    cargo_length=truck_params["Cargo length"],
+                    cargo_height=truck_params["Cargo height"],
+                    cargo_capacity=truck_params["Cargo capacity"],
+                    min_supply=min_supply
                 )
-                
-                else:
-                    st.error("Error: Biomass price should be a number.")
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
