@@ -69,14 +69,12 @@ def prepare_data(
     Ng = D.shape[0]
     C = biomass_data["C"]
     H = biomass_data["H"]
-    A = biomass_data["Ash"]
     Ct = target_composition["Target carbon"]
     Ht = target_composition["Target hydrogen"]
-    At = target_composition["Target ash"]
     F = prices["Price (THB/ton)"]
     T = biomass_data["Transportation Cost"]
 
-    return Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S
+    return Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S
 
 def milp_solver(
         prices, target_composition, compositions, densities, supplies, distances,
@@ -85,7 +83,7 @@ def milp_solver(
         min_supply
     ):
 
-    Nb, Ns, Ng, C, H, A, Ct, Ht, At, F, T, D, S = prepare_data(
+    Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S = prepare_data(
         prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
@@ -231,12 +229,11 @@ def milp_solver(
         #
         mixed_carbon = sum([C.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
         mixed_hydrogen = sum([H.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
-        mixed_ash = sum([A.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
 
         #
         composition = pd.DataFrame(
-            np.array([mixed_carbon, mixed_hydrogen, mixed_ash, At]).reshape(1, 4),
-            columns=["Mixed Carbon", "Mixed Hydrogen", "Mixed Ash", "Target Ash"],
+            np.array([mixed_carbon, mixed_hydrogen]).reshape(1, 2),
+            columns=["Mixed Carbon", "Mixed Hydrogen"],
             index=[0]
         )
         summary = pd.concat([summary, composition], axis=1)
@@ -264,15 +261,13 @@ def main():
     with st.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
 
         col1.write("**Feedstock Specifications**")
         col2.write("‎ ")
-        col3.write("‎ ")
         target_composition = {
             "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, key="Target carbon"),
             "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, key="Target hydrogen"),
-            "Target ash": col3.number_input("Target ash content (%db) :red[*]", value=None, min_value=0.01, key="Target ash")
         }
 
         min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
@@ -332,7 +327,7 @@ def main():
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
-            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and target_composition["Target ash"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
+            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
                 milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
