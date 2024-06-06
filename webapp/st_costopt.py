@@ -314,7 +314,9 @@ def main():
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
+        run_count = 0
         if submit_button.form_submit_button("**Submit**", type="primary"):
+            run_count += 1
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
                 summary_text, details = milp_solver(
                     prices=biomass_prices,
@@ -377,10 +379,11 @@ def main():
         summary_text = None
         details = None
 
-    st.write("Here is your result:")
-    st.write(summary_text)
-    st.write("For more details:")
-    st.dataframe(details)
+    if run_count > 0:
+        st.write("Here is your result:")
+        st.write(summary_text)
+        st.write("For more details:")
+        st.dataframe(details)
 
 if __name__ == "__main__":
     main()
