@@ -197,12 +197,15 @@ def milp_solver(
         #
         distance = D.loc[plant.index, supply.index].T
         distance.index = range(supply.shape[0])
-        distance.columns = ["Distance"]
+        distance.columns = ["Distance (km)"]
         details = pd.concat([details, distance], axis=1)
+        details.rename(columns=lambda x: x.capitalize() + ' supply (ton/year)' if x not in ["Province", "Distance (km)"] else x, inplace=True)
 
         #
         supply.index = range(supply.shape[0])
         details = pd.concat([details, supply], axis=1)
+
+        details = details[details>0].dropna(axis=1)
 
         #
         selected_plant_code = plant.index.values[0]
@@ -216,12 +219,8 @@ def milp_solver(
         total_distance = distance.sum().values[0]
         distance_text = f"The total distance covered is {total_distance:.2f} kilometers. "
 
-        mixed_carbon = sum([C.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
-        mixed_hydrogen = sum([H.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
-        composition_text = f"The mixed carbon content is {mixed_carbon:.2f}% (daf), and the mixed hydrogen content is {mixed_hydrogen:.2f}% (daf). "
-
         total_supply = X_val.T.sum().sum()
-        supply_text = f"The total supply amounts to {total_supply:.2f} tons. "
+        supply_text = f"The total supply amount is {total_supply:.2f} tons. "
 
         biomass_percentage = X_val.T.sum() / total_supply * 100
         selected_feedstock = biomass_percentage[biomass_percentage>0]
@@ -234,10 +233,9 @@ def milp_solver(
             else:
                 feedstock_text += f"and {selected_feedstock.loc[0, feedstock]:.2f}% {feedstock}."
         
-        summary_text = plant_text + cost_text + distance_text + composition_text + supply_text + feedstock_text
+        summary_text = plant_text + cost_text + distance_text + supply_text + feedstock_text
 
     else:
-        print(f"Error: No solution found for this composition.")
         summary_text = None
         details = None
     
@@ -380,9 +378,9 @@ def main():
         details = None
 
     if run_count > 0:
-        st.write("Here is your result:")
+        st.write("Here are your results:")
         st.write(summary_text)
-        st.write("For more details:")
+        st.write("For more details, see the supply and distance information from each province below:")
         st.dataframe(details)
 
 if __name__ == "__main__":
