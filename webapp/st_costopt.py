@@ -169,7 +169,6 @@ def milp_solver(
     if status == pulp.LpStatusOptimal:
         #
         details = pd.DataFrame()
-        summary = pd.DataFrame()
 
         #
         Yg_val = []
@@ -192,8 +191,6 @@ def milp_solver(
         #
         supplier_indices = X_val.any(axis=0)
         supply = X_val.loc[:, supplier_indices].T
-
-        #
         supplier = pd.DataFrame(supply.index, columns=["Province"], index=range(supply.shape[0]))
         details = pd.concat([details, supplier], axis=0)
 
@@ -208,52 +205,42 @@ def milp_solver(
         details = pd.concat([details, supply], axis=1)
 
         #
+        selected_plant_code = plant.index.values[0]
+        plant_text = f"The selected plant code is {selected_plant_code}. "
+
         feedstock_cost = FC.value()
         transport_cost = TC.value()
         total_cost = feedstock_cost + transport_cost
+        cost_text = f"The total cost is {total_cost:.2f} THB per year, with a feedstock cost of {feedstock_cost:.2f} THB per year and a transportation cost of {transport_cost:.2f} THB per year. "
 
-        #
-        cost = pd.DataFrame(
-            np.array([plant.index.values[0], total_cost, feedstock_cost, transport_cost]).reshape(1, 4),
-            columns=["Selected Plant Code", "Total Cost", "Feedstock Cost", "Transportation Cost"],
-            index=[0]
-        )
-        summary = pd.concat([summary, cost], axis=0)
-
-        #
         total_distance = distance.sum()
-        total_distance.index = [0]
-        total_distance = pd.DataFrame(total_distance, columns=["Total Distance"])
-        summary = pd.concat([summary, total_distance], axis=1)
+        distance_text = f"The total distance covered is {total_distance:.2f} kilometers. "
 
-        #
         mixed_carbon = sum([C.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
         mixed_hydrogen = sum([H.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
+        composition_text = f"The mixed carbon content is {mixed_carbon:.2f}% (daf), and the mixed hydrogen content is {mixed_hydrogen:.2f}% (daf). "
 
-        #
-        composition = pd.DataFrame(
-            np.array([mixed_carbon, mixed_hydrogen]).reshape(1, 2),
-            columns=["Mixed Carbon", "Mixed Hydrogen"],
-            index=[0]
-        )
-        summary = pd.concat([summary, composition], axis=1)
-
-        #
         total_supply = X_val.T.sum().sum()
-        total_supply = pd.DataFrame([total_supply], columns=["Total Supply"], index=[0])
-        summary = pd.concat([summary, total_supply], axis=1)
+        supply_text = f"The total supply amounts to {total_supply:.2f} tons. "
 
-        #
         biomass_percentage = X_val.T.sum() / total_supply.values[0][0] * 100
-        biomass_percentage = pd.DataFrame(biomass_percentage).T
-        biomass_percentage.index = [0]
-        summary = pd.concat([summary, biomass_percentage], axis=1)
-
-        st.dataframe(summary)
-        st.dataframe(details)
+        selected_feedstock = biomass_percentage[biomass_percentage>0].dropna(axis=1)
+        last_column = selected_feedstock.columns[-1]
+        feedstock_text = "The composition of the feedstock includes "
+        for feedstock in selected_feedstock.columns:
+            if feedstock != last_column:
+                feedstock_text += f"{selected_feedstock.loc[0, feedstock]:.2f}% {feedstock}, "
+            else:
+                feedstock_text += f"and {selected_feedstock.loc[0, feedstock]:.2f}% {feedstock}."
+        
+        summary_text = plant_text + cost_text + distance_text + composition_text + supply_text + feedstock_text
 
     else:
         print(f"Error: No solution found for this composition.")
+        summary_text = None
+        details = None
+    
+    return summary_text, details
 
 def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
@@ -328,7 +315,7 @@ def main():
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                milp_solver(
+                summary_text, details = milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
                     compositions=compositions,
@@ -384,6 +371,12 @@ def main():
             """,
             unsafe_allow_html=True,
         )
+    
+    if "summary_text" in locals() and "details" in locals():
+        st.write("Here is your result:")
+        st.write(summary_text)
+        st.write("For more details:")
+        st.dataframe(details)
 
 if __name__ == "__main__":
     main()
