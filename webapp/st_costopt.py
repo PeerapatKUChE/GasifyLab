@@ -213,7 +213,7 @@ def milp_solver(
         total_cost = feedstock_cost + transport_cost
         cost_text = f"The total cost is {total_cost:.2f} THB per year, with a feedstock cost of {feedstock_cost:.2f} THB per year and a transportation cost of {transport_cost:.2f} THB per year. "
 
-        total_distance = distance.sum().values[0][0]
+        total_distance = distance.sum().values[0]
         distance_text = f"The total distance covered is {total_distance:.2f} kilometers. "
 
         mixed_carbon = sum([C.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
