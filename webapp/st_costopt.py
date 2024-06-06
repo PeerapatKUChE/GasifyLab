@@ -224,7 +224,8 @@ def milp_solver(
         supply_text = f"The total supply amounts to {total_supply:.2f} tons. "
 
         biomass_percentage = X_val.T.sum() / total_supply * 100
-        selected_feedstock = biomass_percentage[biomass_percentage>0].dropna(axis=1)
+        selected_feedstock = biomass_percentage[biomass_percentage>0]
+        selected_feedstock = pd.DataFrame(selected_feedstock).T
         last_column = selected_feedstock.columns[-1]
         feedstock_text = "The composition of the feedstock includes "
         for feedstock in selected_feedstock.columns:
