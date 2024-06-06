@@ -334,6 +334,11 @@ def main():
                     cargo_capacity=truck_params["Cargo capacity"],
                     min_supply=min_supply
                 )
+            
+                st.write("Here is your result:")
+                st.write(summary_text)
+                st.write("For more details:")
+                st.dataframe(details)
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
@@ -372,11 +377,11 @@ def main():
             unsafe_allow_html=True,
         )
     
-    if "summary_text" in locals() and "details" in locals():
-        st.write("Here is your result:")
-        st.write(summary_text)
-        st.write("For more details:")
-        st.dataframe(details)
+    #if "summary_text" in locals() and "details" in locals():
+        #st.write("Here is your result:")
+        #st.write(summary_text)
+        #st.write("For more details:")
+        #st.dataframe(details)
 
 if __name__ == "__main__":
     main()
