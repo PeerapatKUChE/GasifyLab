@@ -373,11 +373,12 @@ def main():
             unsafe_allow_html=True,
         )
     
-    if "summary_text" in locals() and "details" in locals():
-        st.write("Here is your result:")
-        st.write(summary_text)
-        st.write("For more details:")
-        st.dataframe(details)
+    if "summary_text" not in locals() or "details"  not in locals():
+        summary_text = None
+        details = None
+
+    st.write("Here is your result:", "\n", summary_text, "\n", "For more details:")
+    st.dataframe(details)
 
 if __name__ == "__main__":
     main()
