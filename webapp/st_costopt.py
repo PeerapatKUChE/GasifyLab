@@ -213,7 +213,7 @@ def milp_solver(
         total_cost = feedstock_cost + transport_cost
         cost_text = f"The total cost is {total_cost:.2f} THB per year, with a feedstock cost of {feedstock_cost:.2f} THB per year and a transportation cost of {transport_cost:.2f} THB per year. "
 
-        total_distance = distance.sum()
+        total_distance = distance.sum().values[0][0]
         distance_text = f"The total distance covered is {total_distance:.2f} kilometers. "
 
         mixed_carbon = sum([C.values[j] * X_val.iloc[j, :].sum() for j in range(Nb)]) / X_val.sum().sum()
@@ -334,11 +334,6 @@ def main():
                     cargo_capacity=truck_params["Cargo capacity"],
                     min_supply=min_supply
                 )
-            
-                st.write("Here is your result:")
-                st.write(summary_text)
-                st.write("For more details:")
-                st.dataframe(details)
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
@@ -377,11 +372,11 @@ def main():
             unsafe_allow_html=True,
         )
     
-    #if "summary_text" in locals() and "details" in locals():
-        #st.write("Here is your result:")
-        #st.write(summary_text)
-        #st.write("For more details:")
-        #st.dataframe(details)
+    if "summary_text" in locals() and "details" in locals():
+        st.write("Here is your result:")
+        st.write(summary_text)
+        st.write("For more details:")
+        st.dataframe(details)
 
 if __name__ == "__main__":
     main()
