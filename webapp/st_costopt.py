@@ -214,13 +214,13 @@ def milp_solver(
         feedstock_cost = FC.value()
         transport_cost = TC.value()
         total_cost = feedstock_cost + transport_cost
-        cost_text = f"The total cost is {total_cost:.2f} THB per year, with a feedstock cost of {feedstock_cost:.2f} THB per year and a transportation cost of {transport_cost:.2f} THB per year. "
+        cost_text = f"The total cost is {total_cost:,.2f} THB per year, with a feedstock cost of {feedstock_cost:,.2f} THB per year and a transportation cost of {transport_cost:,.2f} THB per year. "
 
         total_distance = distance.sum().values[0]
-        distance_text = f"The total distance covered is {total_distance:.2f} kilometers. "
+        distance_text = f"The total distance covered is {total_distance:,.2f} kilometers. "
 
         total_supply = X_val.T.sum().sum()
-        supply_text = f"The total supply amount is {total_supply:.2f} tons. "
+        supply_text = f"The total supply amount is {total_supply:,.2f} tons. "
 
         biomass_percentage = X_val.T.sum() / total_supply * 100
         selected_feedstock = biomass_percentage[biomass_percentage>0]
@@ -229,9 +229,9 @@ def milp_solver(
         feedstock_text = "The composition of the feedstock includes "
         for feedstock in selected_feedstock.columns:
             if feedstock != last_column:
-                feedstock_text += f"{selected_feedstock.loc[0, feedstock]:.2f}% {feedstock}, "
+                feedstock_text += f"{selected_feedstock.loc[0, feedstock]:,.2f}% {feedstock}, "
             else:
-                feedstock_text += f"and {selected_feedstock.loc[0, feedstock]:.2f}% {feedstock}."
+                feedstock_text += f"and {selected_feedstock.loc[0, feedstock]:,.2f}% {feedstock}."
         
         summary_text = plant_text + cost_text + distance_text + supply_text + feedstock_text
 
@@ -380,7 +380,7 @@ def main():
     if run_count > 0:
         st.write("Here are your results:")
         st.write(summary_text)
-        st.write("For more details, see the supply and distance information from each province below:")
+        st.write("For more details, see the distance and supply information from each province below:")
         st.dataframe(details)
 
 if __name__ == "__main__":
