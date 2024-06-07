@@ -199,11 +199,12 @@ def milp_solver(
         distance.index = range(supply.shape[0])
         distance.columns = ["Distance (km)"]
         details = pd.concat([details, distance], axis=1)
-        details.rename(columns=lambda x: x.capitalize() + ' supply (ton/year)' if x not in ["Province", "Distance (km)"] else x, inplace=True)
+    
 
         #
         supply = supply.loc[:, (supply != 0).any(axis=0)]
         supply.index = range(supply.shape[0])
+        supply.rename(columns=lambda x: x.capitalize(), inplace=True)
         details = pd.concat([details, supply], axis=1)
 
         #
