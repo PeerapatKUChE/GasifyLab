@@ -202,10 +202,9 @@ def milp_solver(
         details.rename(columns=lambda x: x.capitalize() + ' supply (ton/year)' if x not in ["Province", "Distance (km)"] else x, inplace=True)
 
         #
+        supply = supply.loc[:, (supply != 0).any(axis=0)]
         supply.index = range(supply.shape[0])
         details = pd.concat([details, supply], axis=1)
-
-        details = details[details>0].dropna(axis=1)
 
         #
         selected_plant_code = plant.index.values[0]
@@ -252,8 +251,8 @@ def main():
         col1.write("**Feedstock Specifications**")
         col2.write("‎ ")
         target_composition = {
-            "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, key="Target hydrogen"),
+            "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
         }
 
         min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
