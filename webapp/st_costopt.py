@@ -204,7 +204,7 @@ def milp_solver(
         #
         supply = supply.loc[:, (supply != 0).any(axis=0)]
         supply.index = range(supply.shape[0])
-        supply.rename(columns=lambda x: x.capitalize(), inplace=True)
+        supply.rename(columns=lambda x: x.capitalize()+" supply (ton/year)", inplace=True)
         details = pd.concat([details, supply], axis=1)
 
         #
