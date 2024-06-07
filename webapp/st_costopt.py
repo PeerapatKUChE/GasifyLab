@@ -378,10 +378,13 @@ def main():
         details = None
 
     if run_count > 0:
-        st.write("Here are your results:")
-        st.write(summary_text)
-        st.write("For more details, see the distance and supply information from each province below:")
-        st.dataframe(details)
+        if summary_text is None or details is None:
+            st.error("Error: No solution found.")
+        else:
+            st.write("Here are your results:")
+            st.write(summary_text)
+            st.write("For more details, see the distance and supply information from each province below:")
+            st.dataframe(details)
 
 if __name__ == "__main__":
     main()
