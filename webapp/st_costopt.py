@@ -382,7 +382,7 @@ def main():
         "Total Distance (km)": "0.00",
         "Total Supply (tons)": "0.00"
     }
-    default_selected_feedstock = pd.DataFrame(np.ones(3).reshape(1, 3), index=[0])
+    default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0])
 
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
         summary = default_summmary
