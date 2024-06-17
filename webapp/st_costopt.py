@@ -653,6 +653,8 @@ def main():
     if run_count > 0:
         if summary["Selected Plant Code"] == "-" or selected_feedstock.columns == ["No Data"] or details is None:
             st.error("Error: No solution found.")
+    
+    st.dataframe(selected_feedstock)
 
     page_column1.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column1.columns(2)
