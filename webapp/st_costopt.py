@@ -390,7 +390,7 @@ def main():
         details = None
 
     if run_count > 0:
-        if summary == default_summmary or selected_feedstock == default_selected_feedstock or details is None:
+        if type(summary) == type(default_summmary) or type(selected_feedstock) == type(default_selected_feedstock) or details is None:
             st.error("Error: No solution found.")
     page_column1.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column1.columns(2)
