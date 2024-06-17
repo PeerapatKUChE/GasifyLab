@@ -390,7 +390,7 @@ def main():
         details = None
 
     if run_count > 0:
-        if type(summary) == type(default_summmary) or type(selected_feedstock) == type(default_selected_feedstock) or details is None:
+        if summary["Selected Plant Code"] == "-" or selected_feedstock.columns == ["No Data"] or details is None:
             st.error("Error: No solution found.")
             summary = default_summmary
             selected_feedstock = default_selected_feedstock
