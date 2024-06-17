@@ -487,6 +487,7 @@ def milp_solver(
 
 def main():
     st.set_page_config(layout="wide")
+    st.title("Plant Summary Dashboard")
 
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
@@ -655,7 +656,6 @@ def main():
     
     st.dataframe(selected_feedstock)
 
-    page_column1.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column1.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
