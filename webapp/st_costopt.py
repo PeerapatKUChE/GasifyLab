@@ -400,12 +400,14 @@ def main():
         else:
             summary_col2.metric(label=label, value=value)
     
-    feedstock_labels = selected_feedstock.columns
-    feedstock_sizes = selected_feedstock.iloc[0]
+    st.subheader("Feedstock Composition")
+    sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=False)
+    feedstock_labels = sorted_feedstock.T.columns
+    feedstock_sizes = sorted_feedstock.T.iloc[0]
 
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
-    ax.axis('equal')
+    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90)
+    ax.axis("equal")
 
     page_column1.pyplot(fig)
     page_column1.write("For more details, see the distance and supply information from each province below:")
