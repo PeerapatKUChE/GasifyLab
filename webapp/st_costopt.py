@@ -5,6 +5,17 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+default_summmary = {
+    "Selected Plant Code": "-",
+    "Total Cost (THB/year)": "0.00",
+    "Feedstock Cost (THB/year)": "0.00",
+    "Transportation Cost (THB/year)": "0.00",
+    "Total Distance (km)": "0.00",
+    "Total Supply (tons)": "0.00"
+}
+
+default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
+
 def load_data(path):
     compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
     densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
@@ -233,8 +244,8 @@ def milp_solver(
         }
 
     else:
-        summary = None
-        selected_feedstock = None
+        summary = default_summmary
+        selected_feedstock = default_selected_feedstock
         details = None
     
     return summary, selected_feedstock, details
@@ -373,16 +384,6 @@ def main():
             """,
             unsafe_allow_html=True,
         )
-    
-    default_summmary = {
-        "Selected Plant Code": "-",
-        "Total Cost (THB/year)": "0.00",
-        "Feedstock Cost (THB/year)": "0.00",
-        "Transportation Cost (THB/year)": "0.00",
-        "Total Distance (km)": "0.00",
-        "Total Supply (tons)": "0.00"
-    }
-    default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
         summary = default_summmary
