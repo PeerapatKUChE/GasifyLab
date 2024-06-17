@@ -240,6 +240,8 @@ def milp_solver(
     return summary, selected_feedstock, details
 
 def main():
+    st.set_page_config(layout="wide")
+
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     page_column1, page_column2 = st.columns(2)
