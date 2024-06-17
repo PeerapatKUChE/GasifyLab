@@ -374,13 +374,22 @@ def main():
             unsafe_allow_html=True,
         )
     
+    default_summmary = {
+        "Selected Plant Code": "-",
+        "Total Cost (THB/year)": "0.00",
+        "Feedstock Cost (THB/year)": "0.00",
+        "Transportation Cost (THB/year)": "0.00",
+        "Total Distance (km)": "0.00",
+        "Total Supply (tons)": "0.00"
+    }
+
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
-        summary = None
+        summary = default_summmary
         selected_feedstock = None
         details = None
 
     if run_count > 0:
-        if summary is None or selected_feedstock is None or details is None:
+        if summary == default_summmary or selected_feedstock is None or details is None:
             st.error("Error: No solution found.")
     page_column2.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column2.columns(2)
