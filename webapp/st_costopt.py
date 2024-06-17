@@ -650,7 +650,7 @@ def main():
         details = None
 
     if run_count > 0:
-        if summary["Selected Plant Code"] == default_summmary["Selected Plant Code"] or selected_feedstock.columns == default_selected_feedstock.columns or details is None:
+        if summary["Selected Plant Code"] == default_summmary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
             st.error("Error: No solution found.")
     
     st.dataframe(selected_feedstock)
