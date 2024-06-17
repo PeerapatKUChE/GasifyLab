@@ -410,8 +410,10 @@ def main():
     ax.axis("equal")
 
     page_column1.pyplot(fig)
-    page_column1.write("For more details, see the distance and supply information from each province below:")
-    page_column1.dataframe(details)
+
+    if details != None:
+        page_column1.write("For more details, see the distance and supply information from each province below:")
+        page_column1.dataframe(details)
 
 if __name__ == "__main__":
     main()
