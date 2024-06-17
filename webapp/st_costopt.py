@@ -382,14 +382,15 @@ def main():
         "Total Distance (km)": "0.00",
         "Total Supply (tons)": "0.00"
     }
+    default_selected_feedstock = pd.DataFrame(np.zeros(1), index=[0])
 
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
         summary = default_summmary
-        selected_feedstock = None
+        selected_feedstock = default_selected_feedstock
         details = None
 
     if run_count > 0:
-        if summary == default_summmary or selected_feedstock is None or details is None:
+        if summary != default_summmary or selected_feedstock != default_selected_feedstock or details is None:
             st.error("Error: No solution found.")
     page_column2.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column2.columns(2)
@@ -398,6 +399,7 @@ def main():
             summary_col1.metric(label=label, value=value)
         else:
             summary_col2.metric(label=label, value=value)
+    
     feedstock_labels = selected_feedstock.columns
     feedstock_sizes = selected_feedstock.iloc[0]
 
