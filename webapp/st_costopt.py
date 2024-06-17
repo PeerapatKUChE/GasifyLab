@@ -242,7 +242,8 @@ def milp_solver(
 def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
-    with st.form("Optimization Tool"):
+    page_column1, page_column2 = st.columns(2)
+    with page_column1.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
         col1, col2 = st.columns(2)
@@ -372,7 +373,6 @@ def main():
         )
     
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
-        st.write("No")
         summary = None
         selected_feedstock = None
         details = None
