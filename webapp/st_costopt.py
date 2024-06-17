@@ -3,6 +3,7 @@ import pulp
 import streamlit as st
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def load_data(path):
     compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
@@ -199,8 +200,8 @@ def milp_solver(
         distance.index = range(supply.shape[0])
         distance.columns = ["Distance (km)"]
         details = pd.concat([details, distance], axis=1)
-    
 
+        #
         #
         supply = supply.loc[:, (supply != 0).any(axis=0)]
         supply.index = range(supply.shape[0])
@@ -209,37 +210,44 @@ def milp_solver(
 
         #
         selected_plant_code = plant.index.values[0]
-        plant_text = f"The selected plant code is {selected_plant_code}. "
 
         feedstock_cost = FC.value()
         transport_cost = TC.value()
         total_cost = feedstock_cost + transport_cost
-        cost_text = f"The total cost is {total_cost:,.2f} THB per year, with a feedstock cost of {feedstock_cost:,.2f} THB per year and a transportation cost of {transport_cost:,.2f} THB per year. "
 
         total_distance = distance.sum().values[0]
-        distance_text = f"The total distance covered is {total_distance:,.2f} kilometers. "
 
         total_supply = X_val.T.sum().sum()
-        supply_text = f"The total supply amount is {total_supply:,.2f} tons. "
 
         biomass_percentage = X_val.T.sum() / total_supply * 100
         selected_feedstock = biomass_percentage[biomass_percentage>0]
         selected_feedstock = pd.DataFrame(selected_feedstock).T
-        last_column = selected_feedstock.columns[-1]
-        feedstock_text = "The composition of the feedstock includes "
-        for feedstock in selected_feedstock.columns:
-            if feedstock != last_column:
-                feedstock_text += f"{selected_feedstock.loc[0, feedstock]:,.2f}% {feedstock}, "
-            else:
-                feedstock_text += f"and {selected_feedstock.loc[0, feedstock]:,.2f}% {feedstock}."
-        
-        summary_text = plant_text + cost_text + distance_text + supply_text + feedstock_text
+
+        # Streamlit dashboard
+        st.title("Plant Cost and Supply Dashboard")
+
+        # Display metrics
+        st.metric(label="Selected Plant Code", value=selected_plant_code)
+        st.metric(label="Total Cost (THB/year)", value=f"{total_cost:,.2f}")
+        st.metric(label="Feedstock Cost (THB/year)", value=f"{feedstock_cost:,.2f}")
+        st.metric(label="Transportation Cost (THB/year)", value=f"{transport_cost:,.2f}")
+        st.metric(label="Total Distance (km)", value=f"{total_distance:,.2f}")
+        st.metric(label="Total Supply (tons)", value=f"{total_supply:,.2f}")
+
+        # Feedstock composition pie chart
+        feedstock_labels = selected_feedstock.columns
+        feedstock_sizes = selected_feedstock.iloc[0]
+
+        fig, ax = plt.subplots()
+        ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')
+
+        st.pyplot(fig)
 
     else:
-        summary_text = None
         details = None
     
-    return summary_text, details
+    return details
 
 def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
@@ -316,7 +324,7 @@ def main():
         if submit_button.form_submit_button("**Submit**", type="primary"):
             run_count += 1
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                summary_text, details = milp_solver(
+                details = milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
                     compositions=compositions,
