@@ -244,7 +244,7 @@ def main():
 
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
-    page_column1, _, page_column2 = st.columns([0.55, 0.05, 0.40])
+    page_column1, _, page_column2 = st.columns([0.45, 0.05, 0.50])
     with page_column2.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
