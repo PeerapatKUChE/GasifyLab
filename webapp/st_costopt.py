@@ -390,7 +390,7 @@ def main():
         details = None
 
     if run_count > 0:
-        if summary != default_summmary or selected_feedstock != default_selected_feedstock or details is None:
+        if summary == default_summmary or selected_feedstock == default_selected_feedstock or details is None:
             st.error("Error: No solution found.")
     #page_column1.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column1.columns(2)
@@ -400,7 +400,7 @@ def main():
         else:
             summary_col2.metric(label=label, value=value)
     
-    st.subheader("Feedstock Composition")
+    page_column1.subheader("Feedstock Composition")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=False)
     feedstock_labels = sorted_feedstock.T.columns
     feedstock_sizes = sorted_feedstock.T.iloc[0]
