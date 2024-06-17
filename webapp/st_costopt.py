@@ -644,6 +644,7 @@ def main():
             unsafe_allow_html=True,
         )
 
+    st.dataframe(selected_feedstock)
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
         summary = default_summmary
         selected_feedstock = default_selected_feedstock
