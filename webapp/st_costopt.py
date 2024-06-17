@@ -372,6 +372,7 @@ def main():
         )
     
     if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
+        st.write("No")
         summary = None
         selected_feedstock = None
         details = None
