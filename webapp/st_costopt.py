@@ -245,7 +245,7 @@ def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     page_column1, _, page_column2 = st.columns([0.55, 0.05, 0.40])
-    with page_column1.form("Optimization Tool"):
+    with page_column2.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
         col1, col2 = st.columns(2)
@@ -392,8 +392,8 @@ def main():
     if run_count > 0:
         if summary != default_summmary or selected_feedstock != default_selected_feedstock or details is None:
             st.error("Error: No solution found.")
-    page_column2.title("Plant Summary Dashboard")
-    summary_col1, summary_col2 = page_column2.columns(2)
+    #page_column1.title("Plant Summary Dashboard")
+    summary_col1, summary_col2 = page_column1.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
             summary_col1.metric(label=label, value=value)
@@ -407,9 +407,9 @@ def main():
     ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
     ax.axis('equal')
 
-    page_column2.pyplot(fig)
-    page_column2.write("For more details, see the distance and supply information from each province below:")
-    page_column2.dataframe(details)
+    page_column1.pyplot(fig)
+    page_column1.write("For more details, see the distance and supply information from each province below:")
+    page_column1.dataframe(details)
 
 if __name__ == "__main__":
     main()
