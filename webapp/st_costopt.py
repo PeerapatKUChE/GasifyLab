@@ -223,31 +223,21 @@ def milp_solver(
         selected_feedstock = biomass_percentage[biomass_percentage>0]
         selected_feedstock = pd.DataFrame(selected_feedstock).T
 
-        # Streamlit dashboard
-        st.title("Plant Cost and Supply Dashboard")
-
-        # Display metrics
-        st.metric(label="Selected Plant Code", value=selected_plant_code)
-        st.metric(label="Total Cost (THB/year)", value=f"{total_cost:,.2f}")
-        st.metric(label="Feedstock Cost (THB/year)", value=f"{feedstock_cost:,.2f}")
-        st.metric(label="Transportation Cost (THB/year)", value=f"{transport_cost:,.2f}")
-        st.metric(label="Total Distance (km)", value=f"{total_distance:,.2f}")
-        st.metric(label="Total Supply (tons)", value=f"{total_supply:,.2f}")
-
-        # Feedstock composition pie chart
-        feedstock_labels = selected_feedstock.columns
-        feedstock_sizes = selected_feedstock.iloc[0]
-
-        fig, ax = plt.subplots()
-        ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
-        ax.axis('equal')
-
-        st.pyplot(fig)
+        summary = {
+            "Selected Plant Code": selected_plant_code,
+            "Total Cost (THB/year)": f"{total_cost:,.2f}",
+            "Feedstock Cost (THB/year)": f"{feedstock_cost:,.2f}",
+            "Transportation Cost (THB/year)": f"{transport_cost:,.2f}",
+            "Total Distance (km)": f"{total_distance:,.2f}",
+            "Total Supply (tons)": f"{total_supply:,.2f}"
+        }
 
     else:
+        summary = None
+        selected_feedstock = None
         details = None
     
-    return details
+    return summary, selected_feedstock, details
 
 def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
@@ -324,7 +314,7 @@ def main():
         if submit_button.form_submit_button("**Submit**", type="primary"):
             run_count += 1
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                details = milp_solver(
+                summary, selected_feedstock, details = milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
                     compositions=compositions,
@@ -381,16 +371,30 @@ def main():
             unsafe_allow_html=True,
         )
     
-    if "summary_text" not in locals() or "details"  not in locals():
-        summary_text = None
+    if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
+        summary = None
+        selected_feedstock = None
         details = None
 
     if run_count > 0:
-        if summary_text is None or details is None:
+        if summary is None or selected_feedstock is None or details is None:
             st.error("Error: No solution found.")
         else:
-            st.write("Here are your results:")
-            st.write(summary_text)
+            st.title("Plant Summary Dashboard")
+            summary_col1, summary_col2 = st.columns(2)
+            for i, (label, value) in enumerate(summary.items()):
+                if i % 2 == 0:
+                    summary_col1.metric(label=label, value=value)
+                else:
+                    summary_col2.metric(label=label, value=value)
+            feedstock_labels = selected_feedstock.columns
+            feedstock_sizes = selected_feedstock.iloc[0]
+
+            fig, ax = plt.subplots()
+            ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
+            ax.axis('equal')
+
+            st.pyplot(fig)
             st.write("For more details, see the distance and supply information from each province below:")
             st.dataframe(details)
 
