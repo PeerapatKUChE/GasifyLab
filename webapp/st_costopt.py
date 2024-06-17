@@ -674,7 +674,7 @@ def main():
 
     page_column1.pyplot(fig)
 
-    if details != None:
+    if type(details) != type(None):
         page_column1.write("For more details, see the distance and supply information from each province below:")
         page_column1.dataframe(details)
 
