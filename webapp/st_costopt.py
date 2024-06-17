@@ -382,24 +382,23 @@ def main():
     if run_count > 0:
         if summary is None or selected_feedstock is None or details is None:
             st.error("Error: No solution found.")
+    page_column2.title("Plant Summary Dashboard")
+    summary_col1, summary_col2 = page_column2.columns(2)
+    for i, (label, value) in enumerate(summary.items()):
+        if i % 2 == 0:
+            summary_col1.metric(label=label, value=value)
         else:
-            st.title("Plant Summary Dashboard")
-            summary_col1, summary_col2 = st.columns(2)
-            for i, (label, value) in enumerate(summary.items()):
-                if i % 2 == 0:
-                    summary_col1.metric(label=label, value=value)
-                else:
-                    summary_col2.metric(label=label, value=value)
-            feedstock_labels = selected_feedstock.columns
-            feedstock_sizes = selected_feedstock.iloc[0]
+            summary_col2.metric(label=label, value=value)
+    feedstock_labels = selected_feedstock.columns
+    feedstock_sizes = selected_feedstock.iloc[0]
 
-            fig, ax = plt.subplots()
-            ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
-            ax.axis('equal')
+    fig, ax = plt.subplots()
+    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct='%1.1f%%', startangle=90)
+    ax.axis('equal')
 
-            st.pyplot(fig)
-            st.write("For more details, see the distance and supply information from each province below:")
-            st.dataframe(details)
+    page_column2.pyplot(fig)
+    page_column2.write("For more details, see the distance and supply information from each province below:")
+    page_column2.dataframe(details)
 
 if __name__ == "__main__":
     main()
