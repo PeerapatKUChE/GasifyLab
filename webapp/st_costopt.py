@@ -392,7 +392,7 @@ def main():
     if run_count > 0:
         if summary == default_summmary or selected_feedstock == default_selected_feedstock or details is None:
             st.error("Error: No solution found.")
-    #page_column1.title("Plant Summary Dashboard")
+    page_column1.title("Plant Summary Dashboard")
     summary_col1, summary_col2 = page_column1.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
