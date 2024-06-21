@@ -411,7 +411,7 @@ def main():
     st.dataframe(sorted_feedstock)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     st.dataframe(other_feedstock)
-    if other_feedstock.shape[0] > 0:
+    if other_feedstock.shape[0] > 0 and type(details) != type(None):
         other_columns = other_feedstock.index
         total_other_feedstock = sum(other_feedstock.values)
         st.write(total_other_feedstock)
@@ -425,7 +425,7 @@ def main():
     feedstock_sizes = sorted_feedstock.iloc[0]
 
     if type(details) != type(None):
-        colors = plt.cm.YlGn(np.linspace(0, 1, len(feedstock_labels)))
+        colors = plt.cm.tab10(np.linspace(0, 1, len(feedstock_labels)))
         autopct = "%.2f%%"
     else:
         colors = ["#CCCCCC"]
