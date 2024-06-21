@@ -411,13 +411,16 @@ def main():
     st.dataframe(sorted_feedstock)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     st.dataframe(other_feedstock)
-    other_columns = other_feedstock.columns
-    total_other_feedstock = sum(other_feedstock)
-    sorted_feedstock = sorted_feedstock.drop(columns=other_columns)
-    sorted_feedstock["Other"] = total_other_feedstock
+    if other_feedstock.shape[0] > 0:
+        other_columns = other_feedstock.index
+        total_other_feedstock = sum(other_feedstock)
+        sorted_feedstock = sorted_feedstock.T.drop(columns=other_columns)
+        sorted_feedstock["Other"] = total_other_feedstock
+    else:
+        sorted_feedstock = sorted_feedstock.T
     
-    feedstock_labels = sorted_feedstock.T.columns
-    feedstock_sizes = sorted_feedstock.T.iloc[0]
+    feedstock_labels = sorted_feedstock.columns
+    feedstock_sizes = sorted_feedstock.iloc[0]
 
     if type(details) != type(None):
         colors = plt.cm.YlGn(np.linspace(0, 1, len(feedstock_labels)))
