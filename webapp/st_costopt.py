@@ -408,18 +408,14 @@ def main():
     
     page_column1.subheader("Feedstock Composition")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
-    st.dataframe(sorted_feedstock)
-    other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
-    st.dataframe(other_feedstock)
+    other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0))
     if other_feedstock.shape[0] > 0 and type(details) != type(None):
         other_columns = other_feedstock.index
         total_other_feedstock = sum(other_feedstock.values)
-        st.write(total_other_feedstock)
         sorted_feedstock = sorted_feedstock.T.drop(columns=other_columns)
         sorted_feedstock["Other"] = total_other_feedstock
     else:
         sorted_feedstock = sorted_feedstock.T
-    st.write(sorted_feedstock)
     
     feedstock_labels = sorted_feedstock.columns
     feedstock_sizes = sorted_feedstock.iloc[0]
