@@ -416,12 +416,13 @@ def main():
         sorted_feedstock["Other"] = total_other_feedstock
     else:
         sorted_feedstock = sorted_feedstock.T
+    sorted_feedstock.columns = sorted_feedstock.columns.str.capitalize()
     
     feedstock_labels = sorted_feedstock.columns
     feedstock_sizes = sorted_feedstock.iloc[0]
 
     if type(details) != type(None):
-        colors = plt.cm.tab10(np.linspace(0, 1, len(feedstock_labels)))
+        colors = plt.cm.cool(np.linspace(0, 1, len(feedstock_labels)))
         autopct = "%.2f%%"
     else:
         colors = ["#CCCCCC"]
