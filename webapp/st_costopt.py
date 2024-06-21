@@ -408,7 +408,9 @@ def main():
     
     page_column1.subheader("Feedstock Composition")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
+    st.dataframe(sorted_feedstock)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
+    st.dataframe(other_feedstock)
     other_columns = other_feedstock.columns
     total_other_feedstock = sum(other_feedstock)
     sorted_feedstock = sorted_feedstock.drop(columns=other_columns)
