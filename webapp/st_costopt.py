@@ -407,21 +407,25 @@ def main():
             summary_col2.metric(label=label, value=value)
     
     page_column1.subheader("Feedstock Composition")
-    sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=False)
+    sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
+    other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
+    other_columns = other_feedstock.columns
+    total_other_feedstock = sum(other_feedstock)
+    sorted_feedstock = sorted_feedstock.drop(columns=other_columns)
+    sorted_feedstock["Other"] = total_other_feedstock
+    
     feedstock_labels = sorted_feedstock.T.columns
     feedstock_sizes = sorted_feedstock.T.iloc[0]
 
     if type(details) != type(None):
-        colors = plt.cm.Spectral(np.linspace(0, 1, len(feedstock_labels)))
+        colors = plt.cm.YlGn(np.linspace(0, 1, len(feedstock_labels)))
         autopct = "%.2f%%"
-        explode = [0.1 if size < 10 else 0 for size in feedstock_sizes]
     else:
         colors = ["#CCCCCC"]
         autopct = None
-        explode = None
 
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90, explode=explode)
+    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
     ax.axis("equal")
 
     page_column1.pyplot(fig)
