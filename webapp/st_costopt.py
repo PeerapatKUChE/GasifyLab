@@ -225,11 +225,11 @@ def milp_solver(
 
         summary = {
             "Selected Plant Code": selected_plant_code,
-            "Total Cost (THB/year)": f"{total_cost:,.2f}",
-            "Feedstock Cost (THB/year)": f"{feedstock_cost:,.2f}",
-            "Transportation Cost (THB/year)": f"{transport_cost:,.2f}",
+            "Total Cost (×10⁶ THB/year)": f"{total_cost/10**6:,.2f}",
+            "Feedstock Cost (×10⁶ THB/year)": f"{feedstock_cost/10**6:,.2f}",
+            "Transportation Cost (×10³ THB/year)": f"{transport_cost/10**3:,.2f}",
             "Total Distance (km)": f"{total_distance:,.2f}",
-            "Total Supply (tons)": f"{total_supply:,.2f}"
+            "Total Supply (×10³ ton/year)": f"{total_supply/10**3:,.2f}"
         }
 
     else:
@@ -653,8 +653,6 @@ def main():
     if run_count > 0:
         if summary["Selected Plant Code"] == default_summmary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
             st.error("Error: No solution found.")
-    
-    st.dataframe(selected_feedstock)
 
     summary_col1, summary_col2 = page_column1.columns(2)
     for i, (label, value) in enumerate(summary.items()):
@@ -669,7 +667,7 @@ def main():
     feedstock_sizes = sorted_feedstock.T.iloc[0]
 
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90)
+    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90, cmap="YlGn")
     ax.axis("equal")
 
     page_column1.pyplot(fig)
