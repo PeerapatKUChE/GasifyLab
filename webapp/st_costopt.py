@@ -666,9 +666,15 @@ def main():
     feedstock_labels = sorted_feedstock.T.columns
     feedstock_sizes = sorted_feedstock.T.iloc[0]
 
+    if type(details) != type(None):
+        colors = plt.cm.Spectral(np.linspace(0, 1, len(feedstock_labels)))
+        autopct = "%.2f%%"
+    else:
+        colors = "#CCCCCC"
+        autopct = None
+
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90, 
-        colors=plt.cm.Spectral(np.linspace(0, 1, len(feedstock_labels))))
+    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
     ax.axis("equal")
 
     page_column1.pyplot(fig)
