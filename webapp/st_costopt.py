@@ -225,11 +225,11 @@ def milp_solver(
 
         summary = {
             "Selected Plant Code": selected_plant_code,
-            "Total Cost (×10⁶ THB/year)": f"{total_cost/10**6:,.2f}",
-            "Feedstock Cost (×10⁶ THB/year)": f"{feedstock_cost/10**6:,.2f}",
+            "Total Cost (×10³ THB/year)": f"{total_cost/10**3:,.2f}",
+            "Feedstock Cost (×10³ THB/year)": f"{feedstock_cost/10**3:,.2f}",
             "Transportation Cost (×10³ THB/year)": f"{transport_cost/10**3:,.2f}",
             "Total Distance (km)": f"{total_distance:,.2f}",
-            "Total Supply (×10³ ton/year)": f"{total_supply/10**3:,.2f}"
+            "Total Supply (ton/year)": f"{total_supply:,.2f}"
         }
 
     else:
