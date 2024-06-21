@@ -422,7 +422,7 @@ def main():
     feedstock_sizes = sorted_feedstock.iloc[0]
 
     if type(details) != type(None):
-        colors = plt.cm.rainbow(np.linspace(0, 1, len(feedstock_labels)))
+        colors = plt.cm.BuGn(np.linspace(0, 1, len(feedstock_labels)))
         autopct = "%.2f%%"
     else:
         colors = ["#CCCCCC"]
