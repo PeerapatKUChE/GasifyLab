@@ -670,7 +670,7 @@ def main():
         colors = plt.cm.Spectral(np.linspace(0, 1, len(feedstock_labels)))
         autopct = "%.2f%%"
     else:
-        colors = "#CCCCCC"
+        colors = ["#CCCCCC"]
         autopct = None
 
     fig, ax = plt.subplots()
