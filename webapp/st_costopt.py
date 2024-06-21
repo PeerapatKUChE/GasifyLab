@@ -247,11 +247,11 @@ def main():
 
     default_summary = {
         "Selected Plant Code": "-",
-        "Total Cost (×10⁶ THB/year)": "0.00",
-        "Feedstock Cost (×10⁶ THB/year)": "0.00",
+        "Total Cost (×10³ THB/year)": "0.00",
+        "Feedstock Cost (×10³ THB/year)": "0.00",
         "Transportation Cost (×10³ THB/year)": "0.00",
         "Total Distance (km)": "0.00",
-        "Total Supply (×10³ ton/year)": "0.00"
+        "Total Supply (ton/year)": "0.00"
     }
 
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
