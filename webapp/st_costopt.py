@@ -667,7 +667,8 @@ def main():
     feedstock_sizes = sorted_feedstock.T.iloc[0]
 
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90, colors=plt.cm.YlGn.colors)
+    ax.pie(feedstock_sizes, labels=feedstock_labels, autopct="%1.1f%%", startangle=90, 
+        colors=plt.cm.Spectral(np.linspace(0, 1, len(feedstock_labels))))
     ax.axis("equal")
 
     page_column1.pyplot(fig)
