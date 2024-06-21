@@ -241,7 +241,7 @@ def milp_solver(
 
 def main():
     st.set_page_config(layout="wide")
-    st.title("Plant Summary Dashboard")
+    st.title("Biomass Blending Dashboard")
 
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
