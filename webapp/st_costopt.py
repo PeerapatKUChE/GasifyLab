@@ -246,7 +246,7 @@ def main():
     compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
 
     default_summary = {
-        "Selected Plant Code": "-",
+        "Selected Plant Code": None,
         "Total Cost (×10³ THB/year)": "0.00",
         "Feedstock Cost (×10³ THB/year)": "0.00",
         "Transportation Cost (×10³ THB/year)": "0.00",
@@ -405,9 +405,8 @@ def main():
             summary_col1.metric(label=label, value=value)
         else:
             summary_col2.metric(label=label, value=value)
-    
-    page_column1.write("Feedstock Composition (%wt)")
-    page_column1.metric(label="Feedstock Composition (%wt)", value=None)
+
+    page_column1.metric(label="Feedstock Composition (%wt)", value="")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     if other_feedstock.shape[0] > 0 and type(details) != type(None):
