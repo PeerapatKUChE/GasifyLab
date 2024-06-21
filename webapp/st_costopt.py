@@ -406,7 +406,7 @@ def main():
         else:
             summary_col2.metric(label=label, value=value)
     
-    page_column1.write("Feedstock Composition")
+    page_column1.write("Feedstock Composition (%wt)")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     if other_feedstock.shape[0] > 0 and type(details) != type(None):
