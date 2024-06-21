@@ -413,7 +413,7 @@ def main():
     st.dataframe(other_feedstock)
     if other_feedstock.shape[0] > 0:
         other_columns = other_feedstock.index
-        total_other_feedstock = sum(other_feedstock)
+        total_other_feedstock = sum(other_feedstock.values)
         st.write(total_other_feedstock)
         sorted_feedstock = sorted_feedstock.T.drop(columns=other_columns)
         sorted_feedstock["Other"] = total_other_feedstock
