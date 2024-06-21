@@ -421,7 +421,7 @@ def main():
         explode = None
 
     fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
+    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90, explode=explode)
     ax.axis("equal")
 
     page_column1.pyplot(fig)
