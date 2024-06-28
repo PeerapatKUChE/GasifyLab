@@ -4,7 +4,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-print("Hello")
+
 def load_data(path):
     compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
     densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
@@ -330,6 +330,7 @@ def main():
         run_count = 0
         if submit_button.form_submit_button("**Submit**", type="primary"):
             run_count += 1
+            print("Hello")
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
                 summary, selected_feedstock, details = milp_solver(
                     prices=biomass_prices,
