@@ -232,9 +232,6 @@ def milp_solver(
             "Total Supply (ton/year)": f"{total_supply:,.2f}"
         }
 
-        st.write(len(prob.variables()))
-        st.write(len(prob.constraints))
-
     else:
         summary = default_summary
         selected_feedstock = default_selected_feedstock
