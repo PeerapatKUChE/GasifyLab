@@ -164,6 +164,8 @@ def milp_solver(
     
     # Solve the problem
     status = prob.solve()
+    st.write(prob)
+    st.write(prob.variables())
 
     # Result Analysis ==================================================================================
     #
