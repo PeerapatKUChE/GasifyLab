@@ -170,8 +170,6 @@ def milp_solver(
     if status == pulp.LpStatusOptimal:
         #
         details = pd.DataFrame()
-        st.write(prob)
-        st.write(prob.variables())
 
         #
         Yg_val = []
@@ -239,7 +237,7 @@ def milp_solver(
         selected_feedstock = default_selected_feedstock
         details = None
     
-    return summary, selected_feedstock, details
+    return summary, selected_feedstock, details, prob
 
 def main():
     st.set_page_config(layout="wide")
@@ -333,7 +331,7 @@ def main():
         if submit_button.form_submit_button("**Submit**", type="primary"):
             run_count += 1
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                summary, selected_feedstock, details = milp_solver(
+                summary, selected_feedstock, details, prob = milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
                     compositions=compositions,
@@ -439,6 +437,9 @@ def main():
     if type(details) != type(None):
         page_column1.write("For more details, see the distance and supply information from each province below:")
         page_column1.dataframe(details)
+
+    st.write(prob)
+    st.write(prob.variables())
 
 if __name__ == "__main__":
     main()
