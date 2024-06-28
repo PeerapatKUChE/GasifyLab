@@ -232,8 +232,8 @@ def milp_solver(
             "Total Supply (ton/year)": f"{total_supply:,.2f}"
         }
 
-        st.write(prob.variables())
-        st.write(prob.constraints)
+        st.write(len(prob.variables()))
+        st.write(len(prob.constraints))
 
     else:
         summary = default_summary
