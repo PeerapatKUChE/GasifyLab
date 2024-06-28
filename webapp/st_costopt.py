@@ -164,14 +164,14 @@ def milp_solver(
     
     # Solve the problem
     status = prob.solve()
-    st.write(prob)
-    st.write(prob.variables())
 
     # Result Analysis ==================================================================================
     #
     if status == pulp.LpStatusOptimal:
         #
         details = pd.DataFrame()
+        st.write(prob)
+        st.write(prob.variables())
 
         #
         Yg_val = []
