@@ -352,7 +352,8 @@ def main():
                     default_summary=default_summary,
                     default_selected_feedstock=default_selected_feedstock
                 )
-                st.write(prob)
+                st.write(prob.constraints)
+                st.write(prob.variables())
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
