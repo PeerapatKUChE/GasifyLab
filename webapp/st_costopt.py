@@ -232,12 +232,15 @@ def milp_solver(
             "Total Supply (ton/year)": f"{total_supply:,.2f}"
         }
 
+        st.write(prob.variables())
+        st.write(prob.constraints)
+
     else:
         summary = default_summary
         selected_feedstock = default_selected_feedstock
         details = None
     
-    return summary, selected_feedstock, details, prob
+    return summary, selected_feedstock, details
 
 def main():
     st.set_page_config(layout="wide")
@@ -331,7 +334,7 @@ def main():
         if submit_button.form_submit_button("**Submit**", type="primary"):
             run_count += 1
             if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                summary, selected_feedstock, details, prob = milp_solver(
+                summary, selected_feedstock, details = milp_solver(
                     prices=biomass_prices,
                     target_composition=target_composition,
                     compositions=compositions,
@@ -352,8 +355,6 @@ def main():
                     default_summary=default_summary,
                     default_selected_feedstock=default_selected_feedstock
                 )
-                st.write(prob.constraints)
-                st.write(prob.variables())
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
