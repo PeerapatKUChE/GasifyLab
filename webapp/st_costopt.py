@@ -257,7 +257,7 @@ def main():
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
     page_column1, _, page_column2 = st.columns([0.40, 0.05, 0.55])
-    with page_column2.form("Optimization Tool"):
+    with page_column1.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
         col1, col2 = st.columns(2)
@@ -265,8 +265,8 @@ def main():
         col1.write("**Mixed Biomass Feedstock Specifications**")
         col2.write("‎ ")
         target_composition = {
-            "Target carbon": col1.number_input("Target carbon content of mixed biomass feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content of mixed biomass feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
+            "Target carbon": col1.number_input("Target carbon content of mixed feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content of mixed feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
         }
 
         min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
@@ -399,14 +399,14 @@ def main():
         if summary["Selected Plant Code"] == default_summary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
             st.error("Error: No solution found.")
 
-    summary_col1, summary_col2 = page_column1.columns(2)
+    summary_col1, summary_col2 = page_column2.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
             summary_col1.metric(label=label, value=value)
         else:
             summary_col2.metric(label=label, value=value)
 
-    page_column1.metric(label="Feedstock Composition (%wt)", value="")
+    page_column2.metric(label="Feedstock Composition (%wt)", value="")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     if other_feedstock.shape[0] > 0 and type(details) != type(None):
@@ -432,11 +432,11 @@ def main():
     ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
     ax.axis("equal")
 
-    page_column1.pyplot(fig)
+    page_column2.pyplot(fig)
 
     if type(details) != type(None):
-        page_column1.write("For more details, see the distance and supply information from each province below:")
-        page_column1.dataframe(details)
+        page_column2.write("For more details, see the distance and supply information from each province below:")
+        page_column2.dataframe(details)
 
 if __name__ == "__main__":
     main()
