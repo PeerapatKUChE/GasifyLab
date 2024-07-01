@@ -263,11 +263,11 @@ def main():
         st.write("")
         col1, col2 = st.columns(2)
 
-        col1.write("**Mixed Biomass Feedstock Specifications**")
+        col1.write("**Target Mixed Biomass Feedstock Specifications**")
         col2.write("‎ ")
         target_composition = {
-            "Target carbon": col1.number_input("Target carbon content of mixed biomass feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content of mixed biomass feedstock (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
+            "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
+            "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
         }
 
         min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
