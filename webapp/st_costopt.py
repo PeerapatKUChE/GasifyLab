@@ -256,7 +256,7 @@ def main():
 
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-    page_column1, _, page_column2 = st.columns([0.60, 0.02, 0.38])
+    page_column1, _, page_column2 = st.columns([0.55, 0.02, 0.43])
     with page_column1.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
@@ -313,7 +313,7 @@ def main():
         truck_params = {
             "Fuel price": col2.number_input("Fuel price (THB/liter)", value=default_truck_params["Fuel price"], min_value=0.00, key="Fuel price"),
             "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=default_truck_params["Fuel consumption rate"], min_value=0.01, key="Fuel consumption rate"),
-            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
+            "Maintenance cost": col2.number_input("Maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
             "Tire price": col3.number_input("Tire price (THB/tire)", value=default_truck_params["Tire price"], min_value=0.00, key="Tire price"),
             "Tire lifespan": col2.number_input("Tire lifespan (km)", value=default_truck_params["Tire lifespan"], min_value=0.01, key="Tire lifespan"),
             "Number of tires": col3.number_input("Number of tires", value=default_truck_params["Number of tires"], min_value=0, key="Number of tires"),
