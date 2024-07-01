@@ -256,7 +256,7 @@ def main():
 
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-    page_column1, _, page_column2 = st.columns([0.6, 0.4])
+    page_column1, page_column2 = st.columns([0.6, 0.4])
     with page_column1.form("Optimization Tool"):
         st.write(":red[* Required]")
         st.write("")
