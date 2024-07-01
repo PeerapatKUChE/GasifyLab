@@ -257,6 +257,7 @@ def main():
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
     page_column1, page_column2 = st.columns([0.6, 0.4])
+    page_column1.write("Inputs:")
     with page_column1.form("Optimization Tool"):
         st.write(":red[* Required inputs]")
         st.write("")
@@ -399,6 +400,7 @@ def main():
         if summary["Selected Plant Code"] == default_summary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
             st.error("Error: No solution found.")
 
+    page_column2.write("Outputs")
     summary_col1, summary_col2 = page_column2.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
