@@ -258,7 +258,7 @@ def main():
 
     page_column1, page_column2 = st.columns([0.6, 0.4])
     with page_column1.form("Optimization Tool"):
-        st.write(":red[* Required]")
+        st.write(":red[* Required inputs]")
         st.write("")
         col1, col2 = st.columns(2)
 
