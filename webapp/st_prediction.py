@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from joblib import load
 import json
+import subprocess
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
@@ -77,9 +78,9 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    with open(os.getcwd()+"/webapp/data.json", 'r') as f:
+    webapp_data_path = os.getcwd()+"/webapp/data.json"
+    with open(webapp_data_path, 'r') as f:
         webapp_data = json.load(f)
-        st.write("1: ", webapp_data)
 
         st.session_state["run_count"] = webapp_data["run_count"][0]["costopt"]
 
@@ -143,11 +144,13 @@ def main():
 
                     st.session_state['run_count'] += 1
                     webapp_data["run_count"][0]["costopt"] = st.session_state["run_count"]
-                    st.write("2: ", webapp_data)
                     
-                    with open(os.getcwd()+"/webapp/data.json", 'w') as f:
+                    with open(webapp_data_path, 'w') as f:
                         json.dump(webapp_data, f, indent=4)
-                    st.write(f"Successfully saved changes")
+                    
+                    subprocess.run(['git', 'add', webapp_data_path], check=True, capture_output=True)
+                    subprocess.run(['git', 'commit', '-m', "Updated data"], check=True, capture_output=True)
+                    subprocess.run(['git', 'push', 'origin', 'HEAD'], check=True, capture_output=True)
             
             else:
                 st.error("Error: All fields are required.")
