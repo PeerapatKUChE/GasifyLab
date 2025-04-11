@@ -77,7 +77,7 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    with open(os.path.abspath()+"/webapp/data.json", 'r') as f:
+    with open(os.getcwd()+"/webapp/data.json", 'r') as f:
         webapp_data = json.load(f)
 
     continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
