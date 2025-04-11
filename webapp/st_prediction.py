@@ -126,9 +126,6 @@ def main():
             "Catalyst": categorical_col1.selectbox("Catalyst presence", ("Absent", "Present"), index=None, placeholder="Select", key="Catalyst"),
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
-
-        if 'run_count' not in st.session_state:
-            st.session_state['run_count'] = 0
         
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
@@ -136,8 +133,6 @@ def main():
             if not any(value is None for value in categorical_inputs.values()) and not any(value is None for value in continuous_inputs.values()):
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
-
-                    st.session_state['run_count'] += 1
             
             else:
                 st.error("Error: All fields are required.")
@@ -178,8 +173,6 @@ def main():
     res1, res2, _ = st.columns([1, 1, 2])
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
-
-    st.info(f"ⓘ This app has been run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}")
 
 if __name__ == "__main__":
     main()
