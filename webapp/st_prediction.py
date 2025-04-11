@@ -80,9 +80,7 @@ def main():
     with open(os.getcwd()+"/webapp/data.json", 'r') as f:
         webapp_data = json.load(f)
 
-        for item in webapp_data["run_count"]:
-            if "costopt" in item:
-                st.session_state['run_count'] = item["costopt"]
+        st.session_state["run_count"] = webapp_data["run_count"][0]["costopt"]
 
     continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
@@ -142,10 +140,8 @@ def main():
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
-                    for item in webapp_data["run_count"]:
-                        if "costopt" in item:
-                            item["costopt"] += 1
-                            st.session_state['run_count'] = item["costopt"]
+                    st.session_state['run_count'] += 1
+                    webapp_data["run_count"][0]["costopt"] = st.session_state["run_count"]
                     
                     with open(os.getcwd()+"/webapp/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
