@@ -79,7 +79,7 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
 def main():
     with open(os.getcwd()+"/webapp/data.json", 'r') as f:
         webapp_data = json.load(f)
-        print("1: ", webapp_data)
+        st.write("1: ", webapp_data)
 
         st.session_state["run_count"] = webapp_data["run_count"][0]["costopt"]
 
@@ -143,11 +143,11 @@ def main():
 
                     st.session_state['run_count'] += 1
                     webapp_data["run_count"][0]["costopt"] = st.session_state["run_count"]
-                    print("2: ", webapp_data)
+                    st.write("2: ", webapp_data)
                     
                     with open(os.getcwd()+"/webapp/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
-                    print(f"Successfully saved changes")
+                    st.write(f"Successfully saved changes")
             
             else:
                 st.error("Error: All fields are required.")
