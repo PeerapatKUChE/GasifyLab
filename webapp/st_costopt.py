@@ -90,7 +90,7 @@ def milp_solver(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
     
-    st.write("The program is currently running. Your results should be available within the next 30 minutes.")
+    st.write("The code is running. Your results will be ready within 5 to 30 minutes.")
 
     #
     prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
@@ -256,14 +256,13 @@ def main():
 
     default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-    page_column1, page_column2 = st.columns([0.6, 0.4])
-    page_column1.subheader("Inputs:")
-    with page_column1.form("Optimization Tool"):
-        st.write(":red[* Required inputs]")
+    page_column1, _, page_column2 = st.columns([0.40, 0.05, 0.55])
+    with page_column2.form("Optimization Tool"):
+        st.write(":red[* Required]")
         st.write("")
         col1, col2 = st.columns(2)
 
-        col1.write("**Target Mixed Biomass Feedstock Specifications**")
+        col1.write("**Feedstock Specifications**")
         col2.write("‎ ")
         target_composition = {
             "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
@@ -314,7 +313,7 @@ def main():
         truck_params = {
             "Fuel price": col2.number_input("Fuel price (THB/liter)", value=default_truck_params["Fuel price"], min_value=0.00, key="Fuel price"),
             "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=default_truck_params["Fuel consumption rate"], min_value=0.01, key="Fuel consumption rate"),
-            "Maintenance cost": col2.number_input("Maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
+            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
             "Tire price": col3.number_input("Tire price (THB/tire)", value=default_truck_params["Tire price"], min_value=0.00, key="Tire price"),
             "Tire lifespan": col2.number_input("Tire lifespan (km)", value=default_truck_params["Tire lifespan"], min_value=0.01, key="Tire lifespan"),
             "Number of tires": col3.number_input("Number of tires", value=default_truck_params["Number of tires"], min_value=0, key="Number of tires"),
@@ -325,6 +324,8 @@ def main():
         }
 
         default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
+
+        st.session_state["run_count"] = 0
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
@@ -353,6 +354,8 @@ def main():
                     default_summary=default_summary,
                     default_selected_feedstock=default_selected_feedstock
                 )
+
+                st.session_state['run_count'] += 1
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
@@ -400,15 +403,14 @@ def main():
         if summary["Selected Plant Code"] == default_summary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
             st.error("Error: No solution found.")
 
-    page_column2.subheader("Outputs:")
-    summary_col1, summary_col2 = page_column2.columns(2)
+    summary_col1, summary_col2 = page_column1.columns(2)
     for i, (label, value) in enumerate(summary.items()):
         if i % 2 == 0:
             summary_col1.metric(label=label, value=value)
         else:
             summary_col2.metric(label=label, value=value)
 
-    page_column2.metric(label="Feedstock Composition (%wt)", value="")
+    page_column1.metric(label="Feedstock Composition (%wt)", value="")
     sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
     other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
     if other_feedstock.shape[0] > 0 and type(details) != type(None):
@@ -434,11 +436,13 @@ def main():
     ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
     ax.axis("equal")
 
-    page_column2.pyplot(fig)
+    page_column1.pyplot(fig)
 
     if type(details) != type(None):
-        page_column2.write("For more details, see the distance and supply information from each province below:")
-        page_column2.dataframe(details)
+        page_column1.write("For more details, see the distance and supply information from each province below:")
+        page_column1.dataframe(details)
+    
+    st.info(f"ⓘ This app has been run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}")
 
 if __name__ == "__main__":
     main()
