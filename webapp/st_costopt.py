@@ -325,7 +325,8 @@ def main():
 
         default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-        st.session_state["run_count"] = 0
+        if 'run_count' not in st.session_state:
+            st.session_state['run_count'] = 0
 
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
