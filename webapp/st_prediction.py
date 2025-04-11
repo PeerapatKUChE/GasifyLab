@@ -149,6 +149,8 @@ def main():
                         json.dump(webapp_data, f, indent=4)
                     
                     repo = Repo(os.getcwd())
+                    repo.git.config('user.name', 'PeerapatKUChE')
+                    repo.git.config('user.email', 'peerapat.jai@ku.th')
                     repo.git.add(webapp_data_path)
                     repo.git.commit('-m', 'Updated data')
                     repo.git.push()
