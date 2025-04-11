@@ -3,6 +3,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from joblib import load
+import json
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
@@ -76,6 +77,9 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
+    with open(os.path.abspath()+"/data.json", 'r') as f:
+        webapp_data = json.load(f)
+
     continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
 
@@ -134,11 +138,9 @@ def main():
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
-                    with open(os.path.abspath()+"/data.json", 'r') as f:
-                        webapp_data = json.load(f)
-                        for item in webapp_data["run_count"]:
-                            if "costopt" in item:
-                                item["costopt"] += 1
+                    for item in webapp_data["run_count"]:
+                        if "costopt" in item:
+                            item["costopt"] += 1
                     
                     with open(os.path.abspath()+"/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
