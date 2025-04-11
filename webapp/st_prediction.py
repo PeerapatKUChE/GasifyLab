@@ -3,7 +3,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from joblib import load
-import json
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
@@ -77,12 +76,6 @@ def predict_gasification(models, continuous_inputs, categorical_inputs, categori
     return H2, CO2
 
 def main():
-    webapp_data_path = os.getcwd()+"/webapp/data.json"
-    with open(webapp_data_path, 'r') as f:
-        webapp_data = json.load(f)
-
-        st.session_state["run_count"] = webapp_data["run_count"][0]["costopt"]
-
     continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
 
@@ -134,6 +127,8 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
+        st.session_state["run_count"] = 0
+        
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         if submit_button.form_submit_button("**Submit**", type="primary"):
@@ -142,10 +137,6 @@ def main():
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
                     st.session_state['run_count'] += 1
-                    webapp_data["run_count"][0]["costopt"] = st.session_state["run_count"]
-                    
-                    with open(webapp_data_path, 'w') as f:
-                        json.dump(webapp_data, f, indent=4)
             
             else:
                 st.error("Error: All fields are required.")
