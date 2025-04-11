@@ -190,7 +190,7 @@ def main():
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
-    st.info(f"This app has run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}", icon="ⓘ")
+    st.info(f"ⓘ This app has run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}")
 
 if __name__ == "__main__":
     main()
