@@ -147,7 +147,7 @@ def main():
                             item["costopt"] += 1
                             st.session_state['run_count'] = item["costopt"]
                     
-                    with open(os.path.abspath()+"/data.json", 'w') as f:
+                    with open(os.getcwd()+"/webapp/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
             
             else:
@@ -190,7 +190,7 @@ def main():
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
-    st.info(f"This app has run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}", icon="ℹ️")
+    st.info(f"This app has run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}", icon="ⓘ")
 
 if __name__ == "__main__":
     main()
