@@ -325,9 +325,6 @@ def main():
 
         default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-        if 'run_count' not in st.session_state:
-            st.session_state['run_count'] = 0
-
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
         run_count = 0
@@ -355,8 +352,6 @@ def main():
                     default_summary=default_summary,
                     default_selected_feedstock=default_selected_feedstock
                 )
-
-                st.session_state['run_count'] += 1
 
             else:
                 st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
@@ -442,8 +437,6 @@ def main():
     if type(details) != type(None):
         page_column1.write("For more details, see the distance and supply information from each province below:")
         page_column1.dataframe(details)
-    
-    st.info(f"ⓘ This app has been run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}")
 
 if __name__ == "__main__":
     main()
