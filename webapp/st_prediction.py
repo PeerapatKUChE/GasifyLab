@@ -127,7 +127,8 @@ def main():
             "System scale": categorical_col2.selectbox("System scale", ("Laboratory", "Pilot"), index=None, placeholder="Select", key="System scale")
         }
 
-        st.session_state["run_count"] = 0
+        if 'run_count' not in st.session_state:
+            st.session_state['run_count'] = 0
         
         submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
 
