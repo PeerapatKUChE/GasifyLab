@@ -148,9 +148,9 @@ def main():
                     with open(webapp_data_path, 'w') as f:
                         json.dump(webapp_data, f, indent=4)
                     
-                    subprocess.run(['git', 'add', webapp_data_path], check=True, capture_output=True)
-                    subprocess.run(['git', 'commit', '-m', "Updated data"], check=True, capture_output=True)
-                    subprocess.run(['git', 'push', 'origin', 'HEAD'], check=True, capture_output=True)
+                    subprocess.run(["git", "add", webapp_data_path], check=True)
+                    subprocess.run(["git", "commit", "-m", "Updated data"], check=True)
+                    subprocess.run(["git", "push"], check=True)
             
             else:
                 st.error("Error: All fields are required.")
