@@ -149,10 +149,9 @@ def main():
                         json.dump(webapp_data, f, indent=4)
                     
                     repo = Repo(os.getcwd())
-                    repo.index.add([os.path.join("webapp", "data.json")])
-                    repo.index.commit("Updated data")
-                    origin = repo.remote(name='origin')
-                    origin.push()
+                    repo.git.add(webapp_data_path)
+                    repo.git.commit('-m', 'Updated data')
+                    repo.git.push()
             
             else:
                 st.error("Error: All fields are required.")
