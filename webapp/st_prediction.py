@@ -145,6 +145,7 @@ def main():
                     
                     with open(os.getcwd()+"/webapp/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
+                    print(f"Successfully saved changes")
             
             else:
                 st.error("Error: All fields are required.")
