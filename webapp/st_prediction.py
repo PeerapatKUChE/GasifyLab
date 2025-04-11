@@ -80,6 +80,10 @@ def main():
     with open(os.getcwd()+"/webapp/data.json", 'r') as f:
         webapp_data = json.load(f)
 
+        for item in webapp_data["run_count"]:
+            if "costopt" in item:
+                st.session_state['run_count'] = item["costopt"]
+
     continuous_data, categorical_data = load_data(os.path.abspath(os.curdir) + "/data/preprocessed/Data-Gasification-Completed.xlsx")
     target_data = continuous_data[["H2", "CO2"]]
 
@@ -141,6 +145,7 @@ def main():
                     for item in webapp_data["run_count"]:
                         if "costopt" in item:
                             item["costopt"] += 1
+                            st.session_state['run_count'] = item["costopt"]
                     
                     with open(os.path.abspath()+"/data.json", 'w') as f:
                         json.dump(webapp_data, f, indent=4)
@@ -185,7 +190,7 @@ def main():
     res1.metric("H₂ (vol.% db)", f"{H2.item():.2f}")
     res2.metric("CO₂ (vol.% db)", f"{CO2.item():.2f}")
 
-    st.info('This is a purely informational message')
+    st.info(f"This app has run {st.session_state['run_count']} time{'s' if st.session_state['run_count'] != 1 else ''}", icon="ℹ️")
 
 if __name__ == "__main__":
     main()
