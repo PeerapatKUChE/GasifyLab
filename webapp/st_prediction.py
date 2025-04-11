@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from joblib import load
 import json
-import subprocess
+from git import Repo
 
 def load_data(file_path):
     return pd.read_excel(file_path, sheet_name="Encoded Data"), pd.read_excel(file_path, sheet_name="Normalised Data")
@@ -148,9 +148,11 @@ def main():
                     with open(webapp_data_path, 'w') as f:
                         json.dump(webapp_data, f, indent=4)
                     
-                    subprocess.run(["git", "add", webapp_data_path], check=True)
-                    subprocess.run(["git", "commit", "-m", "Updated data"], check=True)
-                    subprocess.run(["git", "push"], check=True)
+                    repo = Repo(os.getcwd())
+                    repo.index.add([os.path.join("webapp", "data.json")])
+                    repo.index.commit("Updated data")
+                    origin = repo.remote(name='origin')
+                    origin.push()
             
             else:
                 st.error("Error: All fields are required.")
