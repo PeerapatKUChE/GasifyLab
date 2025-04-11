@@ -134,6 +134,15 @@ def main():
                 if validate_inputs(categorical_inputs, continuous_inputs):
                     H2, CO2 = predict_gasification(models, continuous_inputs, categorical_inputs, categorical_vars, continuous_vars, target_data)
 
+                    with open(os.path.abspath()+"/data.json", 'r') as f:
+                        webapp_data = json.load(f)
+                        for item in webapp_data["run_count"]:
+                            if "costopt" in item:
+                                item["costopt"] += 1
+                    
+                    with open(os.path.abspath()+"/data.json", 'w') as f:
+                        json.dump(webapp_data, f, indent=4)
+            
             else:
                 st.error("Error: All fields are required.")
 
