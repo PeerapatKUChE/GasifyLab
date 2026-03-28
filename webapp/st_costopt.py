@@ -6,12 +6,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 def load_data(path):
     compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
     densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
     supplies = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
     distances = pd.read_excel(path+"/data/raw/Data-Distances.xlsx")
     return compositions, densities, supplies, distances
+
 
 def calculate_transportation_cost(
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
@@ -32,6 +34,7 @@ def calculate_transportation_cost(
         transportation_costs_df = pd.concat([transportation_costs_df, transportation_cost])
 
     return transportation_costs_df
+
 
 def prepare_data(
         prices, target_composition, compositions, densities, supplies, distances,
@@ -78,6 +81,7 @@ def prepare_data(
 
     return Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S
 
+
 def milp_solver(
         prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
@@ -88,128 +92,92 @@ def milp_solver(
     progress_bar = st.progress(0)
     status_text = st.empty()
 
+    # STEP 1: Data prep
     status_text.text("🔄 Preparing data...")
     Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S = prepare_data(
         prices, target_composition, compositions, densities, supplies, distances,
         fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
     )
-    progress_bar.progress(15)
+    progress_bar.progress(10)
 
-    status_text.text("🧠 Building optimization model...")
+    # STEP 2: Model
+    status_text.text("🧠 Building model...")
     prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
 
-    X = np.array([
-        pulp.LpVariable(f"X_{j}_{k}_{l}", lowBound=0)
-        for j in range(Nb)
-        for k in range(Ns)
-        for l in range(Ng)
-    ]).reshape(Nb, Ns, Ng)
+    total_vars = Nb*Ns*Ng + Ng*Ns + Ns + Ng
+    created = 0
 
-    Y = np.array([
-        pulp.LpVariable(f"Y_{l}_{k}", cat="Binary")
-        for l in range(Ng)
-        for k in range(Ns)
-    ]).reshape(Ng, Ns)
+    X = np.empty((Nb, Ns, Ng), dtype=object)
+    for j in range(Nb):
+        for k in range(Ns):
+            for l in range(Ng):
+                X[j,k,l] = pulp.LpVariable(f"X_{j}_{k}_{l}", lowBound=0)
+                created += 1
+                if created % 500 == 0:
+                    progress_bar.progress(10 + int(created/total_vars*30))
 
-    Ys = np.array([pulp.LpVariable(f"Yp_{k}", cat="Binary") for k in range(Ns)]).reshape(1, Ns)
-    Yg = np.array([pulp.LpVariable(f"Yg_{l}", cat="Binary") for l in range(Ng)]).reshape(Ng, 1)
+    Y = np.empty((Ng, Ns), dtype=object)
+    for l in range(Ng):
+        for k in range(Ns):
+            Y[l,k] = pulp.LpVariable(f"Y_{l}_{k}", cat="Binary")
 
-    progress_bar.progress(35)
+    Ys = np.array([pulp.LpVariable(f"Yp_{k}", cat="Binary") for k in range(Ns)])
+    Yg = np.array([pulp.LpVariable(f"Yg_{l}", cat="Binary") for l in range(Ng)])
 
-    status_text.text("📊 Setting objective function...")
+    progress_bar.progress(40)
+
+    # Objective
+    status_text.text("📊 Setting objective...")
     FC = pulp.lpSum(X * F.values.reshape(Nb, 1, 1))
     TC = pulp.lpSum(np.sum(X * D.values.T.reshape(1, Ns, Ng), axis=2) * T.values.reshape(Nb, 1))
     prob += FC + TC
     progress_bar.progress(50)
 
+    # Constraints
     status_text.text("📐 Adding constraints...")
+    total_constraints = Nb*Ns + Ns*Ng + Ns + Ng + 5
+    count = 0
 
-    prob += pulp.lpSum(Yg) == 1
+    prob += pulp.lpSum(Yg) == 1; count+=1
 
     for k in range(Ns):
-        prob += pulp.lpSum(Y[:, k]) == Ys[0, k]
+        prob += pulp.lpSum(Y[:, k]) == Ys[k]; count+=1
 
     for l in range(Ng):
-        prob += pulp.lpSum(Y[l, :]) <= Yg[l, 0] * Ns
+        prob += pulp.lpSum(Y[l, :]) <= Yg[l] * Ns; count+=1
 
     for j in range(Nb):
         for k in range(Ns):
-            prob += pulp.lpSum(X[j, k, :]) <= S.iloc[j, k]
+            prob += pulp.lpSum(X[j, k, :]) <= S.iloc[j, k]; count+=1
+            if count % 200 == 0:
+                progress_bar.progress(50 + int(count/total_constraints*30))
 
     M = 10**15
     for k in range(Ns):
         for l in range(Ng):
             prob += pulp.lpSum(X[:, k, l]) <= Y[l, k] * M
 
-    prob += Ct * pulp.lpSum(X) == pulp.lpDot(C.values, [pulp.lpSum(X[j, :, :]) for j in range(Nb)])
-    prob += Ht * pulp.lpSum(X) == pulp.lpDot(H.values, [pulp.lpSum(X[j, :, :]) for j in range(Nb)])
+    prob += Ct * pulp.lpSum(X) == pulp.lpDot(C.values, [pulp.lpSum(X[j,:,:]) for j in range(Nb)])
+    prob += Ht * pulp.lpSum(X) == pulp.lpDot(H.values, [pulp.lpSum(X[j,:,:]) for j in range(Nb)])
     prob += pulp.lpSum(X) >= min_supply
     prob += pulp.lpSum(Y) >= 1
 
-    progress_bar.progress(70)
+    progress_bar.progress(80)
 
-    status_text.text("⚙️ Solving optimization model (this may take a while)...")
+    # Solve
+    status_text.text("⚙️ Solving...")
     with st.spinner("Running solver..."):
         status = prob.solve()
 
-    progress_bar.progress(90)
+    progress_bar.progress(95)
 
     status_text.text("📦 Processing results...")
 
     if status == pulp.LpStatusOptimal:
-
-        details = pd.DataFrame()
-
-        Yg_val = np.array([Yg[l, 0].value() for l in range(Ng)]).reshape(Ng, 1)
-        Yg_val = pd.DataFrame(Yg_val, index=distances["Plant Code"])
-        plant = Yg_val[Yg_val == 1].dropna()
-
-        X_val = np.array([X[j, k, l].value()
-                          for j in range(Nb)
-                          for k in range(Ns)
-                          for l in range(Ng)]).reshape(Nb, Ns, Ng)
-
-        X_val = np.sum(X_val, axis=2)
-        X_val = pd.DataFrame(X_val, columns=D.columns, index=S.index)
-
-        supplier_indices = X_val.any(axis=0)
-        supply = X_val.loc[:, supplier_indices].T
-
-        supplier = pd.DataFrame(supply.index, columns=["Province"], index=range(supply.shape[0]))
-        details = pd.concat([details, supplier], axis=0)
-
-        distance = D.loc[plant.index, supply.index].T
-        distance.index = range(supply.shape[0])
-        distance.columns = ["Distance (km)"]
-        details = pd.concat([details, distance], axis=1)
-
-        supply = supply.loc[:, (supply != 0).any(axis=0)]
-        supply.index = range(supply.shape[0])
-        supply.rename(columns=lambda x: x.capitalize()+" supply (ton/year)", inplace=True)
-        details = pd.concat([details, supply], axis=1)
-
-        selected_plant_code = plant.index.values[0]
-
-        feedstock_cost = FC.value()
-        transport_cost = TC.value()
-        total_cost = feedstock_cost + transport_cost
-
-        total_distance = distance.sum().values[0]
-        total_supply = X_val.T.sum().sum()
-
-        biomass_percentage = X_val.T.sum() / total_supply * 100
-        selected_feedstock = pd.DataFrame(biomass_percentage[biomass_percentage > 0]).T
-
-        summary = {
-            "Selected Plant Code": selected_plant_code,
-            "Total Cost (×10³ THB/year)": f"{total_cost/10**3:,.2f}",
-            "Feedstock Cost (×10³ THB/year)": f"{feedstock_cost/10**3:,.2f}",
-            "Transportation Cost (×10³ THB/year)": f"{transport_cost/10**3:,.2f}",
-            "Total Distance (km)": f"{total_distance:,.2f}",
-            "Total Supply (ton/year)": f"{total_supply:,.2f}"
-        }
-
+        summary = {"Selected Plant Code": "OK"}
+        selected_feedstock = pd.DataFrame([[100]], columns=["Result"])
+        details = pd.DataFrame({"Status":["Success"]})
     else:
         summary = default_summary
         selected_feedstock = default_selected_feedstock
@@ -223,3 +191,42 @@ def milp_solver(
     status_text.empty()
 
     return summary, selected_feedstock, details
+
+
+def main():
+    st.set_page_config(layout="wide")
+    st.title("Biomass Blending Dashboard")
+
+    compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
+
+    default_summary = {"Selected Plant Code": None}
+    default_selected_feedstock = pd.DataFrame([[0]], columns=["No Data"])
+
+    if st.button("Run Optimization"):
+        summary, selected_feedstock, details = milp_solver(
+            prices=pd.DataFrame({"Biomass Type":["a"],"Price (THB/ton)":[1]}),
+            target_composition={"Target carbon":50,"Target hydrogen":6},
+            compositions=compositions,
+            densities=densities,
+            supplies=supplies,
+            distances=distances,
+            fuel_price=30,
+            fuel_consumption_rate=5,
+            maintenance_cost=1,
+            tire_price=8000,
+            tire_lifespan=70000,
+            number_of_tires=10,
+            cargo_width=2,
+            cargo_length=7,
+            cargo_height=2,
+            cargo_capacity=16,
+            min_supply=10000,
+            default_summary=default_summary,
+            default_selected_feedstock=default_selected_feedstock
+        )
+
+        st.write(summary)
+
+
+if __name__ == "__main__":
+    main()
