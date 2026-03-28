@@ -87,7 +87,7 @@ def input_requirements():
             value=DEFAULTS["H_target"], key="H_target"
         ),
         "S_min": st.number_input(
-            "Minimum Supply (tonnes/year)", 0.0,
+            "Minimum Supply (tonnes/year)", 0.01,
             value=DEFAULTS["S_min"], key="Min Supply"
         )
     }
