@@ -90,7 +90,7 @@ def milp_solver(
         tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
         )
     
-    st.write("The code is running. Your results will be ready within 5 to 30 minutes.")
+    st.write("We’re on it. This part usually takes a little extra time, thanks for your patience!")
 
     #
     prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
