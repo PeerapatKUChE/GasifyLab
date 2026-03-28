@@ -1,442 +1,516 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
 import os
 import pulp
-import streamlit as st
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
+from datetime import datetime
 
-def load_data(path):
-    compositions = pd.read_excel(path+"/data/raw/Data-ThaiBiomassComposition.xlsx", sheet_name="Processed Data")
-    densities = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Cost")
-    supplies = pd.read_excel(path+"/data/raw/Data-ThaiBiomass.xlsx", sheet_name="Biomass Data")
-    distances = pd.read_excel(path+"/data/raw/Data-Distances.xlsx")
-    return compositions, densities, supplies, distances
+# -----------------------------
+# DEFAULT CONFIG
+# -----------------------------
+DEFAULTS = {
+    "C_target": 46.21,
+    "H_target": 6.48,
+    "S_min": 10000.0,
+    "F": [
+        1800, 5000, 1000, 1500, 500, 50, 500,
+        3200, 500, 1500, 2000, 600, 500, 800
+    ],
+    "FP": 31.94,
+    "FCR": 5.0,
+    "TP": 8000.0,
+    "N_tires": 10,
+    "TL": 70000.0,
+    "VMC": 0.60,
+    "W_cargo": 2.30,
+    "L_cargo": 7.20,
+    "H_cargo": 2.20,
+    "m_max_cargo": 16.0
+}
 
-def calculate_transportation_cost(
-        fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height,
-        cargo_capacity, densities
-):
-    fuel_consumption_cost = fuel_price / fuel_consumption_rate
-    average_tire_cost_per_km = tire_price * number_of_tires / tire_lifespan
-    total_variable_cost = fuel_consumption_cost + average_tire_cost_per_km + maintenance_cost
-    cargo_volume = cargo_width * cargo_length * cargo_height
+BIOMASS_TYPES = [
+    "Cassava rhizome", "Coconut coir", "Coconut shell", "Corn stalk", "Corncob",
+    "Palm empty fruit bunch", "Palm frond", "Palm kernel shell", "Palm trunk",
+    "Rice husk", "Rice straw", "Rubber wood sawdust",
+    "Sugarcane bagasse", "Sugarcane leaf"
+]
 
-    transportation_costs_df = pd.DataFrame()
-    for i in range(densities.shape[0]):
-        weight_at_max_volume = densities.iloc[i] * cargo_volume / 1000
-        weight_at_max_capacity = min(weight_at_max_volume, cargo_capacity)
-        transportation_cost = total_variable_cost / weight_at_max_capacity
-        transportation_cost = pd.DataFrame([transportation_cost], index=[i])
-        transportation_costs_df = pd.concat([transportation_costs_df, transportation_cost])
+# -----------------------------
+# SESSION STATE INIT
+# -----------------------------
+def init_session():
+    if "biomass_prices" not in st.session_state:
+        st.session_state.biomass_prices = pd.DataFrame({
+            "Biomass Type": BIOMASS_TYPES,
+            "Price (THB/tonne)": DEFAULTS["F"]
+        })
 
-    return transportation_costs_df
+    if "editor_key" not in st.session_state:
+        st.session_state.editor_key = 0
 
-def prepare_data(
-        prices, target_composition, compositions, densities, supplies, distances,
-        fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
-    ):
-    
-    prices["Biomass Type"] = prices["Biomass Type"].str.lower()
-    biomass_data = compositions.merge(prices, on="Biomass Type")
-    biomass_data = biomass_data.merge(densities[["Biomass Type", "Density"]], on="Biomass Type")
 
-    biomass_data["Transportation Cost"] = calculate_transportation_cost(
-        fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height,
-        cargo_capacity, biomass_data["Density"]
-    )
-    biomass_data = biomass_data.drop(columns=["Density"])
-    biomass_data = biomass_data.sort_values(by=["Biomass Type"])
+# -----------------------------
+# RESET FUNCTION
+# -----------------------------
+def reset_all():
+    if "editor_key" not in st.session_state:
+        st.session_state.editor_key = 0
 
-    supplies = supplies.drop(columns=["No.", "Region"])
-    S = supplies.T
-    S.columns = supplies["Province"]
-    S = S.sort_index(axis=0)
-    S = S.sort_index(axis=1)
-    S = S.drop(["Province"])
-    S.columns.names = [""]
+    for key, value in DEFAULTS.items():
+        if key != "F":
+            st.session_state[key] = value
 
-    distances = distances.drop(columns=["Latitude", "Longitude"])
-    D = distances.drop(columns=["Plant Code"])
-    D.index = distances["Plant Code"]
-    D = D.sort_index(axis=0)
-    D = D.sort_index(axis=1)
-    D.index.names = [""]
+    st.session_state["Min Supply"] = DEFAULTS["S_min"]
 
-    Nb = S.shape[0]
-    Ns = D.shape[1]
-    Ng = D.shape[0]
-    C = biomass_data["C"]
-    H = biomass_data["H"]
-    Ct = target_composition["Target carbon"]
-    Ht = target_composition["Target hydrogen"]
-    F = prices["Price (THB/ton)"]
-    T = biomass_data["Transportation Cost"]
+    st.session_state.biomass_prices = pd.DataFrame({
+        "Biomass Type": BIOMASS_TYPES,
+        "Price (THB/tonne)": DEFAULTS["F"]
+    })
 
-    return Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S
+    st.session_state.editor_key += 1
 
-def milp_solver(
-        prices, target_composition, compositions, densities, supplies, distances,
-        fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity,
-        min_supply, default_summary, default_selected_feedstock
-    ):
 
-    Nb, Ns, Ng, C, H, Ct, Ht, F, T, D, S = prepare_data(
-        prices, target_composition, compositions, densities, supplies, distances,
-        fuel_price, fuel_consumption_rate, maintenance_cost, tire_price,
-        tire_lifespan, number_of_tires, cargo_width, cargo_length, cargo_height, cargo_capacity
+# -----------------------------
+# INPUT SECTIONS
+# -----------------------------
+def input_requirements():
+    col1, col2 = st.columns(2)
+
+    return {
+        "C_target": col1.number_input(
+            "Target Carbon (% daf)", 0.01, 100.0,
+            value=DEFAULTS["C_target"], key="C_target"
+        ),
+        "H_target": col2.number_input(
+            "Target Hydrogen (% daf)", 0.01, 100.0,
+            value=DEFAULTS["H_target"], key="H_target"
+        ),
+        "S_min": st.number_input(
+            "Minimum Supply (tonnes/year)", 0.0,
+            value=DEFAULTS["S_min"], key="Min Supply"
         )
-    
-    st.write("We’re on it. This part usually takes a little extra time, thanks for your patience!")
-
-    #
-    prob = pulp.LpProblem("Cost_Optimization", pulp.LpMinimize)
-
-    # Decision variables ===============================================================================
-    #
-    X = np.array([
-        pulp.LpVariable(f"X_{j}_{k}_{l}", lowBound=0)
-        for j in range(Nb)
-        for k in range(Ns)
-        for l in range(Ng)
-    ]).reshape(Nb, Ns, Ng)
-
-    #
-    Y = np.array([
-        pulp.LpVariable(f"Y_{l}_{k}", cat="Binary")
-        for l in range(Ng)
-        for k in range(Ns)
-    ]).reshape(Ng, Ns)
-
-    #
-    Ys = np.array([pulp.LpVariable(f"Yp_{k}", cat="Binary") for k in range(Ns)]).reshape(1, Ns)
-
-    #
-    Yg = np.array([pulp.LpVariable(f"Yg_{l}", cat="Binary") for l in range(Ng)]).reshape(Ng, 1)
-
-    # Objective function ===============================================================================
-    #
-    FC = pulp.lpSum(X * F.values.reshape(Nb, 1, 1))
-
-    #
-    TC = pulp.lpSum(np.sum(X * D.values.T.reshape(1, Ns, Ng), axis=2) * T.values.reshape(Nb, 1))
-
-    #
-    prob += FC + TC
-
-    # Constraints ======================================================================================
-    # 1.
-    prob += pulp.lpSum(Yg) == 1
-
-    # 2.
-    for k in range(Ns):
-        prob += pulp.lpSum(Y[:, k]) == Ys[0, k]
-
-    # 3.
-    for l in range(Ng):
-        prob += pulp.lpSum(Y[l, :]) <= Yg[l, 0] * Ns
-
-    # 4.
-    for j in range(Nb):
-        for k in range(Ns):
-            prob += pulp.lpSum(X[j, k, :]) <= S.iloc[j, k]
-
-    # 5.
-    M = 10**15
-    for k in range(Ns):
-        for l in range(Ng):
-            prob += pulp.lpSum(X[:, k, l]) <= Y[l, k] * M
-
-    # 6.
-    prob += Ct * pulp.lpSum(X) == pulp.lpDot(C.values, [pulp.lpSum(X[j, :, :]) for j in range(Nb)])
-
-    # 7.
-    prob += Ht * pulp.lpSum(X) == pulp.lpDot(H.values, [pulp.lpSum(X[j, :, :]) for j in range(Nb)])
-
-    # 8.
-    prob += pulp.lpSum(X) >= min_supply
-
-    # 9.
-    prob += pulp.lpSum(Y) >= 1
-    
-    # Solve the problem
-    status = prob.solve()
-
-    # Result Analysis ==================================================================================
-    #
-    if status == pulp.LpStatusOptimal:
-        #
-        details = pd.DataFrame()
-
-        #
-        Yg_val = []
-        for l in range(Ng):
-            Yg_val.append(Yg[l, 0].value())
-        Yg_val = np.array(Yg_val).reshape(Ng, 1)
-        Yg_val = pd.DataFrame(Yg_val, index=distances["Plant Code"])
-        plant = Yg_val[Yg_val==1].dropna()
-
-        #
-        X_val = []
-        for j in range(Nb):
-            for k in range(Ns):
-                for l in range(Ng):
-                    X_val.append(X[j, k, l].value())
-        X_val = np.array(X_val).reshape(Nb, Ns, Ng)
-        X_val = np.sum(X_val, axis=2)
-        X_val = pd.DataFrame(X_val, columns=D.columns, index=S.index)
-
-        #
-        supplier_indices = X_val.any(axis=0)
-        supply = X_val.loc[:, supplier_indices].T
-        supplier = pd.DataFrame(supply.index, columns=["Province"], index=range(supply.shape[0]))
-        details = pd.concat([details, supplier], axis=0)
-
-        #
-        distance = D.loc[plant.index, supply.index].T
-        distance.index = range(supply.shape[0])
-        distance.columns = ["Distance (km)"]
-        details = pd.concat([details, distance], axis=1)
-
-        #
-        #
-        supply = supply.loc[:, (supply != 0).any(axis=0)]
-        supply.index = range(supply.shape[0])
-        supply.rename(columns=lambda x: x.capitalize()+" supply (ton/year)", inplace=True)
-        details = pd.concat([details, supply], axis=1)
-
-        #
-        selected_plant_code = plant.index.values[0]
-
-        feedstock_cost = FC.value()
-        transport_cost = TC.value()
-        total_cost = feedstock_cost + transport_cost
-
-        total_distance = distance.sum().values[0]
-
-        total_supply = X_val.T.sum().sum()
-
-        biomass_percentage = X_val.T.sum() / total_supply * 100
-        selected_feedstock = biomass_percentage[biomass_percentage>0]
-        selected_feedstock = pd.DataFrame(selected_feedstock).T
-
-        summary = {
-            "Selected Plant Code": selected_plant_code,
-            "Total Cost (×10³ THB/year)": f"{total_cost/10**3:,.2f}",
-            "Feedstock Cost (×10³ THB/year)": f"{feedstock_cost/10**3:,.2f}",
-            "Transportation Cost (×10³ THB/year)": f"{transport_cost/10**3:,.2f}",
-            "Total Distance (km)": f"{total_distance:,.2f}",
-            "Total Supply (ton/year)": f"{total_supply:,.2f}"
-        }
-
-    else:
-        summary = default_summary
-        selected_feedstock = default_selected_feedstock
-        details = None
-    
-    return summary, selected_feedstock, details
-
-def main():
-    st.set_page_config(layout="wide")
-    st.title("Biomass Blending Dashboard")
-
-    compositions, densities, supplies, distances = load_data(os.path.abspath(os.curdir))
-
-    default_summary = {
-        "Selected Plant Code": None,
-        "Total Cost (×10³ THB/year)": "0.00",
-        "Feedstock Cost (×10³ THB/year)": "0.00",
-        "Transportation Cost (×10³ THB/year)": "0.00",
-        "Total Distance (km)": "0.00",
-        "Total Supply (ton/year)": "0.00"
     }
 
-    default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
 
-    page_column1, _, page_column2 = st.columns([0.40, 0.05, 0.55])
-    with page_column2.form("Optimization Tool"):
-        st.write(":red[* Required]")
-        st.write("")
-        col1, col2 = st.columns(2)
+def input_biomass_prices():
+    df = st.session_state.biomass_prices
 
-        col1.write("**Feedstock Specifications**")
-        col2.write("‎ ")
-        target_composition = {
-            "Target carbon": col1.number_input("Target carbon content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target carbon"),
-            "Target hydrogen": col2.number_input("Target hydrogen content (%daf) :red[*]", value=None, min_value=0.01, max_value=100.00, key="Target hydrogen"),
-        }
+    df = st.data_editor(
+        df,
+        disabled=["Biomass Type"],
+        hide_index=True,
+        key=f"editor_{st.session_state.editor_key}",
+        use_container_width=True
+    )
 
-        min_supply = st.number_input("Minimum total supply requirement (ton/year)", value=10000.00, min_value=0.00, key="Min Supply")
+    st.session_state.biomass_prices = df
+    return df
 
-        col1, col2, col3 = st.columns(3)
-        col1.write("**Biomass Price** :red[*]")
-        default_biomass_price = [
-            1800.00, 5000.00, 1000.00, 1500.00, 500.00, 50.00, 500.00,
-            3200.00, 500.00, 1500.00, 2000.00, 600.00, 500.00, 800.00
-        ]
-        biomass_prices = {
-            "Biomass Type": [
-                "Cassava rhizome", "Coconut coir", "Coconut shell", "Corn stalk", "Corncob",
-                "Palm empty fruit bunch", "Palm frond", "Palm kernel shell", "Palm trunk", "Rice husk",
-                "Rice straw", "Rubber wood sawdust", "Sugarcane bagasse", "Sugarcane leaf"
-            ],
-            "Price (THB/ton)": default_biomass_price
-        }
 
-        if "biomass_prices" not in st.session_state:
-            biomass_prices = pd.DataFrame(biomass_prices)
-            st.session_state.biomass_prices = biomass_prices
-            st.session_state.key = 0
-        biomass_prices = st.session_state.biomass_prices
+def input_truck_params():
+    col1, col2 = st.columns(2)
 
-        biomass_prices = col1.data_editor(biomass_prices, disabled=["Biomass Type"], hide_index=True, key=f"Biomass price edited #{st.session_state.key}")
+    fields = [
+        ("FP", "Fuel Price (THB/L)", col1),
+        ("FCR", "Fuel Economy (km/L)", col2),
+        ("TP", "Cost per Tire", col1),
+        ("N_tires", "Tires per Vehicle", col2),
+        ("TL", "Tire Life (km)", col1),
+        ("VMC", "Maintenance (THB/km)", col2),
+        ("W_cargo", "Cargo Width (m)", col1),
+        ("L_cargo", "Cargo Length (m)", col2),
+        ("H_cargo", "Cargo Height (m)", col1),
+        ("m_max_cargo", "Max Payload (tonnes)", col2),
+    ]
 
-        col2.write("**Truck Operational Parameters**")
-        col3.write("‎ ")
-
-        default_truck_params = {
-            "Fuel price": 31.94,
-            "Fuel consumption rate": 5.00,
-            "Maintenance cost": 0.60,
-            "Tire price": 8000.00,
-            "Tire lifespan": 70000.00,
-            "Number of tires": 10,
-            "Cargo width": 2.30,
-            "Cargo length": 7.20,
-            "Cargo height": 2.20,
-            "Cargo capacity": 16.00
-        }
-
-        truck_params = {
-            "Fuel price": col2.number_input("Fuel price (THB/liter)", value=default_truck_params["Fuel price"], min_value=0.00, key="Fuel price"),
-            "Fuel consumption rate": col3.number_input("Fuel consumption rate (km/liter)", value=default_truck_params["Fuel consumption rate"], min_value=0.01, key="Fuel consumption rate"),
-            "Maintenance cost": col2.number_input("Average maintenance cost (THB/km)", value=default_truck_params["Maintenance cost"], min_value=0.00, key="Maintenance cost"),
-            "Tire price": col3.number_input("Tire price (THB/tire)", value=default_truck_params["Tire price"], min_value=0.00, key="Tire price"),
-            "Tire lifespan": col2.number_input("Tire lifespan (km)", value=default_truck_params["Tire lifespan"], min_value=0.01, key="Tire lifespan"),
-            "Number of tires": col3.number_input("Number of tires", value=default_truck_params["Number of tires"], min_value=0, key="Number of tires"),
-            "Cargo width": col2.number_input("Cargo width (m)", value=default_truck_params["Cargo width"], min_value=0.01, key="Cargo width"),
-            "Cargo length": col3.number_input("Cargo length (m)", value=default_truck_params["Cargo length"], min_value=0.01, key="Cargo length"),
-            "Cargo height": col2.number_input("Cargo height (m)", value=default_truck_params["Cargo height"], min_value=0.01, key="Cargo height"),
-            "Cargo capacity": col3.number_input("Cargo capacity (ton)", value=default_truck_params["Cargo capacity"], min_value=0.01, key="Cargo capacity"),
-        }
-
-        default_selected_feedstock = pd.DataFrame(np.ones(1).reshape(1, 1), index=[0], columns=["No Data"])
-
-        submit_button, _, reset_button = st.columns([1.2, 4.9, 1])
-
-        run_count = 0
-        if submit_button.form_submit_button("**Submit**", type="primary"):
-            run_count += 1
-            if target_composition["Target carbon"] != None and target_composition["Target hydrogen"] != None and biomass_prices["Price (THB/ton)"].map(lambda x: isinstance(x, (int, float))).all().all():
-                summary, selected_feedstock, details = milp_solver(
-                    prices=biomass_prices,
-                    target_composition=target_composition,
-                    compositions=compositions,
-                    densities=densities,
-                    supplies=supplies,
-                    distances=distances,
-                    fuel_price=truck_params["Fuel price"],
-                    fuel_consumption_rate=truck_params["Fuel consumption rate"],
-                    maintenance_cost=truck_params["Maintenance cost"],
-                    tire_price=truck_params["Tire price"],
-                    tire_lifespan=truck_params["Tire lifespan"],
-                    number_of_tires=truck_params["Number of tires"],
-                    cargo_width=truck_params["Cargo width"],
-                    cargo_length=truck_params["Cargo length"],
-                    cargo_height=truck_params["Cargo height"],
-                    cargo_capacity=truck_params["Cargo capacity"],
-                    min_supply=min_supply,
-                    default_summary=default_summary,
-                    default_selected_feedstock=default_selected_feedstock
-                )
-
-            else:
-                st.error("Error: One or more required fields are missing. Please ensure all mandatory fields are filled out before submitting the form.")
-
-        def reset():
-            for target_key in list(target_composition.keys()):
-                st.session_state[target_key] = None
-            st.session_state["Min Supply"] = 10000.00
-            for truck_key in list(truck_params.keys()):
-                st.session_state[truck_key] = default_truck_params[truck_key]
-            st.session_state.key += 1
-            
-        reset_button.form_submit_button("**:red[Reset]**", on_click=reset, type="secondary")
-
-        st.markdown(
-            """
-            <style>
-            button[kind="secondaryFormSubmit"] {
-                background: none;
-                border: none;
-                color: "primaryColor";
-            }
-            button[kind="secondaryFormSubmit"]:hover {
-                background-color: rgb(128, 128, 128, 0.15);
-                border: none;
-                color: "primaryColor";
-            }
-            button[kind="secondaryFormSubmit"]:focus {
-                background-color: rgb(128, 128, 128, 0.15); 
-                border: none;
-                color: "primaryColor";
-            }
-
-            </style>
-            """,
-            unsafe_allow_html=True,
+    params = {}
+    for key, label, col in fields:
+        params[key] = col.number_input(
+            label,
+            min_value=0.0,
+            value=float(DEFAULTS[key]),
+            key=key
         )
 
-    if "summary" not in locals() or "selected_feedstock" not in locals() or "details"  not in locals():
-        summary = default_summary
-        selected_feedstock = default_selected_feedstock
-        details = None
+    return params
 
-    if run_count > 0:
-        if summary["Selected Plant Code"] == default_summary["Selected Plant Code"] or selected_feedstock.columns[0] == default_selected_feedstock.columns[0] or details is None:
-            st.error("Error: No solution found.")
 
-    summary_col1, summary_col2 = page_column1.columns(2)
-    for i, (label, value) in enumerate(summary.items()):
-        if i % 2 == 0:
-            summary_col1.metric(label=label, value=value)
-        else:
-            summary_col2.metric(label=label, value=value)
+# -----------------------------
+# VALIDATION
+# -----------------------------
+def validate_inputs(req, prices, truck):
+    errors = []
 
-    page_column1.metric(label="Feedstock Composition (%wt)", value="")
-    sorted_feedstock = selected_feedstock.T.sort_values(by=0, ascending=True)
-    other_feedstock = sorted_feedstock[sorted_feedstock < 10].dropna(axis=0)
-    if other_feedstock.shape[0] > 0 and type(details) != type(None):
-        other_columns = other_feedstock.index
-        total_other_feedstock = sum(other_feedstock.values)
-        sorted_feedstock = sorted_feedstock.T.drop(columns=other_columns)
-        sorted_feedstock["Other"] = total_other_feedstock
-    else:
-        sorted_feedstock = sorted_feedstock.T
-    sorted_feedstock.columns = sorted_feedstock.columns.str.capitalize()
+    if prices["Price (THB/tonne)"].isnull().any():
+        errors.append("All biomass prices must be filled")
+
+    for k, v in {**req, **truck}.items():
+        if v is None:
+            errors.append(f"{k} is required")
+
+    return errors
+
+
+# -----------------------------
+# DATA LOADING
+# -----------------------------
+def load_data(path):
+    biomass_compositions = pd.read_excel(
+        os.path.join(path, "data", "raw", "Data-ThaiBiomassComposition.xlsx"),
+        sheet_name="Processed Data"
+    )
+
+    biomass_data = pd.read_excel(
+        os.path.join(path, "data", "raw", "Data-ThaiBiomass.xlsx"),
+        sheet_name="Biomass Cost"
+    )
+
+    biomass_supplies = pd.read_excel(
+        os.path.join(path, "data", "raw", "Data-ThaiBiomass.xlsx"),
+        sheet_name="Biomass Data"
+    )
+
+    plant_supplier_distances = pd.read_excel(
+        os.path.join(path, "data", "raw", "Data-Distances.xlsx")
+    )
+
+    return biomass_compositions, biomass_data, biomass_supplies, plant_supplier_distances
+
+
+# -----------------------------
+# TRANSPORTATION COST
+# -----------------------------
+def calculate_unit_transport_cost(truck_params, biomass_densities):
+    """
+    Calculate unit transportation cost for each biomass type.
+    """
+
+    FP = float(truck_params["FP"])
+    FCR = float(truck_params["FCR"])
+    TP = float(truck_params["TP"])
+    N_tires = int(truck_params["N_tires"])
+    TL = float(truck_params["TL"])
+    VMC = float(truck_params["VMC"])
+    cargo_width = float(truck_params["W_cargo"])
+    cargo_length = float(truck_params["L_cargo"])
+    cargo_height = float(truck_params["H_cargo"])
+    cargo_capacity = float(truck_params["m_max_cargo"])
+
+    # Fuel Consumption Cost (FCC, THB/km) = Fuel Price (FP, THB/L) / Fuel Consumption Rate (FCR, km/L)
+    FCC = FP / FCR
+
+    # Tire Depreciation Cost (TD, THB/km) = Tire Price (TP, THB/tire) × Number of Tires / Tire Lifespan (TL, km)
+    TD = TP * N_tires / TL
+
+    # Total Vehicle Cost (TVC, THB/km) = FCC + TD + VMC
+    TVC = FCC + TD + VMC
+
+    # Cargo Volume (m³) = Width × Length × Height
+    cargo_volume = cargo_width * cargo_length * cargo_height
+
+    # Maximum weight by volume (tonnes) = Density (kg/m³) × Volume (m³) / 1000
+    max_weight_volume = np.asarray(biomass_densities) * cargo_volume / 1000
+
+    # Effective cargo (m_bmax, tonnes) = min(volume-limited weight, cargo capacity)
+    m_bmax = np.minimum(max_weight_volume, cargo_capacity)
+
+    # Unit Transportation Cost (THB/tkm) = Total Vehicle Cost (TVC, THB/km) / Effective cargo (m_bmax, tonnes)
+    Tb = TVC / m_bmax
+
+    return pd.Series(Tb, name="Unit Transportation Cost")
+
+
+# -----------------------------
+# DATA PREPARATION
+# -----------------------------
+def prepare_data(
+        biomass_compositions,
+        biomass_data,
+        biomass_supplies,
+        plant_supplier_distances,
+        requirements,
+        biomass_prices,
+        truck_params
+    ):
+
+    unit_transport_cost = calculate_unit_transport_cost(
+        truck_params = truck_params,
+        biomass_densities = biomass_data["Density"].values
+    )
+
+    Tb = pd.concat([biomass_data["Biomass Type"], unit_transport_cost], axis=1)
+
+    biomass_prices["Biomass Type"] = biomass_prices["Biomass Type"].str.lower()
+
+    biomass_data = biomass_compositions[["Biomass Type", "C", "H"]].merge(
+        biomass_prices,
+        on="Biomass Type",
+        how="left"
+    )
+
+    biomass_data = biomass_data.merge(
+        Tb,
+        on="Biomass Type",
+        how="left"
+    )
+
+    biomass_data = biomass_data.rename(
+        columns={"Price (THB/tonne)": "Unit Feedstock Cost"}
+    ).sort_values(
+        by="Biomass Type"
+    ).reset_index(
+        drop=True
+    )
+
+    biomass_data.index = list(biomass_supplies.columns)[3:]
+
+    biomass_supplies_clean = biomass_supplies.drop(columns=["No.", "Region"]).T
+    biomass_supplies_clean = biomass_supplies_clean.reset_index(drop=True)
+    biomass_supplies_clean.columns = biomass_supplies_clean.iloc[0]
+    biomass_supplies_clean = biomass_supplies_clean.drop(0).reset_index(drop=True)
+    biomass_supplies_clean.index = list(biomass_supplies.columns)[3:]
+    S = biomass_supplies_clean.sort_index()
+
+    distance_matrix = plant_supplier_distances.drop(columns=["Latitude", "Longitude"]).sort_values(by="Plant Code").reset_index(drop=True)
+    distance_matrix.index = distance_matrix["Plant Code"]
+    D = distance_matrix.drop(columns=["Plant Code"])
+
+
+    Nb = biomass_data.shape[0]
+
+    Ns = S.shape[1]
+
+    Np = D.shape[0]
+
+    C = biomass_data["C"]
+
+    H = biomass_data["H"]
+
+    C_opt = requirements["C_target"]
+
+    H_opt = requirements["H_target"]
+
+    F = biomass_data["Unit Feedstock Cost"]
+
+    T = biomass_data["Unit Transportation Cost"]
+
+    S_min = requirements["S_min"]
+
+    return Nb, Ns, Np, C, H, C_opt, H_opt, F, T, D, S, S_min
+
+
+# -----------------------------
+# LINEAR PROGRAM SOLVER
+# -----------------------------
+def lp_solver(Nb, Ns, Np, C, H, C_opt, H_opt, F, T, D, S, S_min):
+
+    prob = pulp.LpProblem("Cost_Minimization", pulp.LpMinimize)
+
+    # Decision variables: X[j,k,l] = biomass j from supplier k to plant l
+    X = {}
+    for b in range(Nb):
+        for s in range(Ns):
+            for p in range(Np):
+                X[b, s, p] = pulp.LpVariable(f"X_{b}_{s}_{p}", lowBound=0)
     
-    feedstock_labels = sorted_feedstock.columns
-    feedstock_sizes = sorted_feedstock.iloc[0]
+    # Objective: Feedstock cost + transport cost
+    prob += pulp.lpSum([X[b, s, p] * (F[b] + T[b] * D.iloc[p, s])
+                        for b in range(Nb)
+                        for s in range(Ns)
+                        for p in range(Np)])
 
-    if type(details) != type(None):
-        colors = plt.cm.Blues(np.linspace(0.2, 0.6, len(feedstock_labels)))
-        autopct = "%.2f%%"
+    # Constraints
+    # 1. Cannot exceed supply
+    for b in range(Nb):
+        for s in range(Ns):
+            prob += pulp.lpSum([X[b, s, p] for p in range(Np)]) <= S.iloc[b, s]
+
+    # 2. Min supply constraint
+    for p in range(Np):
+        prob += pulp.lpSum([X[b, s, p] for b in range(Nb) for s in range(Ns)]) >= S_min
+
+    # 3. Carbon and Hydrogen target
+    for p in range(Np):
+        prob += pulp.lpSum([C[b] * X[b, s, p] for b in range(Nb) for s in range(Ns)]) \
+            == C_opt * pulp.lpSum([X[b, s, p] for b in range(Nb) for s in range(Ns)])
+
+    for p in range(Np):
+        prob += pulp.lpSum([H[b] * X[b, s, p] for b in range(Nb) for s in range(Ns)]) \
+            == H_opt * pulp.lpSum([X[b, s, p] for b in range(Nb) for s in range(Ns)])
+
+    # Solve
+    status = prob.solve()
+
+    # Result dataframe
+    rows = []
+    if status == pulp.LpStatusOptimal:
+        biomass = C.index.tolist()
+        plants = D.index.tolist()
+        suppliers = S.columns.tolist()
+        for b in range(Nb):
+            for s in range(Ns):
+                for p in range(Np):
+                    val = X[b, s, p].varValue
+                    if val > 0:
+                        feed_cost = val * F[b]
+                        transport_cost = val * T[b] * D.iloc[p, s]
+                        total_cost = feed_cost + transport_cost
+                        rows.append({
+                            "Plant": plants[p],
+                            "Biomass": biomass[b],
+                            "Supplier": suppliers[s],
+                            "Amount (t)": val,
+                            "Feedstock Cost (THB)": feed_cost,
+                            "Transportation Cost (THB)": transport_cost,
+                            "Total Cost (THB)": total_cost
+                        })
     else:
-        colors = ["#CCCCCC"]
-        autopct = None
+        st.warning("No optimal solution found.")
 
-    fig, ax = plt.subplots()
-    ax.pie(feedstock_sizes, labels=feedstock_labels, colors=colors, autopct=autopct, startangle=90)
-    ax.axis("equal")
+    return pd.DataFrame(rows).sort_values(by="Plant").reset_index(drop=True)
 
-    page_column1.pyplot(fig)
 
-    if type(details) != type(None):
-        page_column1.write("For more details, see the distance and supply information from each province below:")
-        page_column1.dataframe(details)
+# -----------------------------
+# MAIN APP
+# -----------------------------
+def main():
+    st.set_page_config(layout="wide")
+    st.title("Biomass Blending & Logistics Optimizer")
 
+    init_session()
+
+    base_path = "."  # change to folder containing 'data/raw'
+
+    result_col, _, form_col = st.columns([0.45, 0.05, 0.50])
+
+    # --- BEFORE THE FORM, show placeholder in result_col ---
+    with result_col:
+        st.info("📊 Results will appear here after you submit the form.")
+
+    with form_col.form("main_form"):
+        st.markdown(":red[* All fields are required]")
+
+        # Section 1: Requirements
+        st.subheader("Supply & Quality Requirements")
+        requirements = input_requirements()
+        st.divider()
+
+        # Section 2: Biomass Prices & Truck Params
+        col1, col2 = st.columns([0.5, 0.5])
+        with col1:
+            st.subheader("Feedstock Prices")
+            prices = input_biomass_prices()
+        with col2:
+            st.subheader("Truck Parameters")
+            truck_params = input_truck_params()
+        st.divider()
+
+        # Submit / Reset
+        submit, reset = st.columns([0.91, 0.09])
+        submitted = submit.form_submit_button("Submit", type="primary")
+        reset.form_submit_button("Reset", on_click=reset_all)
+
+        if submitted:
+            errors = validate_inputs(requirements, prices, truck_params)
+            if errors:
+                for e in errors:
+                    st.error(e)
+            else:
+                with result_col:
+                    with st.spinner("⏳ Running optimization... please wait"):
+                        
+                        # Load Excel data
+                        biomass_compositions, biomass_data, biomass_supplies, plant_supplier_distances = load_data(base_path)
+
+                        # Prepare data
+                        Nb, Ns, Np, C, H, C_opt, H_opt, F, T, D, S, S_min = prepare_data(
+                            biomass_compositions=biomass_compositions,
+                            biomass_data=biomass_data,
+                            biomass_supplies=biomass_supplies,
+                            plant_supplier_distances=plant_supplier_distances,
+                            requirements=requirements,
+                            biomass_prices=prices,
+                            truck_params=truck_params
+                        )
+
+                        # Solve LP
+                        results_df = lp_solver(Nb, Ns, Np, C, H, C_opt, H_opt, F, T, D, S, S_min)
+
+                    # Aggregate biomass by amount
+                    if not results_df.empty:
+                        # --- Pie chart ---
+                        biomass_summary = results_df.groupby("Biomass")["Amount (t)"].sum().sort_values(ascending=False)
+
+                        fig_pie = px.pie(
+                            names=biomass_summary.index,
+                            values=biomass_summary.values,
+                            title="Overall Biomass Composition (%)",
+                            hole=0.3,
+                            color_discrete_sequence=px.colors.sequential.Sunset[::-1]
+                        )
+                        fig_pie.update_traces(direction="clockwise")
+                        result_col.plotly_chart(fig_pie, use_container_width=True)
+
+                        # Sum costs per plant
+                        plant_costs = results_df.groupby("Plant")[["Feedstock Cost (THB)", "Transportation Cost (THB)", "Total Cost (THB)"]].sum()
+
+                        # Overall average per plant
+                        avg_feed = plant_costs["Feedstock Cost (THB)"].mean()
+                        avg_trans = plant_costs["Transportation Cost (THB)"].mean()
+                        avg_total = plant_costs["Total Cost (THB)"].mean()
+
+                        col1, col2, col3 = st.columns([0.36, 0.39, 0.25])
+
+                        with col1:
+                            st.metric(
+                                label="Average Feedstock Cost (THB/yr)",
+                                value=f"{np.ceil(avg_feed):,.0f}",
+                                help="Mean annual expenditure on biomass feedstock required to supply one plant."
+                            )
+
+                        with col2:
+                            st.metric(
+                                label="Average Transportation Cost (THB/yr)",
+                                value=f"{np.ceil(avg_trans):,.0f}",
+                                help="Mean annual logistics cost to transport biomass from suppliers to a plant."
+                            )
+
+                        with col3:
+                            st.metric(
+                                label="Average Total Cost (THB/yr)",
+                                value=f"{np.ceil(avg_total):,.0f}",
+                                help="Mean combined cost of feedstock procurement and transportation for one plant per year."
+                            )
+
+                        # --- Top 3 supplying provinces ---
+                        top_provinces = (
+                            results_df.groupby("Supplier")["Amount (t)"]
+                            .sum()
+                            .sort_values(ascending=False)
+                            .head(3)
+                            .index.tolist()
+                        )
+                        result_col.subheader("Top 3 Supplying Provinces")
+                        result_col.write(", ".join(top_provinces))
+
+                        # Download button
+                        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                        csv = results_df.to_csv(index=False).encode("utf-8")
+                        result_col.download_button(
+                            label="Download Results as CSV",
+                            data=csv,
+                            file_name=f"Results-{timestamp}.csv",
+                            mime="text/csv"
+                        )
+
+                        result_col.success("✅ Your results are ready for download.")
+                    else:
+                        result_col.warning("⚠️ No results to display.")
+
+
+# -----------------------------
+# RUN APP
+# -----------------------------
 if __name__ == "__main__":
     main()
