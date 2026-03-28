@@ -407,7 +407,7 @@ def main():
         st.divider()
 
         # Submit / Reset
-        submit, reset = st.columns([0.91, 0.09])
+        submit, reset = st.columns([0.9, 0.1])
         submitted = submit.form_submit_button("Submit", type="primary")
         reset.form_submit_button("Reset", on_click=reset_all)
 
