@@ -114,7 +114,7 @@ def main():
             "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.01, max_value=100.00, key="Moisture"),
             "Temperature": temperature,
             "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00, key="Steam/biomass ratio"),
-            "ER": equivalence_ratio.number_input("Equivalence Ratio (ER), Non-Steam", value=None, min_value=0.00, key="ER"),
+            "ER": equivalence_ratio.number_input("Equivalence Ratio (ER), non-steam", value=None, min_value=0.00, key="ER"),
         }
 
         categorical_col1, categorical_col2 = st.columns(2)
