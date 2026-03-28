@@ -504,7 +504,6 @@ def main():
                             mime="text/csv"
                         )
 
-                        result_col.success("✅ Your results are ready for download.")
                     else:
                         result_col.warning("⚠️ No results to display.")
 
