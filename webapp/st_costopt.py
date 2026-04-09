@@ -114,7 +114,7 @@ def input_truck_params():
     fields = [
         ("FP", "Fuel Price (THB/L)", col1),
         ("FCR", "Fuel Economy (km/L)", col2),
-        ("TP", "Cost per Tire", col1),
+        ("TP", "Cost per Tire (THB)", col1),
         ("N_tires", "Tires per Vehicle", col2),
         ("TL", "Tire Life (km)", col1),
         ("VMC", "Maintenance (THB/km)", col2),
