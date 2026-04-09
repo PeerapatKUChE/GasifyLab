@@ -98,23 +98,23 @@ def main():
         st.write(":red[All fields are required.]")
         st.write("")
         st.write("**Biomass Charecteristics**")
-        particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.01, key="Particle size")
+        particle_size = st.number_input("Particle size (mm)", value=None, min_value=0.01, placeholder="0.25–70.00", key="Particle size")
         carbon, hydrogen = st.columns(2)
         ash, moisture = st.columns(2)
         st.write("")
         st.write("**Process Conditions**")
-        temperature = st.number_input("Temperature (°C)", value=None, min_value=0.01, key="Temperature")
+        temperature = st.number_input("Temperature (°C)", value=None, min_value=0.01, placeholder="553.00–1,050.00", key="Temperature")
         steam_biomass, equivalence_ratio = st.columns(2)
 
         continuous_inputs = {
             "Particle size": particle_size,
-            "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.01, max_value=100.00, key="C"),
-            "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.01, max_value=100.0, key="H"),
-            "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.01, max_value=100.00, key="Ash"),
-            "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.01, max_value=100.00, key="Moisture"),
+            "C": carbon.number_input("Carbon (%daf)", value=None, min_value=0.01, max_value=100.00, placeholder="40.38–69.35", key="C"),
+            "H": hydrogen.number_input("Hydrogen (%daf)", value=None, min_value=0.01, max_value=100.0, placeholder="3.79–10.13", key="H"),
+            "Ash": ash.number_input("Ash (%db)", value=None, min_value=0.01, max_value=100.00, placeholder="0.27–44.00", key="Ash"),
+            "Moisture": moisture.number_input("Moisture (%wb)", value=None, min_value=0.01, max_value=100.00, placeholder="0.00–29.13", key="Moisture"),
             "Temperature": temperature,
-            "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00, key="Steam/biomass ratio"),
-            "ER": equivalence_ratio.number_input("Equivalence Ratio (ER), non-steam", value=None, min_value=0.00, key="ER"),
+            "Steam/biomass ratio": steam_biomass.number_input("Steam/biomass ratio (wt/wt)", value=None, min_value=0.00, placeholder="0.00–4.04", key="Steam/biomass ratio"),
+            "ER": equivalence_ratio.number_input("Equivalence Ratio (ER), non-steam", value=None, min_value=0.00, placeholder="0.00–0.87", key="ER"),
         }
 
         categorical_col1, categorical_col2 = st.columns(2)
